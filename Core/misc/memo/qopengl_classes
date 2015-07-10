@@ -1,0 +1,77 @@
+QOpenGLBuffer
+Functions for creating and managing OpenGL buffer objects
+
+QOpenGLContext
+Represents a native OpenGL context, enabling OpenGL rendering on a QSurface
+
+QOpenGLContextGroup
+Represents a group of contexts sharing OpenGL resources
+
+QOpenGLDebugLogger
+Enables logging of OpenGL debugging messages
+
+QOpenGLDebugMessage
+Wraps an OpenGL debug message
+
+QOpenGLFramebufferObject
+Encapsulates an OpenGL framebuffer object
+
+QOpenGLFramebufferObjectFormat
+Specifies the format of an OpenGL framebuffer object
+
+QOpenGLFunctions
+Cross-platform access to the OpenGL ES 2.0 API
+
+
+QOpenGLFunctions_3_3_Compatibility
+All functions for OpenGL 3.3 compatibility profile
+
+QOpenGLFunctions_3_3_Core
+All functions for OpenGL 3.3 core profile
+
+
+QOpenGLFunctions_4_3_Compatibility
+All functions for OpenGL 4.3 compatibility profile
+
+QOpenGLFunctions_4_3_Core
+All functions for OpenGL 4.3 core profile
+
+
+
+QOpenGLPaintDevice
+Enables painting to an OpenGL context using QPainter
+
+QOpenGLShader
+Allows OpenGL shaders to be compiled
+
+QOpenGLShaderProgram
+Allows OpenGL shader programs to be linked and used
+
+QOpenGLTexture
+Encapsulates an OpenGL texture object
+
+QOpenGLTimeMonitor
+Wraps a sequence of OpenGL timer query objects
+
+QOpenGLTimerQuery
+Wraps an OpenGL timer query object
+
+QOpenGLVersionProfile
+Represents the version and if applicable the profile of an OpenGL context
+
+QOpenGLVertexArrayObject
+Wraps an OpenGL Vertex Array Object
+
+QOpenGLVertexArrayObject::Binder
+QOpenGLVertexArrayObject::Binder class is a convenience class to help with the binding and releasing of OpenGL Vertex Array Objects
+
+
+
+QOpenGLWidget
+The QOpenGLWidget class is a widget for rendering OpenGL graphics.
+QOpenGLWidget provides functionality for displaying OpenGL graphics integrated into a Qt application. It is very simple to use: Make your class inherit from it and use the subclass like any other QWidget, except that you have the choice between using QPainter and standard OpenGL rendering commands.
+
+
+
+QOpenGLWindow
+Convenience subclass of QWindow to perform OpenGL painting

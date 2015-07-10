@@ -1,0 +1,19 @@
+# to installl list
+fbxsdk
+bullet
+eigen
+boost
+gstreamer
+qt5
+python3.4
+leap sdk
+alsa driver
+lua glue
+
+# todo list
+get leap data
+
+#
+net work on off
+rectangle render detach gameapplication
+handrender camera light person
