@@ -51,7 +51,7 @@ bool HandInfo::UpdateInfo(){
 
        if(hand.isRight()){
            Leap::Vector v = hand.palmPosition();
-           m_handGlobalPos = RegenUtil::EigenVector3fMake(v.z/m_PointDiv, v.y/m_PointDiv , -v.x/m_PointDiv);
+           m_handGlobalPos = QRRUtil::EigenVector3fMake(v.z/m_PointDiv, v.y/m_PointDiv , -v.x/m_PointDiv);
 
            const Leap::Vector normal = hand.palmNormal();
            const Leap::Vector direction = hand.direction();
@@ -77,13 +77,13 @@ bool HandInfo::UpdateInfo(){
                Leap::Bone::Type boneType = static_cast<Leap::Bone::Type>(b);
                Leap::Bone bone = finger.bone(boneType);
 
-               m_fingerdata[i][b].direction = RegenUtil::EigenVector3fMake(-bone.direction().z, -bone.direction().y, bone.direction().x).normalized();
+               m_fingerdata[i][b].direction = QRRUtil::EigenVector3fMake(-bone.direction().z, -bone.direction().y, bone.direction().x).normalized();
                std::cout << m_fingerdata[i][b].direction << std::endl;
-             //  m_fingerdata[i][b].direction_mat = RegenUtil::MakeRotationZAxis(RegenUtil::EigenVector3fMake(bone.direction().x ,bone.direction().y,bone.direction().z).normalized());
+             //  m_fingerdata[i][b].direction_mat = QRRUtil::MakeRotationZAxis(QRRUtil::EigenVector3fMake(bone.direction().x ,bone.direction().y,bone.direction().z).normalized());
 
                m_fingerdata[i][b].direction_mat = LeaptoEigenmat(bone.basis());
 
-               m_fingerdata[i][b].position_mat = RegenUtil::MakeTransform(RegenUtil::EigenVector3fMake(bone.prevJoint().z/m_PointDiv,bone.prevJoint().y/m_PointDiv, -bone.prevJoint().x/m_PointDiv));
+               m_fingerdata[i][b].position_mat = QRRUtil::MakeTransform(QRRUtil::EigenVector3fMake(bone.prevJoint().z/m_PointDiv,bone.prevJoint().y/m_PointDiv, -bone.prevJoint().x/m_PointDiv));
              }
              i++;
            }

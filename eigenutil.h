@@ -5,7 +5,7 @@
 #include <Eigen/Geometry>
 
 
-namespace RegenUtil{
+namespace QRRUtil{
     Eigen::Vector2f EigenVector2fMake(float const x, float const y);
     Eigen::Vector3f EigenVector3fMake(float const x, float const y, float const z);
     Eigen::Vector4f EigenVector4fMake(float const x, float const y, float const z, float const w);

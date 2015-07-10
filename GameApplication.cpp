@@ -22,10 +22,10 @@ GameApplication::GameApplication(QWidget *parent)
     position = EigenVector3fMake(50.0f, 30.0f, 20.0f);
 
     eye = position;
-    center= RegenUtil::EigenVector3fMake(0.0f, 0.0f, 0.0f);
-    eyeUp= RegenUtil::EigenVector3fMake(0.0f, 1.0f , 0.0f);
+    center= QRRUtil::EigenVector3fMake(0.0f, 0.0f, 0.0f);
+    eyeUp= QRRUtil::EigenVector3fMake(0.0f, 1.0f , 0.0f);
 
-    m_ecamera = RegenUtil::lookAt(eye, center, eyeUp);
+    m_ecamera = QRRUtil::lookAt(eye, center, eyeUp);
     m_eworld = Eigen::Matrix4f::Identity();
 
     m_maincamra = new Camera();
@@ -347,13 +347,13 @@ void GameApplication::updateuniform(){
     axis<<0,0,1;
     quat=AngleAxisf(M_PI * (m_frame / 100.0),axis);
     eye = position;
-    center= RegenUtil::EigenVector3fMake(0.0f, 0.0f, 0.0f);
-    eyeUp= RegenUtil::EigenVector3fMake(0.0f, 1.0f , 0.0f);
+    center= QRRUtil::EigenVector3fMake(0.0f, 0.0f, 0.0f);
+    eyeUp= QRRUtil::EigenVector3fMake(0.0f, 1.0f , 0.0f);
 
     // eye =  quat * eye;
     // eyeUp = quat * eyeUp;
 
-    // m_ecamera = RegenUtil::lookAt(eye, center, eyeUp);
+    // m_ecamera = QRRUtil::lookAt(eye, center, eyeUp);
 
 
     m_uniformVs.normalMatrix = m_eworld.inverse();
@@ -753,7 +753,7 @@ GLuint GameApplication::loadTexture (const std::string & filename)
 
 void GameApplication::resizeGL(int width, int height)
 {
-    m_eproj = RegenUtil::perspective(45.0f, (float)(width /2 )/ height, 0.1f, 10000.0f);
+    m_eproj = QRRUtil::perspective(45.0f, (float)(width /2 )/ height, 0.1f, 10000.0f);
     m_maincamra->setProjection(Perspective, WidthHeight{width /2 ,height});
 }
 void GameApplication::mousePressEvent(QMouseEvent *e)

@@ -12,7 +12,7 @@
 
 
 using namespace Eigen;
-using namespace RegenUtil;
+using namespace QRRUtil;
 
 //fbx no reader dayo
 //dependent eigen libraryp
@@ -649,7 +649,7 @@ void FBXLoader::GetBoneMatrix(float frame, int meshId, Matrix4f* out_matrixList,
 
         if ( boneNodeName == "Bone" ) {
           //  trans = handInfo->m_handGlobalNorm;
-           // trans = RegenUtil::MakeTransform(handInfo->m_handGlobalPos) * trans;
+           // trans = QRRUtil::MakeTransform(handInfo->m_handGlobalPos) * trans;
                if(boneNode->GetParent()->GetParent() != NULL){ std::cout << "tashika ni tsuzuki ga aru !!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
                 FbxNodeAttribute* boneAttributea = boneNode->GetParent()->GetParent()->GetNodeAttribute();
 

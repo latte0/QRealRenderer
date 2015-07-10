@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-namespace Relost{
+namespace QRR{
 namespace Environment{
     static const std::string asset_path = "./resource/";
     static const std::string shader_path = asset_path + "Shader/";

@@ -6,7 +6,7 @@
 #include <iostream>
 
 
-Eigen::Matrix4f RegenUtil::perspective
+Eigen::Matrix4f QRRUtil::perspective
 (
     double fovy,
     double aspect,
@@ -19,7 +19,7 @@ Eigen::Matrix4f RegenUtil::perspective
     assert(aspect > 0);
     assert(zFar > zNear);
 
-    double radf = RegenUtil::ToRad(fovy);
+    double radf = QRRUtil::ToRad(fovy);
 
     double tanHalfFovy = tan(radf / 2.0 );
     Eigen::Matrix4f res = Eigen::Matrix4f::Zero();
@@ -34,7 +34,7 @@ Eigen::Matrix4f RegenUtil::perspective
 
 }
 
-Eigen::Matrix4f RegenUtil::lookAt(Eigen::Vector3f const &eye,
+Eigen::Matrix4f QRRUtil::lookAt(Eigen::Vector3f const &eye,
                                   Eigen::Vector3f const & center,
                                   Eigen::Vector3f const &up)
 {
@@ -57,7 +57,7 @@ Eigen::Matrix4f RegenUtil::lookAt(Eigen::Vector3f const &eye,
 
 }
 
-Eigen::Matrix4f RegenUtil::MakeTransform(Eigen::Vector3f const &trans){
+Eigen::Matrix4f QRRUtil::MakeTransform(Eigen::Vector3f const &trans){
 
    Eigen::Matrix4f res;
 
@@ -68,7 +68,7 @@ Eigen::Matrix4f RegenUtil::MakeTransform(Eigen::Vector3f const &trans){
    return res;
 }
 
-Eigen::Matrix4f RegenUtil::MakeRotationZAxis(Eigen::Vector3f const &vec){
+Eigen::Matrix4f QRRUtil::MakeRotationZAxis(Eigen::Vector3f const &vec){
 
 
     Eigen::Vector3f f = vec.normalized();
@@ -88,11 +88,11 @@ Eigen::Matrix4f RegenUtil::MakeRotationZAxis(Eigen::Vector3f const &vec){
 }
 
 
-Eigen::Matrix4f RegenUtil::MakeRotationYAxis(Eigen::Vector3f const &vec){
+Eigen::Matrix4f QRRUtil::MakeRotationYAxis(Eigen::Vector3f const &vec){
 
 }
 
-Eigen::Matrix4f RegenUtil::MakeRotationXAxis(Eigen::Vector3f const &vec){
+Eigen::Matrix4f QRRUtil::MakeRotationXAxis(Eigen::Vector3f const &vec){
     Eigen::Vector3f f = vec.normalized();
     std::cout << f << std::endl;
     Eigen::Vector3f u = EigenVector3fMake(0.0f ,1.0f ,0.0f).normalized();
@@ -111,32 +111,32 @@ Eigen::Matrix4f RegenUtil::MakeRotationXAxis(Eigen::Vector3f const &vec){
 
 
 
-Eigen::Vector2f RegenUtil::EigenVector2fMake(float const x, float const y)
+Eigen::Vector2f QRRUtil::EigenVector2fMake(float const x, float const y)
 {
   Eigen::Vector2f v = {x, y};
   return std::move(v);
 }
 
 
-Eigen::Vector3f RegenUtil::EigenVector3fMake(float const x, float const y, float const z)
+Eigen::Vector3f QRRUtil::EigenVector3fMake(float const x, float const y, float const z)
 {
   Eigen::Vector3f v = {x, y ,z};
   return std::move(v);
 }
 
-Eigen::Vector4f RegenUtil::EigenVector4fMake(float const x, float const y, float const z, float const w)
+Eigen::Vector4f QRRUtil::EigenVector4fMake(float const x, float const y, float const z, float const w)
 {
   Eigen::Vector4f v = {x, y, z, w};
   return std::move(v);
 }
 
-Eigen::Vector2f RegenUtil::EivenVector4fNormalize(Eigen::Vector2f &&vec){
+Eigen::Vector2f QRRUtil::EivenVector4fNormalize(Eigen::Vector2f &&vec){
 }
 
-Eigen::Vector3f RegenUtil::EivenVector4fNormalize(Eigen::Vector3f &&vec){
+Eigen::Vector3f QRRUtil::EivenVector4fNormalize(Eigen::Vector3f &&vec){
 }
 
-Eigen::Vector4f RegenUtil::EivenVector4fNormalize(Eigen::Vector4f &&vec){
+Eigen::Vector4f QRRUtil::EivenVector4fNormalize(Eigen::Vector4f &&vec){
    // double total=0;
 
    // std::for_each(vec. vec.end(), [=](double x) -> void {total += x;});
@@ -148,32 +148,32 @@ Eigen::Vector4f RegenUtil::EivenVector4fNormalize(Eigen::Vector4f &&vec){
 
 }
 
-Eigen::Vector2d RegenUtil::EigenVector2dMake(double const x, double const y)
+Eigen::Vector2d QRRUtil::EigenVector2dMake(double const x, double const y)
 {
   Eigen::Vector2d v = {x, y};
   return std::move(v);
 }
 
 
-Eigen::Vector3d RegenUtil::EigenVector3dMake(double const x, double const y, double const z)
+Eigen::Vector3d QRRUtil::EigenVector3dMake(double const x, double const y, double const z)
 {
   Eigen::Vector3d v = {x, y ,z};
   return std::move(v);
 }
 
-Eigen::Vector4d RegenUtil::EigenVector4dMake(double const x, double const y, double const z, double const w)
+Eigen::Vector4d QRRUtil::EigenVector4dMake(double const x, double const y, double const z, double const w)
 {
   Eigen::Vector4d v = {x, y, z, w};
   return std::move(v);
 }
 
-Eigen::Vector2d RegenUtil::EivenVector4dNormalize(Eigen::Vector2d &&vec){
+Eigen::Vector2d QRRUtil::EivenVector4dNormalize(Eigen::Vector2d &&vec){
 }
 
-Eigen::Vector3d RegenUtil::EivenVector4dNormalize(Eigen::Vector3d &&vec){
+Eigen::Vector3d QRRUtil::EivenVector4dNormalize(Eigen::Vector3d &&vec){
 }
 
-Eigen::Vector4d RegenUtil::EivenVector4dNormalize(Eigen::Vector4d &&vec){
+Eigen::Vector4d QRRUtil::EivenVector4dNormalize(Eigen::Vector4d &&vec){
 
 }
 

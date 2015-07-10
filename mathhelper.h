@@ -5,7 +5,7 @@
 #include <cfloat>
 #include <type_traits>
 
-namespace RegenUtil{
+namespace QRRUtil{
 
 template <typename T>
 struct MathConstants;

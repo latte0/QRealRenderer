@@ -14,7 +14,7 @@ fbxDrawer::~fbxDrawer()
 void fbxDrawer::Initialize(ModelUpdate &&updatedata)
 {
 
-    m_pid = m_shaderobj.GenProgram(QString( (Relost::Environment::shader_path + updatedata.sh_filename).data() ), QString( (Relost::Environment::shader_path + updatedata.sh_filename).data() ) );
+    m_pid = m_shaderobj.GenProgram(QString( (QRR::Environment::shader_path + updatedata.sh_filename).data() ), QString( (QRR::Environment::shader_path + updatedata.sh_filename).data() ) );
 
     uniformsSkin[UNIFORM_VS] = glGetUniformBlockIndex(m_pid, "UniformVs");
     uniformsSkin[UNIFORM_DIFFUSE_TEXTURE] = glGetUniformBlockIndex(m_pid, "diffuseTexture");
@@ -23,12 +23,12 @@ void fbxDrawer::Initialize(ModelUpdate &&updatedata)
     uniformsSkin[UNIFORM_SPECULAR_TEXTURE] = glGetUniformBlockIndex(m_pid, "specularTexture");
 
 
-    m_fbxLoader.Initialize( (Relost::Environment::model_path + "hand_rig_fixed.fbx").data() );
+    m_fbxLoader.Initialize( (QRR::Environment::model_path + "hand_rig_fixed.fbx").data() );
 
     qDebug() << "initialize ?" << m_fbxLoader.GetMaterialCount() ;
 
 
-    m_fbxLoader.LoadAnimation( (Relost::Environment::model_path + "hand_rig_fixed.fbx").data() );
+    m_fbxLoader.LoadAnimation( (QRR::Environment::model_path + "hand_rig_fixed.fbx").data() );
 
 
     /*
@@ -177,8 +177,8 @@ void fbxDrawer::update(ModelUpdate &&updatedata){
      Eigen::Vector3f axis;
      axis<<0,0,1;
     Eigen::Vector3f m_eye = position;
-    Eigen::Vector3f m_center= RegenUtil::EigenVector3fMake(0.0f, 0.0f, 0.0f);
-    Eigen::Vector3f m_eyeUp= RegenUtil::EigenVector3fMake(0.0f, 1.0f , 0.0f);
+    Eigen::Vector3f m_center= QRRUtil::EigenVector3fMake(0.0f, 0.0f, 0.0f);
+    Eigen::Vector3f m_eyeUp= QRRUtil::EigenVector3fMake(0.0f, 1.0f , 0.0f);
 
 
     m_uniformVs.normalMatrix = m_eworld.inverse();

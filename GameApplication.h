@@ -110,7 +110,7 @@
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
 using namespace Eigen;
-using namespace RegenUtil;
+using namespace QRRUtil;
 
 
 class GameApplication : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core

@@ -14,7 +14,7 @@
 
 
 using namespace Eigen;
-using namespace RegenUtil;
+using namespace QRRUtil;
 
 struct ModelBoneWeight
 {
