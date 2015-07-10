@@ -6,7 +6,7 @@ AdminWidget::AdminWidget(QWidget *parent) : QWidget(parent)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
 
-    gameapp = new GameApplication();
+    gameapp = new SceneRender();
     mainLayout->addWidget(gameapp);
 
     setLayout(mainLayout);

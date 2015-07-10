@@ -114,7 +114,6 @@ INCLUDEPATH += . \
 # Input
 HEADERS += \
            adminwidget.h \
-           GameApplication.h \
            mainwindow.h \
            external/catch.hpp \
            external/cpplinq.hpp \
@@ -575,9 +574,12 @@ HEADERS += \
     light.h \
     fbxloader.h \
     player.h \
+    scenerender.h \
+    networkconfirm.h \
+    imagereceiver.h \
+    ovrcondition.h
 
 SOURCES += adminwidget.cpp \
-           GameApplication.cpp \
            main.cpp \
            mainwindow.cpp \
            external/external_opengl/glm/detail/glm.cpp \
@@ -598,3 +600,7 @@ SOURCES += adminwidget.cpp \
     light.cpp \
     fbxloader.cpp \
     player.cpp \
+    scenerender.cpp \
+    networkconfirm.cpp \
+    imagereceiver.cpp \
+    ovrcondition.cpp

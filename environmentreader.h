@@ -5,10 +5,10 @@
 
 namespace QRR{
 namespace Environment{
-    static const std::string asset_path = "./resource/";
-    static const std::string shader_path = asset_path + "Shader/";
-    static const std::string model_path = asset_path + "model/";
-
+    static std::string asset_path = "./resource/";
+    static std::string shader_path = asset_path + "Shader/";
+    static std::string model_path = asset_path + "model/";
+    static std::string distance_ip = "192.168.100.23";
 }
 }
 #endif // ENVIRONMENTREADER_H

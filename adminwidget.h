@@ -5,7 +5,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
-#include "GameApplication.h"
+#include "scenerender.h"
 
 class MainWindow;
 
@@ -19,7 +19,7 @@ public:
 
 private:
     MainWindow *mainWindow;
-    GameApplication *gameapp;
+    SceneRender *gameapp;
     QTimer *timer;
 
 signals:
