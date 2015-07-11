@@ -76,14 +76,6 @@
 
 
 
-#include <GL/glx.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
-
-
-
-
 
 #define MAX_BONE_COUNT 128
 
@@ -372,6 +364,9 @@ public:
     void getOculusAngle();
     void CalculateHmdValues();
     int OnStartup();
+
+//---------------------------------------------------------------------------------------------------
+
 
 private slots:
     void processing();

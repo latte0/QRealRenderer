@@ -311,15 +311,6 @@ void SceneRender::initializeGL ()
        bind(sock, (struct sockaddr *)&addr, sizeof(addr));
        */
 
-/*
-    videoudpSocket = new QUdpSocket(this);
-    videoudpSocket->bind(1080);
-
-
-    qDebug() << "before connect";
-    connect(videoudpSocket, SIGNAL(readyRead()),
-            this, SLOT( readvideodata() ));
-*/
     genVideoTexture();
 
 }

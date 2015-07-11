@@ -577,7 +577,8 @@ HEADERS += \
     scenerender.h \
     networkconfirm.h \
     imagereceiver.h \
-    ovrcondition.h
+    ovrcondition.h \
+    renderobject.h
 
 SOURCES += adminwidget.cpp \
            main.cpp \
@@ -603,4 +604,5 @@ SOURCES += adminwidget.cpp \
     scenerender.cpp \
     networkconfirm.cpp \
     imagereceiver.cpp \
-    ovrcondition.cpp
+    ovrcondition.cpp \
+    renderobject.cpp
