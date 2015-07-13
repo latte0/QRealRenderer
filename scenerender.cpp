@@ -630,6 +630,8 @@ void SceneRender::getOculusAngle(){
 
     ovrQuatf orientation = state.HeadPose.ThePose.Orientation;
     qDebug () << orientation.x << orientation.y << orientation.z << orientation.w;
+    Eigen::Matrix4f testmat = QRRUtil::MakeMatrixfromQuat( orientation.x , orientation.y , orientation.z , orientation.w);
+    std::cout << testmat << std::endl;
     glm::quat q = glm::make_quat(&orientation.x);
     glm::vec3 euler = glm::eulerAngles(q);
 

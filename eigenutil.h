@@ -34,6 +34,8 @@ namespace QRRUtil{
     Eigen::Matrix4f MakeRotationYAxis(Eigen::Vector3f const &vec);
     Eigen::Matrix4f MakeRotationZAxis(Eigen::Vector3f const &vec);
 
+    Eigen::Matrix4f MakeMatrixfromQuat(float x, float y, float z, float w);
+
 }
 
 #endif // EIGENUTIL
