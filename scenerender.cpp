@@ -29,8 +29,6 @@ SceneRender::SceneRender(QWidget *parent)
     m_ecamera = QRRUtil::lookAt(eye, center, eyeUp);
     m_eworld = Eigen::Matrix4f::Identity();
 
-    m_maincamra = new Camera();
-    m_maincamra->setPosition(position);
 } 
 
 SceneRender::~SceneRender()
@@ -741,7 +739,6 @@ GLuint SceneRender::loadTexture (const std::string & filename)
 void SceneRender::resizeGL(int width, int height)
 {
     m_eproj = QRRUtil::perspective(45.0f, (float)(width /2 )/ height, 0.1f, 10000.0f);
-    m_maincamra->setProjection(Perspective, WidthHeight{width /2 ,height});
 }
 void SceneRender::mousePressEvent(QMouseEvent *e)
 {

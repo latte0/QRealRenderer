@@ -101,8 +101,7 @@ public:
   //  HmdDesc hmd;
     bool isHmdInitialized = false;
     ovrHmd ovrhmd;
-    ovrEyeRenderDesc eyeRenderDesc[2];
-   // ovrRecti = rect[2];
+
 
     void DrawAxisAlignedQuad(float afLowerLeftX, float afLowerLeftY, float afUpperRightX, float afUpperRightY);
     void DistortQuad(QOpenGLFramebufferObject *src, QOpenGLFramebufferObject *src2, QOpenGLFramebufferObject *dest);
@@ -265,6 +264,8 @@ private:
 
     unsigned char* make_dummy_texture (int* width_, int* height_);
 
+    Player              ThePlayer;
+
 //------------------------------------- net work -------------------------
 public:
     QUdpSocket udpsocket;
@@ -296,7 +297,6 @@ public:
         ovrHmd              Hmd;
 
     OVR::Vector3f       BlocksCenter;
-    Player              ThePlayer;
 
     bool                ForceZeroHeadMovement;
     bool                VsyncEnabled;

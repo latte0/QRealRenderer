@@ -34,26 +34,27 @@ public:
     Camera();
     ~Camera();
 
-    void setProjection(cameraProjection state, WidthHeight &&wh);
+    void setNormalProjection(cameraProjection state, WidthHeight &&wh);
+    void setHMDProjection(HMDSpecies hmd);
    // void setProjection(cameraProjection state, WidthHeight wh);
     void setPosition(Eigen::Vector3f pos);
     void setAxis(Eigen::Matrix4f mat);
 
-
-
-
+    //*******important******//
     Eigen::Matrix4f getProjection();
+    Eigen::Matrix4f MakelookAt();
+    //*********************//
+
+
+
     Eigen::Vector3f getPosition();
 
-    Eigen::Matrix4f MakelookAt();
-
-
-
     Eigen::Matrix4f m_proj;
-    //*
+
+    //******important*****//
     Eigen::Vector3f m_pos;
     Eigen::Matrix4f m_axis;
-    //*
+    //*******************//
 
 private:
 
