@@ -166,12 +166,6 @@ public:
 
     struct UniformVs
     {
-        /*
-        glm::mat4 modelViewMatrix;
-        glm::mat4 projectionMatrix;
-        glm::mat4 normalMatrix;
-        */
-
         Eigen::Matrix4f modelViewMatrix;
         Eigen::Matrix4f projectionMatrix;
         Eigen::Matrix4f normalMatrix;
@@ -346,19 +340,13 @@ public:
 
         unsigned            StartTrackingCaps;
 
-    RenderDevice*       pRender;
+    //RenderDevice*       pRender;
   //  RendererParams      RenderParams;
 
 
     bool                LinuxFullscreenOnDevice;
 
 
-    void BlockShowChange()    { BlocksCenter = ThePlayer.BodyPos; }
-    void EyeHeightChange()
-    {
-        ThePlayer.HeightScale = ScaleAffectsEyeHeight ? PositionTrackingScale : 1.0f;
-        ThePlayer.BodyPos.y = ThePlayer.GetScaledEyeHeight();
-    }
 
 
     void getOculusAngle();

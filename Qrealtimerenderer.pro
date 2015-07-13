@@ -578,7 +578,8 @@ HEADERS += \
     networkconfirm.h \
     imagereceiver.h \
     ovrcondition.h \
-    renderobject.h
+    renderobject.h \
+    hmdinfo.h
 
 SOURCES += adminwidget.cpp \
            main.cpp \

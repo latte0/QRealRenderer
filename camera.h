@@ -9,11 +9,18 @@
 #include <math.h>
 
 #include "eigenutil.h"
+#include "hmdinfo.h"
+
 
 
 enum cameraProjection: int {
     Perspective = 0,
     Orthographic=1
+};
+
+enum HMDSpecies: int {
+    Oculus = 0,
+    Morpheus = 1
 };
 
 typedef struct widthheight{
@@ -29,14 +36,24 @@ public:
 
     void setProjection(cameraProjection state, WidthHeight &&wh);
    // void setProjection(cameraProjection state, WidthHeight wh);
-    void setCamPosition(Eigen::Vector3f pos);
+    void setPosition(Eigen::Vector3f pos);
+    void setAxis(Eigen::Matrix4f mat);
+
+
+
 
     Eigen::Matrix4f getProjection();
-    Eigen::Matrix4f getCamPosition();
+    Eigen::Vector3f getPosition();
+
+    Eigen::Matrix4f MakelookAt();
+
+
 
     Eigen::Matrix4f m_proj;
-    Eigen::Matrix4f m_camera;
-
+    //*
+    Eigen::Vector3f m_pos;
+    Eigen::Matrix4f m_axis;
+    //*
 
 private:
 

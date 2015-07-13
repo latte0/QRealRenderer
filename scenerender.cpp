@@ -30,7 +30,7 @@ SceneRender::SceneRender(QWidget *parent)
     m_eworld = Eigen::Matrix4f::Identity();
 
     m_maincamra = new Camera();
-    m_maincamra->setCamPosition(position);
+    m_maincamra->setPosition(position);
 } 
 
 SceneRender::~SceneRender()
@@ -612,16 +612,9 @@ int SceneRender::OnStartup()
       glm::vec3 euler = glm::eulerAngles(q);
 
       qDebug() << euler.x << euler.y << euler.z;
+
     }
 
-    //   qDebug() << "current orientation - roll " << euler.z << euler.y <<
-
-   // CalculateHmdValues();
-
-    ThePlayer.UserEyeHeight = ovrHmd_GetFloat(Hmd, OVR_KEY_EYE_HEIGHT, ThePlayer.UserEyeHeight);
-    ThePlayer.BodyPos.y     = ThePlayer.UserEyeHeight;
-
-    ThePlayer.bMotionRelativeToBody = false;  // Default to head-steering for DK1
 
     return 0;
 
