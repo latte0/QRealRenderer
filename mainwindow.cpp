@@ -69,14 +69,12 @@ void MainWindow::createDockWindows(){
 #include <QScreen>
 
 void MainWindow::capturewidget(){
-
+/*
     QPixmap screenshot(QSize( 100, 100 ));
-   // screenshot = adminwidget->grab(QRect( QPoint( 0, 0 ), QSize( 1000, 1000 )));
     QScreen *screen = QGuiApplication::primaryScreen();
     if (screen){
-            std::cout<< "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"<<std::endl;
         screenshot = screen->grabWindow(0);
     }
     subadmin->setPixmap(screenshot);
-
+*/
 }

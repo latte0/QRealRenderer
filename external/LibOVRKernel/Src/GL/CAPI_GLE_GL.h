@@ -51,7 +51,6 @@ limitations under the License.
 //     <GL/glxext.h>         X Windows 1.3+ API and GLX extension interfaces.
 //     <GL/glcorearb.h>      OpenGL core profile and ARB extension interfaces. Doesn't include interfaces found only in the compatibility profile. Overlaps with gl.h and glext.h.
 
-
 #if defined(__gl_h_) || defined(__GL_H__) || defined(__X_GL_H)
     #error gl.h should be included after this, not before.
 #endif

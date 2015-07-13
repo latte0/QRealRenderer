@@ -41,7 +41,7 @@ limitations under the License.
 #include "Linux_Platform.h"
 #include "Linux_Gamepad.h"
 
-#include "../3rdParty/EDID/edid.h"
+#include "../../3rdParty/EDID/edid.h"
 #include <X11/extensions/Xrandr.h>
 
 
