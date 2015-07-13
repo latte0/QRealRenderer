@@ -68,12 +68,15 @@ void Player::update()
 
     Eigen::MatrixX4f cam_rot = QRRUtil::MakeMatrixfromQuat( orientation.x, orientation.y, orientation.z, orientation.w );
 
-    m_LeftEyeCam.setAxis(cam_rot);
-    m_LeftEyeCam.setPosition( this->getPosition() - QRRUtil::EigenVector3fMake(this->m_eyewidth / 2.0f, 0 ,0 ) );
+    m_LeftEyeCam.setBasis(cam_rot);
+    Eigen::Vector4f lefttemp = cam_rot * QRRUtil::EigenVector4fMake(this->m_eyewidth / 2.0f, 0 ,0 , 0);
+    m_LeftEyeCam.setPosition( this->getPosition() -  QRRUtil::EigenVector3fMake(lefttemp.x(),lefttemp.y(),lefttemp.z()) );
 
-    m_RightEyeCam.setAxis(cam_rot);
-    m_LeftEyeCam.setPosition( this->getPosition() + QRRUtil::EigenVector3fMake(this->m_eyewidth / 2.0f, 0 ,0 ) );
+    m_RightEyeCam.setBasis(cam_rot);
+    Eigen::Vector4f righttemp = cam_rot * QRRUtil::EigenVector4fMake(this->m_eyewidth / 2.0f, 0 ,0 , 0);
+    m_RightEyeCam.setPosition( this->getPosition() + QRRUtil::EigenVector3fMake(righttemp.x(),righttemp.y(),righttemp.z()) );
 
+    std::cout << this->getPosition() << std::endl;
 
 }
 

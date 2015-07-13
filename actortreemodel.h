@@ -4,11 +4,14 @@
 #include <QList>
 #include <QVariant>
 
+
 class ActorTreeModel
 {
 public:
-    explicit ActorTreeModel();
+    ActorTreeModel();
     ~ActorTreeModel();
+
+
 };
 
 #endif // ACTORTREEMODEL_H

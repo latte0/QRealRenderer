@@ -179,10 +179,10 @@ Eigen::Vector4d QRRUtil::EivenVector4dNormalize(Eigen::Vector4d &&vec){
 
 Eigen::Matrix4f QRRUtil::MakeMatrixfromQuat(float x, float y, float z, float w){
     Eigen::Matrix4f ret;
-    ret << 1 - 2*y*y - 2*z*z , 2*x*y + 2*w*z    , 2*x*z - 2*w*y, 0 ,
-           2*x*y - 2*w*z     , 1 - 2*x*x - 2*z*z, 2*y*z + 2*w*x, 0 ,
-           2*x*z + 2*w*y     , 2*y*z - 2*w*x    , 1 - 2*x*x - 2*y*y, 0,
-            0,0,0,0;
+    ret << 1 - 2*y*y - 2*z*z , 2*x*y + 2*w*z     , 2*x*z - 2*w*y     , 0.0f ,
+           2*x*y - 2*w*z     , 1 - 2*x*x - 2*z*z , 2*y*z + 2*w*x     , 0.0f ,
+           2*x*z + 2*w*y     , 2*y*z - 2*w*x     , 1 - 2*x*x - 2*y*y , 0.0f ,
+           0                 , 0                 , 0                 , 1.0f;
     return ret;
 }
 

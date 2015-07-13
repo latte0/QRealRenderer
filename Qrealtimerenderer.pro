@@ -7,7 +7,7 @@ TARGET =
 
 CONFIG += c++14
 
-QT       += core gui opengl multimedia network
+QT       += core gui opengl multimedia network quick qml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -578,10 +578,10 @@ HEADERS += \
     networkconfirm.h \
     imagereceiver.h \
     ovrcondition.h \
-    renderobject.h \
     hmdinfo.h \
     lineobject.h \
-    actorfactory.h
+    actorfactory.h \
+    qmltexture.h
 
 SOURCES += adminwidget.cpp \
            main.cpp \
@@ -608,6 +608,9 @@ SOURCES += adminwidget.cpp \
     networkconfirm.cpp \
     imagereceiver.cpp \
     ovrcondition.cpp \
-    renderobject.cpp \
     lineobject.cpp \
-    actorfactory.cpp
+    actorfactory.cpp \
+    qmltexture.cpp
+
+DISTFILES += \
+    Test.qml

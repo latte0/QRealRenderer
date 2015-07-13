@@ -62,7 +62,7 @@ public:
 private:
 
     float const m_height = 1700;
-    float const m_eyewidth = 100;
+    float const m_eyewidth = 3;
 
     Camera m_LeftEyeCam;
     Camera m_RightEyeCam;

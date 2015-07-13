@@ -20,8 +20,8 @@ SceneRender::SceneRender(QWidget *parent)
       m_maincamra(nullptr),
       m_secondcamera(nullptr)
 {
-    position = EigenVector3fMake(50.0f, 30.0f, 20.0f);
-
+    //position = EigenVector3fMake(50.0f, 30.0f, 20.0f);
+    position = ThePlayer.getPosition();
     eye = position;
     center= QRRUtil::EigenVector3fMake(0.0f, 0.0f, 0.0f);
     eyeUp= QRRUtil::EigenVector3fMake(0.0f, 1.0f , 0.0f);
@@ -123,11 +123,10 @@ void SceneRender::processing()
 
 void SceneRender::initializeGL ()
 {
-    //
 
     using boost::asio::ip::udp;
 
-    //
+
     initializeOpenGLFunctions();
     glClearColor(0, 0, 0, m_transparent ? 0 : 1);
 
@@ -140,8 +139,6 @@ void SceneRender::initializeGL ()
     hand_program->addShaderFromSourceFile(QOpenGLShader::Fragment, QString("./resources/Shaders/Skin.frag"));
     hand_program->link();
 
-   // distort_program->addShaderFromSourceFile(QOpenGLShader::Vertex, QString("./resources/Shaders/simpleSample.vert"));
-   // distort_program->addShaderFromSourceFile(QOpenGLShader::Fragment, QString("./resources/Shaders/simpleSample.frag"));
     distort_program->addShaderFromSourceFile(QOpenGLShader::Vertex, QString("./resources/Shaders/rift.vert"));
     distort_program->addShaderFromSourceFile(QOpenGLShader::Fragment, QString("./resources/Shaders/rift.frag"));
     distort_program->link();
@@ -325,13 +322,16 @@ void SceneRender::initFB(){
 }
 
 void SceneRender::updateuniform(){
+
+    ThePlayer.update();
+
     m_uniformVs.lightDirection = EigenVector4fMake(0.0f, 0.0f, 500.0f, 0.0f);
     m_uniformVs.lightDirection = m_uniformVs.lightDirection.normalized();
-
-    m_uniformVs.cameraPosition = EigenVector4fMake(0.0f, 10.0f, 60.0f, 0.0f);
+//    m_uniformVs.cameraPosition = EigenVector4fMake(0.0f, 10.0f, 60.0f, 0.0f);
 
     position = EigenVector3fMake(100.0f, 10.0f, 60.0f);
 
+/*
     Eigen::Quaternionf quat;
     Eigen::Vector3f axis;
     axis<<0,0,1;
@@ -339,12 +339,17 @@ void SceneRender::updateuniform(){
     eye = position;
     center= QRRUtil::EigenVector3fMake(0.0f, 0.0f, 0.0f);
     eyeUp= QRRUtil::EigenVector3fMake(0.0f, 1.0f , 0.0f);
+*/
 
-    // eye =  quat * eye;
-    // eyeUp = quat * eyeUp;
+    std::cout << eye << std::endl;
 
-    // m_ecamera = QRRUtil::lookAt(eye, center, eyeUp);
+    m_ecamera = QRRUtil::lookAt(eye, center, eyeUp);
 
+    std::cout << m_ecamera << std::endl;
+
+    m_ecamera = ThePlayer.getRightEyeMat();
+
+    std::cout << m_ecamera << std::endl;
 
     m_uniformVs.normalMatrix = m_eworld.inverse();
     m_uniformVs.modelViewMatrix = m_ecamera * m_eworld;

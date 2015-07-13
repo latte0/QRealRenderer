@@ -36,12 +36,12 @@ void Camera::setHMDProjection(HMDSpecies hmd)
 
 void Camera::setPosition(Eigen::Vector3f pos)
 {
-    this->m_pos = pos;
+    this->m_position = pos;
 }
 
-void Camera::setAxis(Eigen::Matrix4f axis)
+void Camera::setBasis(Eigen::Matrix4f basis)
 {
-    this->m_axis = axis;
+    this->m_basis = basis;
 }
 
 Eigen::Matrix4f Camera::MakelookAt(){
@@ -49,9 +49,9 @@ Eigen::Matrix4f Camera::MakelookAt(){
     Eigen::Matrix4f res;
 
 
-    res << m_axis(0,0), m_axis(1,0), m_axis(2,0), -getPosition().x(),
-           m_axis(0,1), m_axis(1,1), m_axis(2,1), -getPosition().y(),
-           m_axis(0,2), m_axis(1,2), m_axis(2,2), -getPosition().z(),
+    res << m_basis(0,0), m_basis(1,0), m_basis(2,0), -getPosition().x(),
+           m_basis(0,1), m_basis(1,1), m_basis(2,1), -getPosition().y(),
+           m_basis(0,2), m_basis(1,2), m_basis(2,2), -getPosition().z(),
            0          , 0          , 0          , 1               ;
 
     return res;
@@ -62,7 +62,4 @@ Eigen::Matrix4f Camera::getProjection()
     return m_proj;
 }
 
-Eigen::Vector3f Camera::getPosition()
-{
-    return m_pos;
-}
+
