@@ -579,7 +579,9 @@ HEADERS += \
     imagereceiver.h \
     ovrcondition.h \
     renderobject.h \
-    hmdinfo.h
+    hmdinfo.h \
+    lineobject.h \
+    actorfactory.h
 
 SOURCES += adminwidget.cpp \
            main.cpp \
@@ -606,4 +608,6 @@ SOURCES += adminwidget.cpp \
     networkconfirm.cpp \
     imagereceiver.cpp \
     ovrcondition.cpp \
-    renderobject.cpp
+    renderobject.cpp \
+    lineobject.cpp \
+    actorfactory.cpp

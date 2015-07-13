@@ -471,7 +471,7 @@ void SceneRender::paintGL()
     glUniform1i     (glGetUniformLocation (distort_program->programId(), "sampler"), 0);
     //glBindTexture   (GL_TEXTURE_2D, m_quadtexture)
 
-    //glBindTexture(GL_TEXTURE_2D, composeEyeTex->texture());
+    glBindTexture(GL_TEXTURE_2D, composeEyeTex->texture());
 
 
     //glBindTexture(GL_TEXTURE_2D,videotex_right_id);
@@ -499,11 +499,11 @@ void SceneRender::paintGL()
 
 
     video_ibuff.clear();
-*/
+
     glTexImage2D (GL_TEXTURE_2D, 0, GL_RGB,
                   640,480, 0, GL_RGB,
                   GL_UNSIGNED_BYTE, video_right_image.data);
-
+*/
     int width, height;
 
     glBindSampler   (0, m_quadsampler);
@@ -528,9 +528,9 @@ void SceneRender::paintGL()
         glUniform1i     (glGetUniformLocation (distort_program->programId(), "sampler"), 1);
 
 
-  //      glBindTexture(GL_TEXTURE_2D, composeEyeTex->texture());
+        glBindTexture(GL_TEXTURE_2D, composeEyeTex->texture());
 
-        glBindTexture(GL_TEXTURE_2D,videotex_left_id);
+     //   glBindTexture(GL_TEXTURE_2D,videotex_left_id);
         using boost::asio::ip::udp;
 
 /*
