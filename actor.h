@@ -26,6 +26,14 @@ public:
     Eigen::Vector3f m_position;
     Eigen::Matrix4f m_basis;
 
+    void setPosition(Eigen::Vector3f pos){
+        m_position = pos;
+    }
+
+    void setBasis(Eigen::Matrix4f basis){
+        m_basis = basis;
+    }
+
     const Eigen::Vector3f getPosition(){
         return m_position;
     }

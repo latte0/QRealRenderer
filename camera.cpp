@@ -34,15 +34,7 @@ void Camera::setHMDProjection(HMDSpecies hmd)
     }
 }
 
-void Camera::setPosition(Eigen::Vector3f pos)
-{
-    this->m_position = pos;
-}
 
-void Camera::setBasis(Eigen::Matrix4f basis)
-{
-    this->m_basis = basis;
-}
 
 Eigen::Matrix4f Camera::MakelookAt(){
 

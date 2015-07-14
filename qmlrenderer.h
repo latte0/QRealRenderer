@@ -20,18 +20,18 @@
 #include <QQuickItem>
 
 
-class qmltexture : public QObject
+class qmltexture : public QObject :public
 {
     Q_OBJECT
 
 public:
     qmltexture();
     ~qmltexture();
-/*
+
     void initqml(const QString &filename);
     void updateQuick();
     void run();
-*/
+
 public:
     QOffscreenSurface *m_offscreenSurface;
     QQuickRenderControl *m_renderControl;

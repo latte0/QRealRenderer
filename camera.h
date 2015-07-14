@@ -37,8 +37,6 @@ public:
     void setNormalProjection(cameraProjection state, WidthHeight &&wh);
     void setHMDProjection(HMDSpecies hmd);
    // void setProjection(cameraProjection state, WidthHeight wh);
-    void setPosition(Eigen::Vector3f pos);
-    void setBasis(Eigen::Matrix4f basis);
 
     //*******important******//
     Eigen::Matrix4f getProjection();

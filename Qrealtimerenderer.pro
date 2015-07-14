@@ -581,7 +581,7 @@ HEADERS += \
     hmdinfo.h \
     lineobject.h \
     actorfactory.h \
-    qmltexture.h
+    qmlrenderer.h
 
 SOURCES += adminwidget.cpp \
            main.cpp \
@@ -610,7 +610,7 @@ SOURCES += adminwidget.cpp \
     ovrcondition.cpp \
     lineobject.cpp \
     actorfactory.cpp \
-    qmltexture.cpp
+    qmlrenderer.cpp
 
 DISTFILES += \
     Test.qml
