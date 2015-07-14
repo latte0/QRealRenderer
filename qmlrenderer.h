@@ -1,6 +1,8 @@
 #ifndef QMLTEXTURE_H
 #define QMLTEXTURE_H
 
+#include "actor.h"
+
 #include <QWindow>
 #include <QMatrix4x4>
 #include <QTimer>
@@ -20,7 +22,7 @@
 #include <QQuickItem>
 
 
-class qmltexture : public QObject :public
+class qmltexture : public QObject , public Actor
 {
     Q_OBJECT
 

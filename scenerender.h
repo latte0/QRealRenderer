@@ -242,19 +242,20 @@ private:
 
     unsigned int m_quadtexture;
     unsigned int m_quadsampler;
-
+/*
     const float m_quadpositions[12] = {
                           -1.0f,  1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f,
-                                        -1.0f,  -1.0f, 0.0f,
-                         1.0f, -1.0f, 0.0f,
+                           1.0f, 1.0f, 0.0f,
+                          -1.0f,  -1.0f, 0.0f,
+                           1.0f, -1.0f, 0.0f,
                          };
-  /*
+                         */
+
     const float m_quadpositions[12] = { 1.0f, -1.0f, 0.0f,
                           1.0f,  1.0f, 0.0f,
                          -1.0f, -1.0f, 0.0f,
                          -1.0f,  1.0f, 0.0f};
-*/
+
     const float m_quadtex_coords[8] = {1.0f, 0.0f,
                           1.0f, 1.0f,
                           0.0f, 0.0f,
