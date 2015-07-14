@@ -317,13 +317,17 @@ void SceneRender::initOVR(){
 }
 
 void SceneRender::initFB(){
+    m_rightEyeTex = new QOpenGLFramebufferObject(960,1080, QOpenGLFramebufferObject::CombinedDepthStencil);
+    m_leftEyeTex = new QOpenGLFramebufferObject(960,1080, QOpenGLFramebufferObject::CombinedDepthStencil);
     composeEyeTex = new QOpenGLFramebufferObject(960,1080, QOpenGLFramebufferObject::CombinedDepthStencil);
  //   lastcomposeEyeTex = new QOpenGLFramebufferObject(1000,1000, QOpenGLFramebufferObject::CombinedDepthStencil);
 }
 
-void SceneRender::updateuniform(){
+void SceneRender::updateuniform(int index){
 
     ThePlayer.update();
+
+    qDebug() <<index << "aaaaaaaaaaaaaaaaaaaaaaaaaaa";
 
     m_uniformVs.lightDirection = EigenVector4fMake(0.0f, 0.0f, 500.0f, 0.0f);
     m_uniformVs.lightDirection = m_uniformVs.lightDirection.normalized();
@@ -331,25 +335,22 @@ void SceneRender::updateuniform(){
 
     position = EigenVector3fMake(100.0f, 10.0f, 60.0f);
 
-/*
-    Eigen::Quaternionf quat;
-    Eigen::Vector3f axis;
-    axis<<0,0,1;
-    quat=AngleAxisf(M_PI * (m_frame / 100.0),axis);
-    eye = position;
-    center= QRRUtil::EigenVector3fMake(0.0f, 0.0f, 0.0f);
-    eyeUp= QRRUtil::EigenVector3fMake(0.0f, 1.0f , 0.0f);
-*/
 
     std::cout << eye << std::endl;
-
     m_ecamera = QRRUtil::lookAt(eye, center, eyeUp);
-
+    std::cout << m_ecamera << std::endl;
+    if(index==0){
+        m_ecamera = ThePlayer.getLeftEyeMat();
+        std::cout << "left" << m_ecamera << std::endl;
+    }
+    if(index==1){
+        m_ecamera = ThePlayer.getRightEyeMat();
+        std::cout << "right"
+                     "" << m_ecamera << std::endl;
+    }
     std::cout << m_ecamera << std::endl;
 
-    m_ecamera = ThePlayer.getRightEyeMat();
 
-    std::cout << m_ecamera << std::endl;
 
     m_uniformVs.normalMatrix = m_eworld.inverse();
     m_uniformVs.modelViewMatrix = m_ecamera * m_eworld;
@@ -367,19 +368,7 @@ void SceneRender::updateuniform(){
 }
 
 void SceneRender::paintGL()
-{
-
-    composeEyeTex->bind();
-
-    glClearColor(0.2f, 0.2f, 0.6f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    updateuniform();
-
-    glViewport(0,0,960,1080);
-
-    glUseProgram(hand_program->programId());
-
+{ 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_TEXTURE);
@@ -436,16 +425,61 @@ void SceneRender::paintGL()
         }
     };
 
+
+//*******************************************
+    m_leftEyeTex->bind();
+
+    glClearColor(0.2f, 0.2f, 0.6f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    updateuniform(0);
+
+    glViewport(0,0,960,1080);
+
+
+    std::cout << "left" << std::endl;
+    glUseProgram(hand_program->programId());
+
+
     glDisable(GL_BLEND);
     drawFunc(m_meshlist);
     glFlush();
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    // drawFunc(m_qmlmesh);
 
    // DistortQuad(composeEyeTex,lastcomposeEyeTex,lastcomposeEyeTex);
 
-    composeEyeTex->release();
+    m_leftEyeTex->release();
+//**************************************************::
+
+//:*******************
+    m_rightEyeTex->bind();
+
+    glClearColor(0.2f, 0.2f, 0.6f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    updateuniform(1);
+
+    glViewport(0,0,960,1080);
+
+    glUseProgram(hand_program->programId());
+
+
+    glDisable(GL_BLEND);
+    drawFunc(m_meshlist);
+    glFlush();
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   // drawFunc(m_qmlmesh);
+
+   // DistortQuad(composeEyeTex,lastcomposeEyeTex,lastcomposeEyeTex);
+
+    m_rightEyeTex->release();
+
+//********************************************
 
     makeCurrent();
     auto status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
@@ -476,7 +510,7 @@ void SceneRender::paintGL()
     glUniform1i     (glGetUniformLocation (distort_program->programId(), "sampler"), 0);
     //glBindTexture   (GL_TEXTURE_2D, m_quadtexture)
 
-    glBindTexture(GL_TEXTURE_2D, composeEyeTex->texture());
+    glBindTexture(GL_TEXTURE_2D, m_leftEyeTex->texture());
 
 
     //glBindTexture(GL_TEXTURE_2D,videotex_right_id);
@@ -533,7 +567,7 @@ void SceneRender::paintGL()
         glUniform1i     (glGetUniformLocation (distort_program->programId(), "sampler"), 1);
 
 
-        glBindTexture(GL_TEXTURE_2D, composeEyeTex->texture());
+        glBindTexture(GL_TEXTURE_2D, m_rightEyeTex->texture());
 
      //   glBindTexture(GL_TEXTURE_2D,videotex_left_id);
         using boost::asio::ip::udp;
@@ -567,6 +601,8 @@ void SceneRender::paintGL()
         glBindBuffer      (GL_ELEMENT_ARRAY_BUFFER, m_quadindex_array);
 
         glDrawElements    (GL_TRIANGLE_STRIP, sizeof( m_quadindices)/sizeof( m_quadindices[0]), GL_UNSIGNED_INT, 0);
+
+
 
 
 

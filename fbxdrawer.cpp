@@ -24,7 +24,6 @@ void fbxDrawer::Initialize(ModelUpdate &&updatedata)
 
 
     m_fbxLoader.Initialize( (QRR::Environment::model_path + "hand_rig_fixed.fbx").data() );
-
     qDebug() << "initialize ?" << m_fbxLoader.GetMaterialCount() ;
 
 

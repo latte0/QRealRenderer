@@ -13,27 +13,21 @@ HandInfo::~HandInfo()
 }
 
 Eigen::Matrix4f HandInfo::LeaptoEigenmat(Leap::Matrix lmat){
-    Leap::Vector xb = lmat.xBasis;
+    Leap::Vector xb = -lmat.zBasis;
     Leap::Vector yb = lmat.yBasis;
-    Leap::Vector zb = lmat.zBasis;
+    Leap::Vector zb = lmat.xBasis;
 
     Eigen::Matrix4f mat;
 
-    std::cout << lmat << std::endl;
+    std::cout << "leap to eigen mat " << lmat << std::endl;
 
     mat = Eigen::Matrix4f::Identity();
-/*
-   mat << xb.x, xb.y, xb.z, 0.0,
-           yb.x, yb.y, yb.z, 0.0,
-           zb.x, zb.y, zb.z, 0.0,
-           0.0 , 0.0 , 0.0 , 1.0;
-*/
-/*
-   mat << xb.x, yb.x, zb.x, 0.0,
-           xb.y, yb.y, zb.y, 0.0,
-           xb.z, yb.z, zb.z, 0.0,
-           0.0 , 0.0 , 0.0 , 1.0;
-*/
+
+    mat << xb.x , yb.x ,zb.x, 0 ,
+            xb.y , yb.y ,zb.y, 0 ,
+            xb.z , yb.z ,zb.z, 0 ,
+            0 , 0 ,0, 1 ;
+
     std::cout << mat << std::endl;
 
     return mat;
@@ -51,7 +45,7 @@ bool HandInfo::UpdateInfo(){
 
        if(hand.isRight()){
            Leap::Vector v = hand.palmPosition();
-           m_handGlobalPos = QRRUtil::EigenVector3fMake(v.z/m_PointDiv, v.y/m_PointDiv , -v.x/m_PointDiv);
+           m_handGlobalPos = QRRUtil::EigenVector3fMake(v.x/m_PointDiv, v.y/m_PointDiv , v.z/m_PointDiv);
 
            const Leap::Vector normal = hand.palmNormal();
            const Leap::Vector direction = hand.direction();
@@ -78,12 +72,11 @@ bool HandInfo::UpdateInfo(){
                Leap::Bone bone = finger.bone(boneType);
 
                m_fingerdata[i][b].direction = QRRUtil::EigenVector3fMake(-bone.direction().z, -bone.direction().y, bone.direction().x).normalized();
-               std::cout << m_fingerdata[i][b].direction << std::endl;
-             //  m_fingerdata[i][b].direction_mat = QRRUtil::MakeRotationZAxis(QRRUtil::EigenVector3fMake(bone.direction().x ,bone.direction().y,bone.direction().z).normalized());
+              // std::cout << m_fingerdata[i][b].direction << std::endl;
 
                m_fingerdata[i][b].direction_mat = LeaptoEigenmat(bone.basis());
-
-               m_fingerdata[i][b].position_mat = QRRUtil::MakeTransform(QRRUtil::EigenVector3fMake(bone.prevJoint().z/m_PointDiv,bone.prevJoint().y/m_PointDiv, -bone.prevJoint().x/m_PointDiv));
+                std::cout << "leap direction mat"<<m_fingerdata[i][b].direction_mat << std::endl;
+               m_fingerdata[i][b].position_mat = QRRUtil::MakeTransform(QRRUtil::EigenVector3fMake(bone.prevJoint().x/m_PointDiv,bone.prevJoint().y/m_PointDiv, bone.prevJoint().z/m_PointDiv));
              }
              i++;
            }

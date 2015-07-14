@@ -660,6 +660,7 @@ void FBXLoader::GetBoneMatrix(float frame, int meshId, Matrix4f* out_matrixList,
         }
         else if ( boneNodeName == "Bone_001" ) {
             trans = handInfo->m_fingerdata[1][0].position_mat * handInfo->m_fingerdata[1][0].direction_mat;
+
         }
         else if ( boneNodeName == "Bone_002" ) {
          //   Eigen::Vector3f v = getSkeleton("Bone_001")->LimbLength * handInfo->m_fingerdata[1][0].direction;
@@ -678,6 +679,7 @@ void FBXLoader::GetBoneMatrix(float frame, int meshId, Matrix4f* out_matrixList,
         }
 
         else if ( boneNodeName == "Bone_005" ) {
+
             trans = handInfo->m_fingerdata[2][0].direction_mat * trans;
             trans = handInfo->m_fingerdata[2][0].position_mat * trans;
         }
@@ -744,8 +746,16 @@ void FBXLoader::GetBoneMatrix(float frame, int meshId, Matrix4f* out_matrixList,
 
     }
 
-    trans.Identity();
-    if(handInfo->m_righthand){out_matrix = trans */* out_matrix */ modelMesh.invBoneBaseposeMatrixList[i]; }//eigen doushi
+
+    std::cout << "model inv matrix " << std::endl;
+    std::cout << modelMesh.invBoneBaseposeMatrixList[i].inverse() << std::endl;
+    std::cout << "trans " << std::endl;
+    std::cout << trans << std::endl;
+    std::cout << "out matrix " << std:: endl;
+    std::cout << out_matrix << std::endl;
+
+
+    if(handInfo->m_righthand){out_matrix = trans * modelMesh.invBoneBaseposeMatrixList[i]; }//eigen doushi
     else out_matrix = out_matrix * modelMesh.invBoneBaseposeMatrixList[i];
 
 

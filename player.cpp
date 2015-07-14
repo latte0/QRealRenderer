@@ -20,7 +20,7 @@ Player::~Player()
 
 void Player::PlayerInit()
 {
-    m_Position = QRRUtil::EigenVector3fMake(10.0f, 0.0f, -40.0f);
+    m_Position = QRRUtil::EigenVector3fMake(0.0f, 0.0f, -40.0f);
 
     m_LeftEyeCam.setHMDProjection(HMDSpecies::Oculus);
     m_RightEyeCam.setHMDProjection(HMDSpecies::Oculus);
@@ -29,7 +29,7 @@ void Player::PlayerInit()
 static void OVR_CDECL PlayerHmdLog(int level, const char* message)
 {
     OVR_UNUSED2(level, message);
-}9
+}
 
 void Player::HmdInit()
 {

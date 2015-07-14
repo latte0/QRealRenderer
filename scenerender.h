@@ -108,7 +108,9 @@ public:
 
     unsigned int m_distortsampler;
 
-    QOpenGLFramebufferObject* eyeTexture[2];
+
+    QOpenGLFramebufferObject* m_rightEyeTex;
+    QOpenGLFramebufferObject* m_leftEyeTex;
     QOpenGLFramebufferObject* composeEyeTex;
     QOpenGLFramebufferObject* lastcomposeEyeTex;
     QOpenGLFramebufferObject* finalTexture;
@@ -184,7 +186,7 @@ protected:
     void mousePressEvent(QMouseEvent *e) override;
     void mouseMoveEvent(QMouseEvent *e) override;
 
-    void updateuniform() ;
+    void updateuniform(int index) ;
 
 private:
 	void setupVertexAttribs();
@@ -242,14 +244,14 @@ private:
 
     unsigned int m_quadtexture;
     unsigned int m_quadsampler;
-/*
-    const float m_quadpositions[12] = {
+
+    const float m_quadpositions_rotate[12] = {
                           -1.0f,  1.0f, 0.0f,
                            1.0f, 1.0f, 0.0f,
                           -1.0f,  -1.0f, 0.0f,
                            1.0f, -1.0f, 0.0f,
                          };
-                         */
+
 
     const float m_quadpositions[12] = { 1.0f, -1.0f, 0.0f,
                           1.0f,  1.0f, 0.0f,
