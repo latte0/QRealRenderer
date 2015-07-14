@@ -20,7 +20,7 @@ SceneRender::SceneRender(QWidget *parent)
       m_maincamra(nullptr),
       m_secondcamera(nullptr)
 {
-    //position = EigenVector3fMake(50.0f, 30.0f, 20.0f);
+
     position = ThePlayer.getPosition();
     eye = position;
     center= QRRUtil::EigenVector3fMake(0.0f, 0.0f, 0.0f);
@@ -336,21 +336,15 @@ void SceneRender::updateuniform(int index){
     position = EigenVector3fMake(100.0f, 10.0f, 60.0f);
 
 
-    std::cout << eye << std::endl;
+
     m_ecamera = QRRUtil::lookAt(eye, center, eyeUp);
     std::cout << m_ecamera << std::endl;
     if(index==0){
         m_ecamera = ThePlayer.getLeftEyeMat();
-        std::cout << "left" << m_ecamera << std::endl;
     }
     if(index==1){
         m_ecamera = ThePlayer.getRightEyeMat();
-        std::cout << "right"
-                     "" << m_ecamera << std::endl;
     }
-    std::cout << m_ecamera << std::endl;
-
-
 
     m_uniformVs.normalMatrix = m_eworld.inverse();
     m_uniformVs.modelViewMatrix = m_ecamera * m_eworld;
@@ -436,8 +430,6 @@ void SceneRender::paintGL()
 
     glViewport(0,0,960,1080);
 
-
-    std::cout << "left" << std::endl;
     glUseProgram(hand_program->programId());
 
 

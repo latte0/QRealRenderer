@@ -1,6 +1,6 @@
 
 #include "player.h"
-
+#include "environmentreader.h"
 
 #include <QDebug>
 
@@ -20,7 +20,7 @@ Player::~Player()
 
 void Player::PlayerInit()
 {
-    m_Position = QRRUtil::EigenVector3fMake(0.0f, 0.0f, -40.0f);
+    m_Position = QRRUtil::EigenVector3fMake(0.0f, 0.0f, -400.0f /  QRR::Environment::mmDiv );
 
     m_LeftEyeCam.setHMDProjection(HMDSpecies::Oculus);
     m_RightEyeCam.setHMDProjection(HMDSpecies::Oculus);

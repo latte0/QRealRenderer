@@ -31,6 +31,8 @@
 #include "camera.h"
 #include "eigenutil.h"
 
+#include "environmentreader.h"
+
 /****************
  * the player only have hmd devices
  * ***************/
@@ -62,7 +64,7 @@ public:
 private:
 
     float const m_height = 1700;
-    float const m_eyewidth = 10;
+    float const m_eyewidth = 3;
 
     Camera m_LeftEyeCam;
     Camera m_RightEyeCam;

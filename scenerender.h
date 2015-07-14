@@ -71,8 +71,18 @@
 #include "Render/Render_Device.h"
 #include "OVR_CAPI.h"
 
-
 //http://stackoverflow.com/questions/17420739/opencv-2-4-5-and-qt5-error-s
+
+#include "LinearMath/btAlignedObjectArray.h"
+
+class btBroadphaseInterface;
+class btCollisionShape;
+class btOverlappingPairCache;
+class btCollisionDispatcher;
+class btConstraintSolver;
+struct btCollisionAlgorithmCreateFunc;
+class btDefaultCollisionConfiguration;
+
 
 
 
@@ -268,6 +278,18 @@ private:
     unsigned char* make_dummy_texture (int* width_, int* height_);
 
     Player              ThePlayer;
+
+//----------------------------------- bullet -----------------------------
+    btAlignedObjectArray<btCollisionShape*>	m_collisionShapes;
+
+    btBroadphaseInterface*	m_broadphase;
+
+    btCollisionDispatcher*	m_dispatcher;
+
+    btConstraintSolver*	m_solver;
+
+    btDefaultCollisionConfiguration* m_collisionConfiguration;
+
 
 //------------------------------------- net work -------------------------
 public:

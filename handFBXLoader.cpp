@@ -746,15 +746,6 @@ void FBXLoader::GetBoneMatrix(float frame, int meshId, Matrix4f* out_matrixList,
 
     }
 
-
-    std::cout << "model inv matrix " << std::endl;
-    std::cout << modelMesh.invBoneBaseposeMatrixList[i].inverse() << std::endl;
-    std::cout << "trans " << std::endl;
-    std::cout << trans << std::endl;
-    std::cout << "out matrix " << std:: endl;
-    std::cout << out_matrix << std::endl;
-
-
     if(handInfo->m_righthand){out_matrix = trans * modelMesh.invBoneBaseposeMatrixList[i]; }//eigen doushi
     else out_matrix = out_matrix * modelMesh.invBoneBaseposeMatrixList[i];
 
