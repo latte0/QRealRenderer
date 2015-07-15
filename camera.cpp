@@ -44,9 +44,9 @@ Eigen::Matrix4f Camera::MakelookAt(){
     Eigen::Vector3f u = QRRUtil::EigenVector3fMake(m_basis(1,0),m_basis(1,1),m_basis(1,2));
     Eigen::Vector3f s = QRRUtil::EigenVector3fMake(m_basis(0,0),m_basis(0,1),m_basis(0,2));
 
-    res << s.x(), s.y(), s.z(), s.dot(getPosition()),
-           u.x(), u.y(), u.z(), u.dot(getPosition()),
-           f.x(), f.y(), f.z(), f.dot(getPosition()),
+    res << s.x(), s.y(), s.z(), -s.dot(getPosition()),
+           u.x(), u.y(), u.z(), -u.dot(getPosition()),
+           f.x(), f.y(), f.z(), -f.dot(getPosition()),
            0    , 0    , 0    ,  1         ;
 
     return res;
