@@ -19,7 +19,7 @@ constexpr T sqrt( T s )
 auto main (int argc, char *argv[]) -> int
 {
     QApplication a(argc, argv);
-/*
+
     QSurfaceFormat fmt;
     fmt.setDepthBufferSize(24);
 
@@ -36,16 +36,12 @@ auto main (int argc, char *argv[]) -> int
     MainWindow mainWindow;
     mainWindow.resize(1280,720);
     mainWindow.show();
-
+/*
     QMainWindow secondwindow_;
     secondwindow_.setCentralWidget((QWidget*)mainWindow.subadmin);
     secondwindow_.show();
 */
 
-    RenderWindow window;
-
-    window.resize(1280, 720);
-    window.show();
 
 
     int test = 0b0011;

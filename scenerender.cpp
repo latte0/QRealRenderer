@@ -14,7 +14,6 @@
 #include "external/external_opengl/glm/glm.hpp"
 #include "external/external_opengl/glm/gtc/type_ptr.hpp"
 
-
 SceneRender::SceneRender(QWidget *parent)
     : QOpenGLWidget(parent),
       m_maincamra(nullptr),
@@ -29,12 +28,25 @@ SceneRender::SceneRender(QWidget *parent)
     m_ecamera = QRRUtil::lookAt(eye, center, eyeUp);
     m_eworld = Eigen::Matrix4f::Identity();
 
-} 
+
+    m_rwindow = new RenderWindow();
+
+    m_rwindow->resize(1280, 720);
+    m_rwindow->show();
+
+
+
+}
 
 SceneRender::~SceneRender()
 {
 
 }
+
+
+
+
+
 
 unsigned char* SceneRender::make_dummy_texture (int* width_, int* height_)
 {
@@ -54,67 +66,6 @@ unsigned char* SceneRender::make_dummy_texture (int* width_, int* height_)
     return pixels;
 }
 
-void SceneRender::DrawAxisAlignedQuad(float afLowerLeftX, float afLowerLeftY, float afUpperRightX, float afUpperRightY)
-{
- //   glDisable(GL_DEPTH_TEST);
-
-    glBindVertexArray (m_quadvertex_arrays);
-    glBindBuffer      (GL_ELEMENT_ARRAY_BUFFER, m_quadindex_array);
-
-    glUniform1i     (glGetUniformLocation (distort_program->programId(), "sampler"), 0);
-    glActiveTexture (GL_TEXTURE0);
-    glBindTexture   (GL_TEXTURE_2D, m_quadtexture);
-    glBindSampler   (0, m_quadsampler);
-
-    glDrawElements    (GL_TRIANGLE_STRIP, sizeof(m_quadindices)/sizeof(m_quadindices[0]), GL_UNSIGNED_INT, 0);
-
-
-//    glDisableVertexAttribArray(0);
- //   glDisableVertexAttribArray(1);
-}
-
-void SceneRender::DistortQuad(QOpenGLFramebufferObject *src, QOpenGLFramebufferObject *src2, QOpenGLFramebufferObject *dest)
-{
-       // dest->bind();
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-        glUseProgram(distort_program->programId());
-       // glViewport(300, 300, size().width(), size().height());
-        glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glDisable(GL_CULL_FACE);
-        glDisable(GL_BLEND);
-    glEnable(GL_TEXTURE);
-
-/*
-        glBindVertexArray (m_quadvertex_arrays);
-        glBindBuffer      (GL_ELEMENT_ARRAY_BUFFER, m_quadindex_array);
-
-        qDebug() << glGetUniformLocation (distort_program->programId(), "sampler");
-       /* glUniform1i     (glGetUniformLocation (distort_program->programId(), "sampler"), 0);
-        glActiveTexture(GL_TEXTURE0);
-        glBindSampler   (0, m_distortsampler);
-        glBindTexture   (GL_TEXTURE_2D, src->texture());
-     /*   glUniform1i     (glGetUniformLocation (distort_program->programId(), "lastFrame"), 1);
-        glActiveTexture(GL_TEXTURE1);
-        glBindSampler   (1, m_distortsampler);
-        glBindTexture   (GL_TEXTURE_2D, src->texture());
-*/
-
-    glActiveTexture (GL_TEXTURE0);
-     glUniform1i     (glGetUniformLocation (distort_program->programId(), "sampler"), 0);
-    glBindTexture   (GL_TEXTURE_2D, m_quadtexture);
-    glBindSampler   (0, m_quadsampler);
-
-    // vertices
-    glBindVertexArray (m_quadvertex_arrays);
-    glBindBuffer      (GL_ELEMENT_ARRAY_BUFFER, m_quadindex_array);
-
-    glDrawElements    (GL_TRIANGLE_STRIP, sizeof( m_quadindices)/sizeof( m_quadindices[0]), GL_UNSIGNED_INT, 0);
-
-       // DrawAxisAlignedQuad(-1, -1, 1, 1);
-}
 
 void SceneRender::processing()
 {
@@ -125,6 +76,8 @@ void SceneRender::initializeGL ()
 {
 
     using boost::asio::ip::udp;
+
+    m_rwindow->updateQuick();
 
 
     initializeOpenGLFunctions();
@@ -362,7 +315,8 @@ void SceneRender::updateuniform(int index){
 }
 
 void SceneRender::paintGL()
-{ 
+{
+
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_TEXTURE);
@@ -502,7 +456,16 @@ void SceneRender::paintGL()
     glUniform1i     (glGetUniformLocation (distort_program->programId(), "sampler"), 0);
     //glBindTexture   (GL_TEXTURE_2D, m_quadtexture)
 
-    glBindTexture(GL_TEXTURE_2D, m_leftEyeTex->texture());
+
+    //glBindTexture(GL_TEXTURE_2D, m_leftEyeTex->texture());
+/*
+    QOpenGLTexture *tex = new QOpenGLTexture(m_rwindow->qmlimage.mirrored());
+    tex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
+    tex->setMagnificationFilter(QOpenGLTexture::Linear);
+
+    tex->bind();
+*/
+    //glBindTexture(GL_TEXTURE_2D, m_quickRenderer->qmlimage.bits());
 
 
     //glBindTexture(GL_TEXTURE_2D,videotex_right_id);

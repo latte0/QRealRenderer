@@ -4,6 +4,8 @@ import QtQuick.Particles 2.0
 
 Rectangle {
     id: root
+    width:960
+    height:1080
 
     gradient: Gradient {
         GradientStop { position: 0; color: mouse.pressed ? "lightsteelblue" : "steelblue" }

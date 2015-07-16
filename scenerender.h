@@ -6,6 +6,7 @@
 #include <QOpenGLFunctions_3_3_Core>
 #include <QOpenGLFunctions_3_3_Compatibility>
 #include <QOpenGLVertexArrayObject>
+#include <QOpenGLTexture>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLShader>
 #include <QOpenGLFramebufferObject>
@@ -17,6 +18,21 @@
 #include <QDataStream>
 #include <QByteArray>
 #include <QMessageBox>
+
+#include <QOffscreenSurface>
+#include <QScreen>
+#include <QQmlEngine>
+#include <QQmlComponent>
+#include <QQuickItem>
+#include <QQuickWindow>
+#include <QQuickRenderControl>
+
+#include <QWindow>
+#include <QMatrix4x4>
+#include <QThread>
+#include <QWaitCondition>
+#include <QMutex>
+
 
 #include <math.h>
 #include <iostream>
@@ -53,6 +69,7 @@
 #include "shaderobject.h"
 #include "vertexbufferobject.h"
 #include "player.h"
+#include "renderwindow.h";
 
 
 #include "OVR.h"
@@ -85,6 +102,23 @@ class btDefaultCollisionConfiguration;
 
 
 
+static const QEvent::Type INIT = QEvent::Type(QEvent::User + 1);
+static const QEvent::Type RENDER = QEvent::Type(QEvent::User + 2);
+static const QEvent::Type RESIZE = QEvent::Type(QEvent::User + 3);
+static const QEvent::Type STOP = QEvent::Type(QEvent::User + 4);
+
+static const QEvent::Type UPDATE = QEvent::Type(QEvent::User + 5);
+
+QT_FORWARD_DECLARE_CLASS(QOpenGLContext)
+QT_FORWARD_DECLARE_CLASS(QOpenGLFramebufferObject)
+QT_FORWARD_DECLARE_CLASS(QOffscreenSurface)
+QT_FORWARD_DECLARE_CLASS(QQuickRenderControl)
+QT_FORWARD_DECLARE_CLASS(QQuickWindow)
+QT_FORWARD_DECLARE_CLASS(QQmlEngine)
+QT_FORWARD_DECLARE_CLASS(QQmlComponent)
+QT_FORWARD_DECLARE_CLASS(QQuickItem)
+
+
 
 
 #define MAX_BONE_COUNT 128
@@ -105,16 +139,14 @@ public:
 
     GLuint loadTexture (const std::string &filename);
 
+   RenderWindow *m_rwindow;
+
     void initOVR();
     void initFB();
 
   //  HmdDesc hmd;
     bool isHmdInitialized = false;
     ovrHmd ovrhmd;
-
-
-    void DrawAxisAlignedQuad(float afLowerLeftX, float afLowerLeftY, float afUpperRightX, float afUpperRightY);
-    void DistortQuad(QOpenGLFramebufferObject *src, QOpenGLFramebufferObject *src2, QOpenGLFramebufferObject *dest);
 
     unsigned int m_distortsampler;
 
@@ -364,9 +396,6 @@ public:
     float               TimewarpRenderIntervalInSeconds;
 
         unsigned            StartTrackingCaps;
-
-    //RenderDevice*       pRender;
-  //  RendererParams      RenderParams;
 
 
     bool                LinuxFullscreenOnDevice;
