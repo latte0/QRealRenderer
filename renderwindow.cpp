@@ -303,50 +303,14 @@ void RenderWindow::init ()
     qDebug() << "afterlink" << hand_program->programId();
 
 
-//--------------
-
-    unsigned int vert_shader;
-    unsigned int frag_shader;
-
-
-    const char* vert_code_array ="varying lowp vec2 v_coord;\n"
-                                 "uniform sampler2D sampler;\n"
-                                 "void main() {\n"
-                                 "   gl_FragColor = vec4(texture2D(sampler, v_coord).rgb, 1.0);\n"
-                                 "}\n";
-    f->glShaderSource  (vert_shader, 1,& vert_code_array, NULL);
-    f->glCompileShader (vert_shader);
-
-
-
-    // fragment shader
-    frag_shader = f->glCreateShader (GL_FRAGMENT_SHADER);
-    assert (frag_shader != 0);
-
-    const char* frag_code_array =         "attribute highp vec4 vertex;\n"
-                                            "attribute lowp vec2 coord;\n"
-                                            "varying lowp vec2 v_coord;\n"
-                                            "uniform highp mat4 matrix;\n"
-                                            "void main() {\n"
-                                            "   v_coord = coord;\n"
-                                            "   gl_Position = matrix * vertex;\n"
-                                            "}\n";
-    f->glShaderSource  (frag_shader, 1, &frag_code_array, NULL);
-    f->glCompileShader (frag_shader);
-
-
-    // shader program
-    auto shader_program = f->glCreateProgram ();
-    assert (shader_program != 0);
-
-    f->glAttachShader (shader_program, vert_shader);
-    f->glAttachShader (shader_program, frag_shader);
-    f->glLinkProgram  (shader_program);
-//-------------
-
+    qDebug() << "a";
+    glUseProgram(hand_program->programId());
+    qDebug() << "a";
 
   //  qDebug() << glGetUniformBlockIndex(shader_program, "vertex");
-    qDebug() << glGetUniformBlockIndex(hand_program->programId(), "UniformVs");
+    qDebug() << f->glGetUniformBlockIndex(hand_program->programId(), "UniformVs");
+
+
 
 
     uniformsSkin[UNIFORM_VS] = f->glGetUniformBlockIndex(hand_program->programId(), "UniformVs");
