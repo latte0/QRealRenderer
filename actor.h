@@ -17,7 +17,7 @@ enum ActorSpecies: int{
     CAMERA = 5
 };
 
-class Actor
+class Actor :public QObject
 {
 public:
     Actor();
@@ -25,6 +25,8 @@ public:
 
     Eigen::Vector3f m_position;
     Eigen::Matrix4f m_basis;
+
+    Eigen::Matrix4f m_world;
 
     void setPosition(Eigen::Vector3f pos){
         m_position = pos;
@@ -34,12 +36,28 @@ public:
         m_basis = basis;
     }
 
+    void setWorld(Eigen::Matrix4f world){
+        m_world = world;
+    }
+
+    void createWold(){
+        m_world << m_basis(0,0) , m_basis(0,1) , m_basis(0,2) , m_position.x(),
+                   m_basis(1,0) , m_basis(1,1) , m_basis(1,2) , m_position.y(),
+                   m_basis(2,0) , m_basis(2,1) , m_basis(2,2) , m_position.z(),
+                   0            ,           0  ,            0 , 1;
+
+    }
+
     const Eigen::Vector3f getPosition(){
         return m_position;
     }
 
     const Eigen::Matrix4f getBasis(){
         return m_basis;
+    }
+
+    const Eigen::Matrix4f getWorld(){
+        return m_world;
     }
 
 

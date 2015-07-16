@@ -2,6 +2,8 @@
 #define QMLTEXTURE_H
 
 #include "actor.h"
+#include "player.h"
+#include "external/cpplinq.hpp"
 
 #include <QWindow>
 #include <QMatrix4x4>
@@ -20,21 +22,42 @@
 #include <QQmlEngine>
 #include <QQmlComponent>
 #include <QQuickItem>
+#include <QOpenGLWidget>
+#include <QOpenGLFunctions>
+#include <QOpenGLFunctions_3_3_Core>
+#include <QOpenGLFunctions_3_3_Compatibility>
 
 
-class qmltexture : public QObject , public Actor
+class QmlRenderer : public QOpenGLWidget
 {
     Q_OBJECT
-
 public:
-    qmltexture();
-    ~qmltexture();
+    QmlRenderer();
+    ~QmlRenderer();
 
     void initqml(const QString &filename);
+
+private slots:
+
+    void update(Player *theplayer);
+
+    void render(Player *theplayer);
     void updateQuick();
     void run();
 
+    void createFbo();
+    void destroyFbo();
+    void requestUpdate();
+
+    void expose();
+
+private:
+    void setupVertexAttribs();
+
+
 public:
+
+    QOpenGLContext *m_context;
     QOffscreenSurface *m_offscreenSurface;
     QQuickRenderControl *m_renderControl;
     QQuickWindow *m_quickWindow;
@@ -47,6 +70,8 @@ public:
     QOpenGLVertexArrayObject *m_vao;
     bool m_quickInitialized;
     bool m_quickReady;
+    int m_matrixLoc;
+
 };
 
 #endif // QMLTEXTURE_H
