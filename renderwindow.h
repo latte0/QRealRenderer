@@ -108,7 +108,7 @@ QT_FORWARD_DECLARE_CLASS(QQuickItem)
 
 class CubeRenderer;
 
-class RenderWindow : public QWindow
+class RenderWindow : public QWindow ,public QOpenGLFunctions_3_3_Core
 {
     Q_OBJECT
 

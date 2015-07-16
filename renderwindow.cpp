@@ -314,19 +314,16 @@ void RenderWindow::init ()
                                  "void main() {\n"
                                  "   gl_FragColor = vec4(texture2D(sampler, v_coord).rgb, 1.0);\n"
                                  "}\n";
-    f->glShaderSource  (vert_shader, 1, vert_code_array, NULL);
+    f->glShaderSource  (vert_shader, 1,& vert_code_array, NULL);
     f->glCompileShader (vert_shader);
 
-    f->glGetShaderiv (vert_shader, GL_COMPILE_STATUS, &status);
-    if (status == GL_FALSE) {
-        exit (0);
-    }
+
 
     // fragment shader
     frag_shader = f->glCreateShader (GL_FRAGMENT_SHADER);
     assert (frag_shader != 0);
 
-    const char* frag_code_array[] =         "attribute highp vec4 vertex;\n"
+    const char* frag_code_array =         "attribute highp vec4 vertex;\n"
                                             "attribute lowp vec2 coord;\n"
                                             "varying lowp vec2 v_coord;\n"
                                             "uniform highp mat4 matrix;\n"
@@ -334,14 +331,8 @@ void RenderWindow::init ()
                                             "   v_coord = coord;\n"
                                             "   gl_Position = matrix * vertex;\n"
                                             "}\n";
-    f->glShaderSource  (frag_shader, 1, frag_code_array, NULL);
+    f->glShaderSource  (frag_shader, 1, &frag_code_array, NULL);
     f->glCompileShader (frag_shader);
-
-    f->glGetShaderiv (frag_shader, GL_COMPILE_STATUS, &status);
-    if (status == GL_FALSE) {
-
-        exit (0);
-    }
 
 
     // shader program
@@ -354,7 +345,8 @@ void RenderWindow::init ()
 //-------------
 
 
-    qDebug() << "may problem" << f->glGetUniformBlockIndex(m_program->programId(), "UniformVs");
+  //  qDebug() << glGetUniformBlockIndex(shader_program, "vertex");
+    qDebug() << glGetUniformBlockIndex(hand_program->programId(), "UniformVs");
 
 
     uniformsSkin[UNIFORM_VS] = f->glGetUniformBlockIndex(hand_program->programId(), "UniformVs");
