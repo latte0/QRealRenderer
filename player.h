@@ -59,6 +59,8 @@ public:
     Eigen::Matrix4f getLeftEyeMat();
     Eigen::Matrix4f getRightEyeMat();
 
+    Camera m_LeftEyeCam;
+    Camera m_RightEyeCam;
 
 
 private:
@@ -66,8 +68,6 @@ private:
     float const m_height = 1700;
     float const m_eyewidth = 2;
 
-    Camera m_LeftEyeCam;
-    Camera m_RightEyeCam;
 
     Eigen::Vector3f m_Position;
 

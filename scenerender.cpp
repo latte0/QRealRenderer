@@ -771,7 +771,8 @@ GLuint SceneRender::loadTexture (const std::string & filename)
 
 void SceneRender::resizeGL(int width, int height)
 {
-    m_eproj = QRRUtil::perspective(45.0f, (float)(width /2 )/ height, 0.1f, 10000.0f);
+ //   m_eproj = QRRUtil::perspective(45.0f, (float)(width /2 )/ height, 0.1f, 10000.0f);
+    m_eproj = ThePlayer.m_RightEyeCam.m_proj;
 }
 void SceneRender::mousePressEvent(QMouseEvent *e)
 {

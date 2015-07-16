@@ -184,6 +184,23 @@ void QmlRenderer::updateQuick()
 
 void QmlRenderer::render(Player *theplayer){
     makeCurrent();
+
+    QOpenGLFunctions *f = m_context->functions();
+
+    if(m_quickReady){
+        f->glFrontFace(GL_CW);
+        f->glEnable(GL_BLEND);
+
+        f->glBindTexture(GL_TEXTURE_2D, m_fbo->texture());
+
+        m_program->bind();
+
+        QOpenGLVertexArrayObject::Binder vaoBinder(m_vao);
+
+        if(!m_vao->isCreated()) setupVertexAttribs();
+
+
+    }
 }
 
 void QmlRenderer::requestUpdate(){
