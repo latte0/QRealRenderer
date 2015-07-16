@@ -9,6 +9,8 @@
 #include <iostream>
 #include <tuple>
 
+#include "renderwindow.h"
+
 template < typename T >
 constexpr T sqrt( T s )
 { return sqrt_aux( s, s/2.0, s ) ; }
@@ -17,7 +19,7 @@ constexpr T sqrt( T s )
 auto main (int argc, char *argv[]) -> int
 {
     QApplication a(argc, argv);
-
+/*
     QSurfaceFormat fmt;
     fmt.setDepthBufferSize(24);
 
@@ -38,7 +40,12 @@ auto main (int argc, char *argv[]) -> int
     QMainWindow secondwindow_;
     secondwindow_.setCentralWidget((QWidget*)mainWindow.subadmin);
     secondwindow_.show();
+*/
 
+    RenderWindow window;
+
+    window.resize(1280, 720);
+    window.show();
 
 
     int test = 0b0011;

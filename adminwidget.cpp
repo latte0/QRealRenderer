@@ -1,9 +1,8 @@
 #include "adminwidget.h"
 
-
-
 AdminWidget::AdminWidget(QWidget *parent) : QWidget(parent)
 {
+    /*
     QVBoxLayout *mainLayout = new QVBoxLayout;
 
     gameapp = new SceneRender();
@@ -16,6 +15,9 @@ AdminWidget::AdminWidget(QWidget *parent) : QWidget(parent)
     QObject::connect(timer, SIGNAL(timeout()), gameapp, SLOT(processing()));
     QObject::connect(timer, SIGNAL(timeout()), this, SLOT(capturetimeout()));
     timer->start( 16 );
+*/
+
+
 
 
 
