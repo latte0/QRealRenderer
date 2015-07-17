@@ -16,15 +16,18 @@
 #include <QQuickRenderControl>
 #include <QCoreApplication>
 
-RenderWindow::RenderWindow()
+RenderWindow::RenderWindow(QMutex *mutex)
     : m_rootItem(0),
       m_fbo(0),
       m_program(0),
       m_vbo(0),
       m_quickInitialized(false),
-      m_quickReady(false)
+      m_quickReady(false),
+      m_scenemutex(nullptr)
 {
     setSurfaceType(QSurface::OpenGLSurface);
+
+        m_scenemutex = mutex;
 
     QSurfaceFormat format;
     // Qt Quick may need a depth and stencil buffer. Always make sure these are available.
@@ -51,14 +54,16 @@ RenderWindow::RenderWindow()
     if (!m_qmlEngine->incubationController())
         m_qmlEngine->setIncubationController(m_quickWindow->incubationController());
 
-    //m_updateTimer.setSingleShot(true);
-    //m_updateTimer.setInterval(50);
-  //  connect(&m_updateTimer, &QTimer::timeout, this, &RenderWindow::updateQuick);
+    m_updateTimer.setSingleShot(true);
+    m_updateTimer.setInterval(16);
+    connect(&m_updateTimer, &QTimer::timeout, this, &RenderWindow::updateQuick);
 
     connect(m_quickWindow, &QQuickWindow::sceneGraphInitialized, this, &RenderWindow::createFbo);
     connect(m_quickWindow, &QQuickWindow::sceneGraphInvalidated, this, &RenderWindow::destroyFbo);
     connect(m_renderControl, &QQuickRenderControl::renderRequested, this, &RenderWindow::requestUpdate);
     connect(m_renderControl, &QQuickRenderControl::sceneChanged, this, &RenderWindow::requestUpdate);
+
+
 }
 
 RenderWindow::~RenderWindow()
@@ -290,10 +295,10 @@ void RenderWindow::updateQuick()
 
     m_quickReady = true;
 
+    m_scenemutex->lock();
     qmlimage = m_fbo->toImage();
+    m_scenemutex->unlock();
 
-    // Get something onto the screen.
-    render();
 }
 
 void RenderWindow::render()
@@ -310,7 +315,9 @@ void RenderWindow::render()
         f->glEnable(GL_CULL_FACE);
         f->glEnable(GL_DEPTH_TEST);
 
+        m_scenemutex->lock();
         f->glBindTexture(GL_TEXTURE_2D, m_fbo->texture());
+        m_scenemutex->unlock();
 
         m_program->bind();
         QOpenGLVertexArrayObject::Binder vaoBinder(m_vao);

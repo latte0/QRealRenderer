@@ -20,6 +20,10 @@
 #include <QQuickRenderControl>
 #include <QCoreApplication>
 
+#include <QMutex>
+#include "scenerender.h"
+
+
 QT_FORWARD_DECLARE_CLASS(QOpenGLContext)
 QT_FORWARD_DECLARE_CLASS(QOpenGLFramebufferObject)
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
@@ -32,17 +36,20 @@ QT_FORWARD_DECLARE_CLASS(QQmlEngine)
 QT_FORWARD_DECLARE_CLASS(QQmlComponent)
 QT_FORWARD_DECLARE_CLASS(QQuickItem)
 
+class SceneRender;
+
 class RenderWindow : public QWindow
 {
     Q_OBJECT
 
 public:
-    RenderWindow();
+    RenderWindow(QMutex* mutex);
     ~RenderWindow();
 
-        QImage qmlimage;
+    QImage qmlimage;
+    QMutex *m_scenemutex;
 
-         void updateQuick();
+    void updateQuick();
 
 protected:
     void exposeEvent(QExposeEvent *e) Q_DECL_OVERRIDE;

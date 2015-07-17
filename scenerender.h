@@ -69,7 +69,8 @@
 #include "shaderobject.h"
 #include "vertexbufferobject.h"
 #include "player.h"
-#include "renderwindow.h";
+#include "renderwindow.h"
+#include "cuberenderer.h"
 
 
 #include "OVR.h"
@@ -118,6 +119,7 @@ QT_FORWARD_DECLARE_CLASS(QQmlEngine)
 QT_FORWARD_DECLARE_CLASS(QQmlComponent)
 QT_FORWARD_DECLARE_CLASS(QQuickItem)
 
+class RenderWindow;
 
 
 
@@ -139,14 +141,15 @@ public:
 
     GLuint loadTexture (const std::string &filename);
 
-   RenderWindow *m_rwindow;
+    RenderWindow *m_rwindow;
+    QMutex* m_mutex;
+    QOpenGLTexture *m_qmltex;
+    CubeRenderer *cube;
+
 
     void initOVR();
     void initFB();
 
-  //  HmdDesc hmd;
-    bool isHmdInitialized = false;
-    ovrHmd ovrhmd;
 
     unsigned int m_distortsampler;
 
@@ -241,6 +244,7 @@ private:
 	QOpenGLVertexArrayObject m_vao;
 	QOpenGLShaderProgram *hand_program;
     QOpenGLShaderProgram *distort_program;
+
 
 	GLuint m_projMatrix;
 
@@ -351,56 +355,9 @@ private slots:
 public:
 //-------------------------------------- oculsu  ---------------------------------------
 
-        ovrHmd              Hmd;
-
-    OVR::Vector3f       BlocksCenter;
-
-    bool                ForceZeroHeadMovement;
-    bool                VsyncEnabled;
-    bool                MultisampleEnabled;
-
-    bool                IsLowPersistence;
-    bool                DynamicPrediction;
-    bool                DisplaySleep;
-    bool                PositionTrackingEnabled;
-    bool				PixelLuminanceOverdrive;
-    bool                HqAaDistortion;
-    bool                MirrorToWindow;
-
-    bool                ScaleAffectsEyeHeight;
-    float               PositionTrackingScale;
-    float               DesiredPixelDensity;
-    float               FovSideTanMax;
-    float               FovSideTanLimit; // Limit value for Fov.
-    bool                FadedBorder;
-
-    int                 ScreenNumber;
-    int                 FirstScreenInCycle;
-    bool                SupportsSrgb;
-    bool                SupportsMultisampling;
-
-    double              NotificationTimeout;
-
-
-    enum TimewarpMode
-    {
-        Timewarp_Off,
-        Timewarp_Orientation,
-    };
-
-    TimewarpMode        TimewarpOption;
-
-        ovrEyeRenderDesc    EyeRenderDesc[2];
-
-    bool                TimewarpJitDelayEnabled;
-    float               TimewarpRenderIntervalInSeconds;
-
-        unsigned            StartTrackingCaps;
-
-
-    bool                LinuxFullscreenOnDevice;
-
-
+   ovrHmd              Hmd;
+   bool isHmdInitialized = false;
+   ovrHmd ovrhmd;
 
 
     void getOculusAngle();

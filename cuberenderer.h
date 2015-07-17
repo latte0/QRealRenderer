@@ -2,35 +2,47 @@
 #ifndef CUBERENDERER_H
 #define CUBERENDERER_H
 
-#include <QMatrix4x4>
+#include <Eigen/Core>
+#include <Eigen/Geometry>
+
+#include <QOpenGLWidget>
+#include <QOpenGLFunctions>
+#include <QOpenGLFunctions_3_3_Core>
+#include <QOpenGLFunctions_3_3_Compatibility>
+#include <QOpenGLVertexArrayObject>
+#include <QOpenGLTexture>
+#include <QOpenGLShaderProgram>
+#include <QOpenGLShader>
+#include <QOpenGLFramebufferObject>
+
+#include <QOffscreenSurface>
+#include <QOpenGLBuffer>
 
 QT_FORWARD_DECLARE_CLASS(QOpenGLContext)
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
 QT_FORWARD_DECLARE_CLASS(QOpenGLBuffer)
 QT_FORWARD_DECLARE_CLASS(QOpenGLVertexArrayObject)
-QT_FORWARD_DECLARE_CLASS(QWindow)
-QT_FORWARD_DECLARE_CLASS(QOffscreenSurface)
+
 
 class CubeRenderer
 {
 public:
-    CubeRenderer(QOffscreenSurface *offscreenSurface);
+    CubeRenderer();
     ~CubeRenderer();
 
     void resize(int w, int h);
-    void render(QWindow *w, QOpenGLContext *share, uint texture);
+    void render(QOpenGLContext* share,Eigen::Matrix4f mat, QOpenGLTexture *qmltex);
 
+    void init(QOpenGLContext* share);
+    void setupVertexAttribs(QOpenGLContext* share);
 private:
-    void init(QWindow *w, QOpenGLContext *share);
-    void setupVertexAttribs();
 
-    QOffscreenSurface *m_offscreenSurface;
-    QOpenGLContext *m_context;
+    QOpenGLContext* m_context;
     QOpenGLShaderProgram *m_program;
     QOpenGLBuffer *m_vbo;
     QOpenGLVertexArrayObject *m_vao;
     int m_matrixLoc;
-    QMatrix4x4 m_proj;
+    Eigen::Matrix4f m_proj;
 };
 
 #endif

@@ -28,10 +28,11 @@ SceneRender::SceneRender(QWidget *parent)
     m_ecamera = QRRUtil::lookAt(eye, center, eyeUp);
     m_eworld = Eigen::Matrix4f::Identity();
 
+    m_mutex = new QMutex();
 
-    m_rwindow = new RenderWindow();
+    m_rwindow = new RenderWindow(m_mutex);
 
-    m_rwindow->resize(1280, 720);
+    m_rwindow->resize(960, 1080);
     m_rwindow->show();
 
 
@@ -77,10 +78,12 @@ void SceneRender::initializeGL ()
 
     using boost::asio::ip::udp;
 
-    m_rwindow->updateQuick();
-
 
     initializeOpenGLFunctions();
+
+    cube = new CubeRenderer();
+    cube->init(this->context());
+
     glClearColor(0, 0, 0, m_transparent ? 0 : 1);
 
     OnStartup();
@@ -322,6 +325,8 @@ void SceneRender::paintGL()
     glEnable(GL_TEXTURE);
     glEnable(GL_CULL_FACE);
 
+
+
     auto drawFunc = [=](const std::vector<AppMesh>& meshlist)
     {
         for (int i = 0; i< meshlist.size(); ++i)
@@ -373,6 +378,12 @@ void SceneRender::paintGL()
         }
     };
 
+    m_mutex->lock();
+    if(m_qmltex != nullptr) delete m_qmltex;
+    m_qmltex = new QOpenGLTexture(m_rwindow->qmlimage.mirrored());
+    m_qmltex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
+    m_qmltex->setMagnificationFilter(QOpenGLTexture::Linear);
+    m_mutex->unlock();
 
 //*******************************************
     m_leftEyeTex->bind();
@@ -393,9 +404,8 @@ void SceneRender::paintGL()
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-   // drawFunc(m_qmlmesh);
 
-   // DistortQuad(composeEyeTex,lastcomposeEyeTex,lastcomposeEyeTex);
+    cube->render(this->context(),m_eproj * m_ecamera, m_qmltex);
 
     m_leftEyeTex->release();
 //**************************************************::
@@ -419,9 +429,9 @@ void SceneRender::paintGL()
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-   // drawFunc(m_qmlmesh);
 
-   // DistortQuad(composeEyeTex,lastcomposeEyeTex,lastcomposeEyeTex);
+    cube->render(this->context(),m_eproj * m_ecamera, m_qmltex);
+
 
     m_rightEyeTex->release();
 
@@ -457,14 +467,13 @@ void SceneRender::paintGL()
     //glBindTexture   (GL_TEXTURE_2D, m_quadtexture)
 
 
-    //glBindTexture(GL_TEXTURE_2D, m_leftEyeTex->texture());
-/*
-    QOpenGLTexture *tex = new QOpenGLTexture(m_rwindow->qmlimage.mirrored());
-    tex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
-    tex->setMagnificationFilter(QOpenGLTexture::Linear);
+    glBindTexture(GL_TEXTURE_2D, m_leftEyeTex->texture());
 
-    tex->bind();
-*/
+
+
+
+
+
     //glBindTexture(GL_TEXTURE_2D, m_quickRenderer->qmlimage.bits());
 
 
