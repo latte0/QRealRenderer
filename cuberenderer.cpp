@@ -8,6 +8,17 @@
 #include <QOpenGLVertexArrayObject>
 #include <QOffscreenSurface>
 #include <QWindow>
+#include <QVector3D>
+
+#include "external/external_opengl/glm/glm.hpp"
+#include "external/external_opengl/glm/gtc/type_ptr.hpp"
+
+#include "external/external_opengl/FreeImage/FreeImage.h"
+#include "external/cppitertools/itertools.hpp"
+#include "external/external_opengl/glm/glm.hpp"
+#include "external/external_opengl/glm/gtc/matrix_transform.hpp"
+
+#include "eigenutil.h"
 
 CubeRenderer::CubeRenderer()
     : m_program(0),
@@ -42,7 +53,7 @@ void CubeRenderer::init(QOpenGLContext* share)
         "varying lowp vec2 v_coord;\n"
         "uniform sampler2D sampler;\n"
         "void main() {\n"
-
+        "   //gl_FragColor = vec4(1.0,1.0,0.0, 0.5);\n"
         "   gl_FragColor = vec4(texture2D(sampler, v_coord).rgb, 1.0);\n"
         "}\n";
 
@@ -63,8 +74,8 @@ void CubeRenderer::init(QOpenGLContext* share)
     m_vbo->bind();
 
     GLfloat v[] = {
-        -100,100,10.5,    100,-100,10.5,     -100,-100,10.5,
-        100,-100,10.5,   -100,100,10.5,       100,100, 10.5
+        -10,10,-1,    10,-10,-1,     -10,-10,-1,
+        10,-10,-1,   -10,10,-1,       10,10, -1
     };
 
     GLfloat texCoords[] = {
@@ -105,29 +116,32 @@ void CubeRenderer::render(QOpenGLContext* share, Eigen::Matrix4f mat, QOpenGLTex
 {
 
     auto *f = share->functions();
+
+    f->glFrontFace(GL_CW);
+
     f->glUseProgram(m_program->programId());
     f->glActiveTexture (GL_TEXTURE0);
     f->glUniform1i     (f->glGetUniformLocation (m_program->programId(), "sampler"), 0);
-        qmltex->bind();
-        f->glFrontFace(GL_CW);
-        f->glEnable(GL_CULL_FACE);
-        f->glEnable(GL_DEPTH_TEST);
 
-        m_program->bind();
+        qmltex->bind();
+
         QOpenGLVertexArrayObject::Binder vaoBinder(m_vao);
 
-        QMatrix4x4 qmat(mat.data());
+        QMatrix4x4 qmat(mat(0,0),mat(0,1),mat(0,2),mat(0,3),
+                        mat(1,0),mat(1,1),mat(1,2),mat(1,3),
+                        mat(2,0),mat(2,1),mat(2,2),mat(2,3),
+                        mat(3,0),mat(3,1),mat(3,2),mat(3,3));
 
         if (!m_vao->isCreated())
             setupVertexAttribs(share);
 
         static GLfloat angle = 0;
-        QMatrix4x4 m;
 
 
-        m_program->setUniformValue(m_matrixLoc, qmat );
+
+        m_program->setUniformValue(m_matrixLoc, qmat);
 
         f->glDrawArrays(GL_TRIANGLES, 0, 6);
 
-
+       // f->glFlush();
 }

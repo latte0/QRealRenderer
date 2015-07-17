@@ -273,7 +273,7 @@ void SceneRender::initOVR(){
 }
 
 void SceneRender::initFB(){
-    m_rightEyeTex = new QOpenGLFramebufferObject(960,1080, QOpenGLFramebufferObject::CombinedDepthStencil);
+    m_rightEyeTex = new QOpenGLFramebufferObject(960,1080, QOpenGLFramebufferObject::Depth);
     m_leftEyeTex = new QOpenGLFramebufferObject(960,1080, QOpenGLFramebufferObject::CombinedDepthStencil);
     composeEyeTex = new QOpenGLFramebufferObject(960,1080, QOpenGLFramebufferObject::CombinedDepthStencil);
  //   lastcomposeEyeTex = new QOpenGLFramebufferObject(1000,1000, QOpenGLFramebufferObject::CombinedDepthStencil);
@@ -320,11 +320,12 @@ void SceneRender::updateuniform(int index){
 void SceneRender::paintGL()
 {
 
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_TEXTURE);
-    glEnable(GL_CULL_FACE);
 
+    glClearColor(0.2f, 0.2f, 0.6f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDepthFunc(GL_LEQUAL);
+
+    m_handinfo.UpdateInfo();
 
 
     auto drawFunc = [=](const std::vector<AppMesh>& meshlist)
@@ -337,8 +338,6 @@ void SceneRender::paintGL()
             uniforms = uniformsSkin;
 
             hand_program->bind();
-
-            m_handinfo.UpdateInfo();
 
             m_fbxLoader.GetMeshMatrix(m_frame, mesh.modelMeshId, m_uniformVs.meshMatrix);
             m_fbxLoader.GetBoneMatrix(m_frame, mesh.modelMeshId, m_uniformVs.boneMatrixList, MAX_BONE_COUNT, &m_handinfo);
@@ -379,58 +378,78 @@ void SceneRender::paintGL()
     };
 
     m_mutex->lock();
-    if(m_qmltex != nullptr) delete m_qmltex;
-    m_qmltex = new QOpenGLTexture(m_rwindow->qmlimage.mirrored());
-    m_qmltex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
-    m_qmltex->setMagnificationFilter(QOpenGLTexture::Linear);
+        if(m_qmltex != nullptr) delete m_qmltex;
+        m_qmltex = new QOpenGLTexture(m_rwindow->qmlimage.mirrored());
+        m_qmltex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
+        m_qmltex->setMagnificationFilter(QOpenGLTexture::Linear);
     m_mutex->unlock();
 
 //*******************************************
     m_leftEyeTex->bind();
 
+    glClearDepth(1.0);
     glClearColor(0.2f, 0.2f, 0.6f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    updateuniform(0);
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_TEXTURE);
+    glEnable(GL_CULL_FACE);
+    glFrontFace(GL_CCW);
+
+
 
     glViewport(0,0,960,1080);
+    cube->render(this->context(),m_eproj * m_ecamera, m_qmltex);
+
+    glFrontFace(GL_CCW);
 
     glUseProgram(hand_program->programId());
-
-
-    glDisable(GL_BLEND);
+    updateuniform(0);
     drawFunc(m_meshlist);
-    glFlush();
 
+/*
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+*/
 
-    cube->render(this->context(),m_eproj * m_ecamera, m_qmltex);
+    glFlush();
 
     m_leftEyeTex->release();
 //**************************************************::
 
 //:*******************
     m_rightEyeTex->bind();
+    glViewport(0,0,960,1080);
 
     glClearColor(0.2f, 0.2f, 0.6f, 1.0f);
+    glClearDepth(1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_TEXTURE);
+    glFrontFace(GL_CCW);
+
+
+
+    cube->render(this->context(),m_eproj * m_ecamera , m_qmltex);
+
+    glFrontFace(GL_CCW);
 
     updateuniform(1);
 
-    glViewport(0,0,960,1080);
-
     glUseProgram(hand_program->programId());
 
-
-    glDisable(GL_BLEND);
     drawFunc(m_meshlist);
-    glFlush();
 
+/*
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    cube->render(this->context(),m_eproj * m_ecamera, m_qmltex);
+*/
 
 
     m_rightEyeTex->release();

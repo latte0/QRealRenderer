@@ -66,7 +66,7 @@ public:
 private:
 
     float const m_height = 1700;
-    float const m_eyewidth = 2;
+    float const m_eyewidth = 3;
 
 
     Eigen::Vector3f m_Position;
