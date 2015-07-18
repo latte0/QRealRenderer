@@ -72,6 +72,7 @@
 #include "renderwindow.h"
 #include "cuberenderer.h"
 #include "backgroundrenderer.h"
+#include "mouserenderer.h"
 
 
 #include "OVR.h"
@@ -106,6 +107,7 @@ class btDefaultCollisionConfiguration;
 
 class RenderWindow;
 class CubeRenderer;
+class MouseRenderer;
 
 
 #define MAX_BONE_COUNT 128
@@ -126,7 +128,10 @@ public:
     GLuint loadTexture (const std::string &filename);
 
     CubeRenderer *cube;
+    CubeRenderer *kyou;
     BackGroundRenderer *back;
+    MouseRenderer *mouse;
+    bool touched = false;
 
 
     void initOVR();
@@ -211,7 +216,9 @@ protected:
     void paintGL() override;
     void resizeGL(int width, int height) override;
     void mousePressEvent(QMouseEvent *e) override;
+    void mouseReleaseEvent(QMouseEvent *e) override;
     void mouseMoveEvent(QMouseEvent *e) override;
+
 
     void updateuniform(int index) ;
 

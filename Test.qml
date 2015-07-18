@@ -23,6 +23,11 @@ Rectangle {
             NumberAnimation { from: 0; to: 360; duration: 5000; easing.type: Easing.InOutCubic }
             loops: Animation.Infinite
         }
+
+        MouseArea {
+            id: mouse
+            anchors.fill: parent
+        }
     }
 
     ParticleSystem {
@@ -154,8 +159,5 @@ Rectangle {
     onWidthChanged: particles.reset()
     onHeightChanged: particles.reset()
 
-    MouseArea {
-        id: mouse
-        anchors.fill: parent
-    }
+
 }

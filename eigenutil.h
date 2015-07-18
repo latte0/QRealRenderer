@@ -36,6 +36,14 @@ namespace QRRUtil{
 
     Eigen::Matrix4f MakeMatrixfromQuat(float x, float y, float z, float w);
 
+
+    Eigen::Vector3f MakeEulerYRotationVec( Eigen::Vector3f rvec ,float theta);
+    Eigen::Vector3f MakeEulerRotationVec(Eigen::Vector3f bvec, Eigen::Vector3f rvec ,float theta);
+
+    Eigen::Matrix4f MakeEulerYRotationMat(float theta);
+    Eigen::Matrix4f MakeEulerRotationMat(Eigen::Vector3f bvec,float theta);
+
+
 }
 
 #endif // EIGENUTIL

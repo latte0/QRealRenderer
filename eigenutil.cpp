@@ -186,6 +186,68 @@ Eigen::Matrix4f QRRUtil::MakeMatrixfromQuat(float x, float y, float z, float w){
     return ret;
 }
 
+Eigen::Vector3f QRRUtil::MakeEulerYRotationVec( Eigen::Vector3f rvec ,float theta){
+
+    Eigen::Matrix3f mat;
+    mat <<  cos(theta),       0,  sin(theta) ,
+                     0,       1,           0 ,
+           -sin(theta),       0,  cos(theta) ;
+
+    Eigen::Vector3f ret;
+
+    ret = mat * rvec;
+
+    return ret;
+}
+
+
+Eigen::Vector3f QRRUtil::MakeEulerRotationVec(Eigen::Vector3f bvec, Eigen::Vector3f rvec ,float theta){
+
+    auto x = bvec.x();
+    auto y = bvec.y();
+    auto z = bvec.z();
+
+    Eigen::Matrix3f mat;
+    mat << x*x*(1-cos(theta)) + cos(theta)    , x*y*(1-cos(theta)) - z*sin(theta) , z*x*(1-cos(theta)) + y*sin(theta) ,
+           x*y*(1-cos(theta)) + z * sin(theta), y*y*(1-cos(theta)) + cos(theta)   , y*z*(1-cos(theta)) - x*sin(theta) ,
+           z*x*(1-cos(theta)) - y * sin(theta), y*z*(1-cos(theta)) + x*sin(theta) , z*z*(1-cos(theta)) + cos(theta)   ;
+
+
+    Eigen::Vector3f ret;
+
+    ret = mat * rvec;
+
+    return ret;
+}
+
+
+Eigen::Matrix4f QRRUtil::MakeEulerYRotationMat( float theta){
+
+    Eigen::Matrix4f mat;
+    mat <<  cos(theta),       0,  sin(theta) ,0,
+                     0,       1,           0 ,0,
+           -sin(theta),       0,  cos(theta) ,0,
+            0,0,0,1;
+
+    return mat;
+}
+
+
+Eigen::Matrix4f QRRUtil::MakeEulerRotationMat(Eigen::Vector3f bvec,float theta){
+
+    auto x = bvec.x();
+    auto y = bvec.y();
+    auto z = bvec.z();
+
+    Eigen::Matrix4f mat;
+    mat << x*x*(1-cos(theta)) + cos(theta)    , x*y*(1-cos(theta)) - z*sin(theta) , z*x*(1-cos(theta)) + y*sin(theta) ,0,
+           x*y*(1-cos(theta)) + z * sin(theta), y*y*(1-cos(theta)) + cos(theta)   , y*z*(1-cos(theta)) - x*sin(theta) ,0,
+           z*x*(1-cos(theta)) - y * sin(theta), y*z*(1-cos(theta)) + x*sin(theta) , z*z*(1-cos(theta)) + cos(theta)   ,0,
+            0,0,0,1;
+
+    return mat;
+}
+
 
 
 

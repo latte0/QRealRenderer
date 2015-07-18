@@ -1,9 +1,8 @@
-
 import QtQuick 2.0
 import QtWebKit 3.0
 import QtQuick.XmlListModel 2.0
-import "qrc:/shared" as Shared
-import "qrc:/content" as Content
+import "./resources/shared" as Shared
+import "./resources/content" as Content
 
 Rectangle {
     id: container
@@ -38,7 +37,7 @@ Rectangle {
             anchors.fill: parent
             opacity: 0
 
-            url: "qrc:///content/player.html?" + currentVideo.vId
+            url: "./resources/content/player.html?" + currentVideo.vId
 
             Behavior on opacity { NumberAnimation { duration: 200 } }
 
@@ -151,7 +150,7 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                     width: height
                     height: visible ? listView.contentItem.height : 0
-                    Image { anchors.centerIn: parent; width: 50; height: 50; source: "qrc:/shared/images/less.png" }
+                    Image { anchors.centerIn: parent; width: 50; height: 50; source: "./resources/shared/images/less.png" }
                     MouseArea {
                         anchors.fill: parent
                         onClicked: model.requestLess()
@@ -166,7 +165,7 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                     width: height
                     height: visible ? listView.contentItem.height : 0
-                    Image { anchors.centerIn: parent; width: 50; height: 50; source: "qrc:/shared/images/more.png" }
+                    Image { anchors.centerIn: parent; width: 50; height: 50; source: "./resources/shared/images/more.png" }
                     MouseArea {
                         anchors.fill: parent
                         onClicked: model.requestMore()

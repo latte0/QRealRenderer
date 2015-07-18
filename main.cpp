@@ -9,7 +9,8 @@
 #include <iostream>
 #include <tuple>
 
-#include "renderwindow.h"
+#include "scenerender.h"
+
 
 template < typename T >
 constexpr T sqrt( T s )
@@ -34,13 +35,18 @@ auto main (int argc, char *argv[]) -> int
     QSurfaceFormat::setDefaultFormat(fmt);
 
     MainWindow mainWindow;
-    mainWindow.resize(1280,720);
+    /*mainWindow.resize(1280,720);
     mainWindow.show();
+*/
+
 /*
     QMainWindow secondwindow_;
     secondwindow_.setCentralWidget((QWidget*)mainWindow.subadmin);
     secondwindow_.show();
 */
+
+
+
 
 
 

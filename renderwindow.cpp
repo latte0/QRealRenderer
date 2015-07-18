@@ -55,7 +55,7 @@ RenderWindow::RenderWindow(QMutex *mutex)
         m_qmlEngine->setIncubationController(m_quickWindow->incubationController());
 
     m_updateTimer.setSingleShot(true);
-    m_updateTimer.setInterval(16);
+    m_updateTimer.setInterval(8);
     connect(&m_updateTimer, &QTimer::timeout, this, &RenderWindow::updateQuick);
 
     connect(m_quickWindow, &QQuickWindow::sceneGraphInitialized, this, &RenderWindow::createFbo);
@@ -155,7 +155,8 @@ void RenderWindow::run()
         "varying lowp vec2 v_coord;\n"
         "uniform sampler2D sampler;\n"
         "void main() {\n"
-        "   gl_FragColor = vec4(texture2D(sampler, v_coord).rgb, 1.0);\n"
+        "   vec4 riftcolor = texture2D(sampler,  v_coord);"
+        "   gl_FragColor = vec4(riftcolor.b, riftcolor.g, riftcolor.r, 0);\n"
         "}\n";
     m_program = new QOpenGLShaderProgram;
     m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource);
@@ -260,7 +261,7 @@ void RenderWindow::exposeEvent(QExposeEvent *)
     if (isExposed()) {
         render();
         if (!m_quickInitialized)
-            startQuick(QStringLiteral("Test.qml"));
+            startQuick(QStringLiteral("flickr.qml"));
     }
 }
 

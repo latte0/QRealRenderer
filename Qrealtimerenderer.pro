@@ -622,4 +622,7 @@ SOURCES += adminwidget.cpp \
 
 DISTFILES += \
     Test.qml \
-    youtube.qml
+    youtube.qml \
+    Paint.qml \
+    imageview.qml \
+    flickr.qml

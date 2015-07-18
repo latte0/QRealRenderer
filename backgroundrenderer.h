@@ -34,7 +34,6 @@ public:
     ~BackGroundRenderer();
 
     QMutex* m_mutex;
-    QOpenGLTexture *m_qmltex;
 
     void resize(int w, int h);
     void render(QOpenGLContext* share);

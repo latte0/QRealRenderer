@@ -8,19 +8,32 @@
 
 MainWindow::MainWindow()
 {
-    QMenuBar *menuBar = new QMenuBar;
+ /*   QMenuBar *menuBar = new QMenuBar;
     QMenu *menuWindow = menuBar->addMenu(tr("&Window"));
     QAction *addNew = new QAction(menuWindow);
+    */
    /* addNew->setText(tr("Add new"));
     menuWindow->addAction(addNew);
     connect(addNew, SIGNAL(triggered()), this, SLOT(onAddNew()));
     setMenuBar(menuBar);
 */
+    /*
     setTree();
 
     onAddNew();
 
     setUnifiedTitleAndToolBarOnMac(true);
+    */
+
+    scenerender = new SceneRender();
+    scenerender->resize(1280, 720);
+    scenerender->show();
+
+
+     timer = new QTimer();
+    QObject::connect(timer, SIGNAL(timeout()), scenerender, SLOT(processing()));
+   // QObject::connect(timer, SIGNAL(timeout()), this, SLOT(capturetimeout()));
+    timer->start( 8 );
 }
 
 void MainWindow::setTree(){

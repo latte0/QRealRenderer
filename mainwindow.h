@@ -22,6 +22,9 @@ public:
     QLabel *subadmin;
     QTreeView *treeview;
 
+    QTimer* timer;
+    SceneRender* scenerender;
+
 private slots:
     void onAddNew();
     void capturewidget();

@@ -28,6 +28,8 @@ SceneRender::SceneRender(QWidget *parent)
     m_ecamera = QRRUtil::lookAt(eye, center, eyeUp);
     m_eworld = Eigen::Matrix4f::Identity();
 
+    setMouseTracking(true);
+    setCursor(Qt::BlankCursor);
 
 }
 
@@ -75,9 +77,14 @@ void SceneRender::initializeGL ()
 
     cube = new CubeRenderer();
     cube->init(this->context());
+    cube->m_uprot = 10;
+    cube->m_rightrot = 10;
 
     back = new BackGroundRenderer();
     back->init(this->context());
+
+    mouse = new MouseRenderer();
+    mouse->init(this->context());
 
     glClearColor(0, 0, 0, m_transparent ? 0 : 1);
 
@@ -278,17 +285,11 @@ void SceneRender::updateuniform(int index){
 
     ThePlayer.update();
 
-    qDebug() <<index << "aaaaaaaaaaaaaaaaaaaaaaaaaaa";
 
     m_uniformVs.lightDirection = EigenVector4fMake(0.0f, 0.0f, 500.0f, 0.0f);
     m_uniformVs.lightDirection = m_uniformVs.lightDirection.normalized();
-//    m_uniformVs.cameraPosition = EigenVector4fMake(0.0f, 10.0f, 60.0f, 0.0f);
-
-    position = EigenVector3fMake(100.0f, 10.0f, 60.0f);
 
 
-
-    m_ecamera = QRRUtil::lookAt(eye, center, eyeUp);
     std::cout << m_ecamera << std::endl;
     if(index==0){
         m_ecamera = ThePlayer.getLeftEyeMat();
@@ -301,8 +302,6 @@ void SceneRender::updateuniform(int index){
     m_uniformVs.modelViewMatrix = m_ecamera * m_eworld;
     m_uniformVs.projectionMatrix = m_eproj;
 
-
-    //m_rotation += self.timeSinceLastUpdate * 0.5f;
 
     m_frame += 1.0f;
     if (m_frame >= m_fbxLoader.GetAnimationEndFrame())
@@ -394,8 +393,11 @@ void SceneRender::paintGL()
 
         updateuniform(0);
 
-    cube->render(this->context(),m_eproj * m_ecamera, m_handinfo.m_fingerdata[1][3].position);
+    cube->render(this->context(),m_eproj * m_ecamera, m_handinfo.m_fingerdata[1][3].position,ThePlayer.getPosition() - mouse->m_centerpos);
+
     back->render(this->context());
+    mouse->render(this->context(),m_eproj * m_ecamera);
+
     glFrontFace(GL_CCW);
 
     glUseProgram(hand_program->programId());
@@ -428,8 +430,11 @@ void SceneRender::paintGL()
 
     updateuniform(1);
 
-    cube->render(this->context(),m_eproj * m_ecamera,m_handinfo.m_fingerdata[1][3].position);
-back->render(this->context());
+    cube->render(this->context(),m_eproj * m_ecamera,m_handinfo.m_fingerdata[1][3].position, ThePlayer.getPosition() - mouse->m_centerpos);
+
+    back->render(this->context());
+    mouse->render(this->context(),m_eproj * m_ecamera);
+
     glFrontFace(GL_CCW);
 
 
@@ -753,15 +758,54 @@ GLuint SceneRender::loadTexture (const std::string & filename)
 
 void SceneRender::resizeGL(int width, int height)
 {
- //   m_eproj = QRRUtil::perspective(45.0f, (float)(width /2 )/ height, 0.1f, 10000.0f);
+
     m_eproj = ThePlayer.m_RightEyeCam.m_proj;
 }
+
 void SceneRender::mousePressEvent(QMouseEvent *e)
 {
-    m_lastPos = e->pos();
+
+    Eigen::Vector2f pos = cube->calcPos(mouse->m_centerpos);
+
+    std::cout << "mousemoveeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"  << pos * 1000 << std::endl;
+
+    QMouseEvent mappedEvent(QEvent::MouseButtonPress,  QPointF(1000* pos.x(), 1000 * pos.y()), Qt::LeftButton, Qt::LeftButton,   Qt::NoModifier   );
+    QCoreApplication::sendEvent(cube->m_rwindow->m_quickWindow, &mappedEvent);
+
+    touched  = true;
+}
+
+void SceneRender::mouseReleaseEvent(QMouseEvent *e)
+{
+
+
+    Eigen::Vector2f pos = cube->calcPos(mouse->m_centerpos);
+
+    std::cout << "mousemoveeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"  << pos * 1000 << std::endl;
+
+    QMouseEvent mappedEvent(QEvent::MouseButtonRelease,  QPointF(1000* pos.x(), 1000 * pos.y()), Qt::LeftButton, Qt::LeftButton,   Qt::NoModifier   );
+    QCoreApplication::sendEvent(cube->m_rwindow->m_quickWindow, &mappedEvent);
+
+    touched  = false;
 }
 
 void SceneRender::mouseMoveEvent(QMouseEvent *e)
 {
+    mouse->m_rightrot -= (e->pos().x() - m_lastPos.x()) /4.0;
+    mouse->m_uprot += (e->pos().y() - m_lastPos.y() ) /4.0;
 
+    m_lastPos = e->pos();
+
+    if(touched){
+        Eigen::Vector2f pos = cube->calcPos(mouse->m_centerpos);
+
+        QMouseEvent mappedEvent(QEvent::MouseMove,  QPointF(1000* pos.x(), 1000 * pos.y()), Qt::LeftButton, Qt::LeftButton,   Qt::NoModifier   );
+        QCoreApplication::sendEvent(cube->m_rwindow->m_quickWindow, &mappedEvent);
+    }
+
+/*
+    QPoint glob = mapToGlobal(QPoint(width()/2,height()/2));
+    QCursor::setPos(glob);
+    m_lastPos = QPoint(width()/2,height()/2);
+*/
 }
