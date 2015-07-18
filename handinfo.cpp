@@ -75,6 +75,8 @@ bool HandInfo::UpdateInfo(){
 
                m_fingerdata[i][b].direction_mat = LeaptoEigenmat(bone.basis());
 
+               m_fingerdata[i][b].position = QRRUtil::EigenVector3fMake(bone.prevJoint().x/QRR::Environment::mmDiv,bone.prevJoint().y/QRR::Environment::mmDiv, bone.prevJoint().z/QRR::Environment::mmDiv);
+
                m_fingerdata[i][b].position_mat = QRRUtil::MakeTransform(QRRUtil::EigenVector3fMake(bone.prevJoint().x/QRR::Environment::mmDiv,bone.prevJoint().y/QRR::Environment::mmDiv, bone.prevJoint().z/QRR::Environment::mmDiv));
              }
              i++;

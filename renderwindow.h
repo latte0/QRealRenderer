@@ -51,6 +51,8 @@ public:
 
     void updateQuick();
 
+    QQuickWindow *m_quickWindow;
+
 protected:
     void exposeEvent(QExposeEvent *e) Q_DECL_OVERRIDE;
     void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
@@ -75,7 +77,7 @@ private:
     QOpenGLContext *m_context;
     QOffscreenSurface *m_offscreenSurface;
     QQuickRenderControl *m_renderControl;
-    QQuickWindow *m_quickWindow;
+
     QQmlEngine *m_qmlEngine;
     QQmlComponent *m_qmlComponent;
     QQuickItem *m_rootItem;

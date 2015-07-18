@@ -347,8 +347,8 @@ void RenderWindow::render()
 
 void RenderWindow::mousePressEvent(QMouseEvent *e)
 {
-
-    QMouseEvent mappedEvent(e->type(), e->localPos(), e->screenPos(), e->button(), e->buttons(), e->modifiers());
+    qDebug() << "999999999999999999999999999999999999999999"<<e <<  e->button() << e->buttons()<<e->modifiers();
+    QMouseEvent mappedEvent(e->type(), e->localPos(), e->button(), e->buttons(), e->modifiers());
     QCoreApplication::sendEvent(m_quickWindow, &mappedEvent);
 }
 

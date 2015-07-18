@@ -120,7 +120,7 @@ QT_FORWARD_DECLARE_CLASS(QQmlComponent)
 QT_FORWARD_DECLARE_CLASS(QQuickItem)
 
 class RenderWindow;
-
+class CubeRenderer;
 
 
 #define MAX_BONE_COUNT 128
@@ -141,11 +141,7 @@ public:
 
     GLuint loadTexture (const std::string &filename);
 
-    RenderWindow *m_rwindow;
-    QMutex* m_mutex;
-    QOpenGLTexture *m_qmltex;
     CubeRenderer *cube;
-
 
     void initOVR();
     void initFB();

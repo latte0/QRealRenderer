@@ -28,12 +28,6 @@ SceneRender::SceneRender(QWidget *parent)
     m_ecamera = QRRUtil::lookAt(eye, center, eyeUp);
     m_eworld = Eigen::Matrix4f::Identity();
 
-    m_mutex = new QMutex();
-
-    m_rwindow = new RenderWindow(m_mutex);
-
-    m_rwindow->resize(960, 1080);
-    m_rwindow->show();
 
 
 
@@ -377,12 +371,7 @@ void SceneRender::paintGL()
         }
     };
 
-    m_mutex->lock();
-        if(m_qmltex != nullptr) delete m_qmltex;
-        m_qmltex = new QOpenGLTexture(m_rwindow->qmlimage.mirrored());
-        m_qmltex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
-        m_qmltex->setMagnificationFilter(QOpenGLTexture::Linear);
-    m_mutex->unlock();
+
 
 //*******************************************
     m_leftEyeTex->bind();
@@ -401,7 +390,8 @@ void SceneRender::paintGL()
 
 
     glViewport(0,0,960,1080);
-    cube->render(this->context(),m_eproj * m_ecamera, m_qmltex);
+
+    cube->render(this->context(),m_eproj * m_ecamera, m_handinfo.m_fingerdata[1][3].position);
 
     glFrontFace(GL_CCW);
 
@@ -413,8 +403,6 @@ void SceneRender::paintGL()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 */
-
-    glFlush();
 
     m_leftEyeTex->release();
 //**************************************************::
@@ -436,7 +424,7 @@ void SceneRender::paintGL()
 
 
 
-    cube->render(this->context(),m_eproj * m_ecamera , m_qmltex);
+    cube->render(this->context(),m_eproj * m_ecamera,m_handinfo.m_fingerdata[1][3].position);
 
     glFrontFace(GL_CCW);
 

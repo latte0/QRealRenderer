@@ -27,6 +27,19 @@ CubeRenderer::CubeRenderer()
       m_matrixLoc(0)
 {
 
+    m_positions[0] = QRRUtil::EigenVector3fMake(-1.0, 1.0, 0.0);
+    m_positions[1] = QRRUtil::EigenVector3fMake(1.0, 1.0, 0.0);
+    m_positions[2] = QRRUtil::EigenVector3fMake(-1.0, -1.0, 0.0);
+    m_positions[3] = QRRUtil::EigenVector3fMake(1.0, -1.0, 0.0);
+
+
+    m_mutex = new QMutex();
+
+    m_rwindow = new RenderWindow(m_mutex);
+
+    m_rwindow->resize(960, 1080);
+    m_rwindow->show();
+
 }
 
 CubeRenderer::~CubeRenderer()
@@ -74,13 +87,13 @@ void CubeRenderer::init(QOpenGLContext* share)
     m_vbo->bind();
 
     GLfloat v[] = {
-        -10,10,-1,    10,-10,-1,     -10,-10,-1,
-        10,-10,-1,   -10,10,-1,       10,10, -1
-    };
+            -1,1,0,    1,-1,0,     -1,-1,0,
+            1,-1,0,   -1,1,0,       1,1, 0
+        };
 
     GLfloat texCoords[] = {
-        0.0f,0.0f, 1.0f,1.0f, 1.0f,0.0f,
-        1.0f,1.0f, 0.0f,0.0f, 0.0f,1.0f,
+        0.0f,1.0f, 1.0f,0.0f, 0.0f,0.0f,
+        1.0f,0.0f, 0.0f,1.0f, 1.0f,1.0f,
     };
 
     const int vertexCount = 6;
@@ -112,7 +125,7 @@ void CubeRenderer::setupVertexAttribs(QOpenGLContext* share)
     m_vbo->release();
 }
 
-void CubeRenderer::render(QOpenGLContext* share, Eigen::Matrix4f mat, QOpenGLTexture *qmltex)
+void CubeRenderer::render(QOpenGLContext* share, Eigen::Matrix4f mat, Eigen::Vector3f top)
 {
 
     auto *f = share->functions();
@@ -123,7 +136,14 @@ void CubeRenderer::render(QOpenGLContext* share, Eigen::Matrix4f mat, QOpenGLTex
     f->glActiveTexture (GL_TEXTURE0);
     f->glUniform1i     (f->glGetUniformLocation (m_program->programId(), "sampler"), 0);
 
-        qmltex->bind();
+    m_mutex->lock();
+        if(m_qmltex != nullptr) delete m_qmltex;
+        m_qmltex = new QOpenGLTexture(m_rwindow->qmlimage.mirrored());
+        m_qmltex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
+        m_qmltex->setMagnificationFilter(QOpenGLTexture::Linear);
+    m_mutex->unlock();
+    m_qmltex->bind();
+
 
         QOpenGLVertexArrayObject::Binder vaoBinder(m_vao);
 
@@ -132,14 +152,40 @@ void CubeRenderer::render(QOpenGLContext* share, Eigen::Matrix4f mat, QOpenGLTex
                         mat(2,0),mat(2,1),mat(2,2),mat(2,3),
                         mat(3,0),mat(3,1),mat(3,2),mat(3,3));
 
+        QMatrix4x4 s;
+        s.scale(m_scale, m_scale);
+        s.translate(0.0f,0.0f,m_z);
+
         if (!m_vao->isCreated())
             setupVertexAttribs(share);
-
         static GLfloat angle = 0;
 
+        m_positions[0] = QRRUtil::EigenVector3fMake(-1.0, 1.0, 0.0);
+        m_positions[1] = QRRUtil::EigenVector3fMake(1.0, 1.0, 0.0);
+        m_positions[2] = QRRUtil::EigenVector3fMake(-1.0, -1.0, 0.0);
+        m_positions[3] = QRRUtil::EigenVector3fMake(1.0, -1.0, 0.0);
+
+        for(int i =0;i < 4;i++){
+            m_positions[i] = m_positions[i] * m_scale;
+            m_positions[i].z() = m_positions[i].z() + m_z;
+        }
+
+        m_rightVec = m_positions[1] - m_positions[0];
+        m_downVec = m_positions[2] - m_positions[0];
+        m_suiVec = m_rightVec.cross(m_downVec);
+
+        if(getH(top) < 5){
+            std::cout << "height " << getH(top) << std::endl;
+            Eigen::Vector2f pos = calcPos(top);
+            qDebug() << "10 ika" ;
+            std::cout << pos << std::endl;
+            QMouseEvent mappedEvent(QEvent::MouseButtonPress,  QPointF(1000* pos.x(), 1000 * pos.y()), Qt::LeftButton, Qt::LeftButton,   Qt::NoModifier   );
+            QCoreApplication::sendEvent(m_rwindow->m_quickWindow, &mappedEvent);
+        }
 
 
-        m_program->setUniformValue(m_matrixLoc, qmat);
+
+        m_program->setUniformValue(m_matrixLoc, qmat * s);
 
         f->glDrawArrays(GL_TRIANGLES, 0, 6);
 
