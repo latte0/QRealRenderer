@@ -168,6 +168,8 @@ void CubeRenderer::render(QOpenGLContext* share, Eigen::Matrix4f mat, Eigen::Vec
         for(int i =0;i < 4;i++){
             m_positions[i] = m_positions[i] * m_scale;
             m_positions[i].z() = m_positions[i].z() + m_z;
+            m_positions[i].x() = m_positions[i].x() + 3;
+            m_positions[i].y() = m_positions[i].y() - 7;
         }
 
         m_rightVec = m_positions[1] - m_positions[0];

@@ -71,6 +71,7 @@
 #include "player.h"
 #include "renderwindow.h"
 #include "cuberenderer.h"
+#include "backgroundrenderer.h"
 
 
 #include "OVR.h"
@@ -103,22 +104,6 @@ class btDefaultCollisionConfiguration;
 
 
 
-static const QEvent::Type INIT = QEvent::Type(QEvent::User + 1);
-static const QEvent::Type RENDER = QEvent::Type(QEvent::User + 2);
-static const QEvent::Type RESIZE = QEvent::Type(QEvent::User + 3);
-static const QEvent::Type STOP = QEvent::Type(QEvent::User + 4);
-
-static const QEvent::Type UPDATE = QEvent::Type(QEvent::User + 5);
-
-QT_FORWARD_DECLARE_CLASS(QOpenGLContext)
-QT_FORWARD_DECLARE_CLASS(QOpenGLFramebufferObject)
-QT_FORWARD_DECLARE_CLASS(QOffscreenSurface)
-QT_FORWARD_DECLARE_CLASS(QQuickRenderControl)
-QT_FORWARD_DECLARE_CLASS(QQuickWindow)
-QT_FORWARD_DECLARE_CLASS(QQmlEngine)
-QT_FORWARD_DECLARE_CLASS(QQmlComponent)
-QT_FORWARD_DECLARE_CLASS(QQuickItem)
-
 class RenderWindow;
 class CubeRenderer;
 
@@ -136,12 +121,13 @@ class SceneRender : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
     Q_OBJECT
 
 public:
-    SceneRender(QWidget *parent = 0);
-    ~SceneRender();
+    SceneRender(QWidget *parent = 0); ~SceneRender();
 
     GLuint loadTexture (const std::string &filename);
 
     CubeRenderer *cube;
+    BackGroundRenderer *back;
+
 
     void initOVR();
     void initFB();

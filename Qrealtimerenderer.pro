@@ -583,7 +583,9 @@ HEADERS += \
     actorfactory.h \
     qmlrenderer.h \
     renderwindow.h \
-    cuberenderer.h
+    cuberenderer.h \
+    backgroundrenderer.h \
+    mouserenderer.h
 
 SOURCES += adminwidget.cpp \
            main.cpp \
@@ -614,7 +616,10 @@ SOURCES += adminwidget.cpp \
     actorfactory.cpp \
     qmlrenderer.cpp \
     renderwindow.cpp \
-    cuberenderer.cpp
+    cuberenderer.cpp \
+    backgroundrenderer.cpp \
+    mouserenderer.cpp
 
 DISTFILES += \
-    Test.qml
+    Test.qml \
+    youtube.qml

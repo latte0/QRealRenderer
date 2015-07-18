@@ -29,8 +29,6 @@ SceneRender::SceneRender(QWidget *parent)
     m_eworld = Eigen::Matrix4f::Identity();
 
 
-
-
 }
 
 SceneRender::~SceneRender()
@@ -77,6 +75,9 @@ void SceneRender::initializeGL ()
 
     cube = new CubeRenderer();
     cube->init(this->context());
+
+    back = new BackGroundRenderer();
+    back->init(this->context());
 
     glClearColor(0, 0, 0, m_transparent ? 0 : 1);
 
@@ -391,12 +392,14 @@ void SceneRender::paintGL()
 
     glViewport(0,0,960,1080);
 
-    cube->render(this->context(),m_eproj * m_ecamera, m_handinfo.m_fingerdata[1][3].position);
+        updateuniform(0);
 
+    cube->render(this->context(),m_eproj * m_ecamera, m_handinfo.m_fingerdata[1][3].position);
+    back->render(this->context());
     glFrontFace(GL_CCW);
 
     glUseProgram(hand_program->programId());
-    updateuniform(0);
+
     drawFunc(m_meshlist);
 
 /*
@@ -423,12 +426,12 @@ void SceneRender::paintGL()
     glFrontFace(GL_CCW);
 
 
+    updateuniform(1);
 
     cube->render(this->context(),m_eproj * m_ecamera,m_handinfo.m_fingerdata[1][3].position);
-
+back->render(this->context());
     glFrontFace(GL_CCW);
 
-    updateuniform(1);
 
     glUseProgram(hand_program->programId());
 
