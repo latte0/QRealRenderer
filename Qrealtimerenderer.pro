@@ -7,7 +7,7 @@ TARGET =
 
 CONFIG += c++14
 
-QT       += core gui opengl multimedia network quick qml
+QT       += core gui opengl multimedia network quick qml webengine
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -586,7 +586,10 @@ HEADERS += \
     mouserenderer.h \
     glutil.h \
     fbxrenderer.h \
-    fbxstruct.h
+    fbxstruct.h \
+    scenario.h \
+    urlutil.h \
+    webrenderwindow.h
 
 SOURCES += adminwidget.cpp \
            main.cpp \
@@ -619,7 +622,10 @@ SOURCES += adminwidget.cpp \
     backgroundrenderer.cpp \
     mouserenderer.cpp \
     glutil.cpp \
-    fbxrenderer.cpp
+    fbxrenderer.cpp \
+    scenario.cpp \
+    urlutil.cpp \
+    webrenderwindow.cpp
 
 DISTFILES += \
     Test.qml \

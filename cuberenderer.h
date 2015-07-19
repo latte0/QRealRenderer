@@ -45,7 +45,7 @@ public:
     void resize(int w, int h);
     void render(QOpenGLContext* share,Eigen::Matrix4f mat, Eigen::Vector3f top, Eigen::Vector3f mousepos);
 
-    void init(QOpenGLContext* share);
+    void init(QOpenGLContext* share, const QString &filename);
     void setupVertexAttribs(QOpenGLContext* share);
 
     float calcV(Eigen::Vector3f top){
@@ -94,7 +94,7 @@ public:
 
 private:
 
-
+    QString m_filename;
 
     QOpenGLContext* m_context;
     QOpenGLShaderProgram *m_program;

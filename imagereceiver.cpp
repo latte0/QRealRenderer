@@ -1,9 +1,15 @@
 #include "imagereceiver.h"
 
-ImageReceiver::ImageReceiver(int port,std::mutex *mtx)
+ImageReceiver::ImageReceiver(int port,std::mutex *mtx) :
+    m_mtx(mtx),
+    m_port(port)
 {
-    m_port = port;
-    m_mtx = mtx;
+    mtx->lock();
+        for(int i=0; i<65500 ; i++){
+            video_ibuff.push_back((uchar)1);
+        }
+        m_videoImage = cv::imdecode(cv::Mat(video_ibuff), CV_LOAD_IMAGE_COLOR);
+    mtx->unlock();
 }
 
 ImageReceiver::~ImageReceiver()

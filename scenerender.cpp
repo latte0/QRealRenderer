@@ -41,7 +41,7 @@ void SceneRender::initializeGL ()
     initializeOpenGLFunctions();
 
     cube = new CubeRenderer();
-    cube->init(this->context());
+    cube->init(this->context(), "Paint.qml");
     cube->m_uprot = 10;
     cube->m_rightrot = 10;
 
@@ -53,6 +53,10 @@ void SceneRender::initializeGL ()
 
     fbxrender = new FbxRenderer();
     fbxrender->init(this->context(), "");
+
+
+
+
 
     glClearColor(0, 0, 0, m_transparent ? 0 : 1);
 
@@ -396,6 +400,8 @@ void SceneRender::paintGL()
 
     glUseProgram(hand_program->programId());
 
+    fbxrender->render(this->context(),&m_handinfo, m_uniformVs);
+
   //  drawFunc(m_meshlist);
 
 /*
@@ -477,6 +483,7 @@ void SceneRender::paintGL()
     glTexImage2D (GL_TEXTURE_2D, 0, GL_RGB,
                   640,480, 0, GL_RGB,
                   GL_UNSIGNED_BYTE, video_right_image.data);
+
 */
     int width, height;
 

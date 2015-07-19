@@ -36,10 +36,7 @@ CubeRenderer::CubeRenderer()
 
     m_mutex = new QMutex();
 
-    m_rwindow = new RenderWindow(m_mutex);
 
-    m_rwindow->resize(960, 1080);
-    m_rwindow->show();
 
 }
 
@@ -50,8 +47,14 @@ CubeRenderer::~CubeRenderer()
     delete m_vao;
 }
 
-void CubeRenderer::init(QOpenGLContext* share)
+void CubeRenderer::init(QOpenGLContext* share, const QString &filename)
 {
+    m_rwindow = new RenderWindow(m_mutex,filename);
+    m_rwindow->resize(960, 1080);
+    m_rwindow->show();
+
+    m_filename = filename;
+
     auto *f = share->functions();
 
     static const char *vertexShaderSource =

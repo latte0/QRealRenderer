@@ -3,6 +3,7 @@
 #include <QDesktopWidget>
 #include <QSurfaceFormat>
 
+#include <QtWebEngine/qtwebengineglobal.h>
 
 #include "mainwindow.h"
 
@@ -20,6 +21,8 @@ constexpr T sqrt( T s )
 auto main (int argc, char *argv[]) -> int
 {
     QApplication a(argc, argv);
+
+    QtWebEngine::initialize();
 
     QSurfaceFormat fmt;
     fmt.setDepthBufferSize(24);
@@ -44,8 +47,6 @@ auto main (int argc, char *argv[]) -> int
     secondwindow_.setCentralWidget((QWidget*)mainWindow.subadmin);
     secondwindow_.show();
 */
-
-
 
 
 

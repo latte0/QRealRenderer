@@ -17,7 +17,7 @@ public:
     Scene();
     ~Scene();
 
-    void drawscene();
+    void render();
 
     void addlight();
     void addmodel();

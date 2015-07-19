@@ -16,7 +16,7 @@
 #include <QQuickRenderControl>
 #include <QCoreApplication>
 
-RenderWindow::RenderWindow(QMutex *mutex)
+RenderWindow::RenderWindow(QMutex *mutex ,const QString &filename)
     : m_rootItem(0),
       m_fbo(0),
       m_program(0),
@@ -26,7 +26,7 @@ RenderWindow::RenderWindow(QMutex *mutex)
       m_scenemutex(nullptr)
 {
     setSurfaceType(QSurface::OpenGLSurface);
-
+    m_filename = filename;
         m_scenemutex = mutex;
 
     QSurfaceFormat format;
@@ -261,7 +261,7 @@ void RenderWindow::exposeEvent(QExposeEvent *)
     if (isExposed()) {
         render();
         if (!m_quickInitialized)
-            startQuick(QStringLiteral("Paint.qml"));
+            startQuick(m_filename);
     }
 }
 

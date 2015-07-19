@@ -12,6 +12,7 @@
 
 
 #include "eigenutil.h"
+#include "glutil.h"
 
 BackGroundRenderer::BackGroundRenderer(int port)
     : m_program(0),
@@ -124,11 +125,13 @@ void BackGroundRenderer::render(QOpenGLContext* share)
     f->glActiveTexture (GL_TEXTURE0);
     f->glUniform1i     (f->glGetUniformLocation (m_program->programId(), "sampler"), 0);
 
+    int width = 640;
+    int height = 480;
 
     m_mtx->lock();
       m_videoImage = m_imgReceiver->getImageData();
     m_mtx->unlock();
-/*
+
         QImage image(m_videoImage.data,640,480,QImage::Format_ARGB32);
         if(m_videotex != nullptr) delete m_videotex;
         m_videotex = new QOpenGLTexture(image.mirrored());
@@ -136,14 +139,9 @@ void BackGroundRenderer::render(QOpenGLContext* share)
         m_videotex->setMagnificationFilter(QOpenGLTexture::Linear);
 
     m_videotex->bind();
-*/
+
+
     QOpenGLVertexArrayObject::Binder vaoBinder(m_vao);
-
-
-
-
-   // m_qmltex = new QOpenGLTexture(m_rwindow->qmlimage.mirrored());
-     //   m_qmltex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
 
     if (!m_vao->isCreated())
         setupVertexAttribs(share);

@@ -93,6 +93,7 @@ class btDefaultCollisionConfiguration;
 
 
 class RenderWindow;
+//class WebRenderWindow;
 class CubeRenderer;
 class MouseRenderer;
 
