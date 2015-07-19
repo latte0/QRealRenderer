@@ -22,7 +22,6 @@
 
 #include <QMutex>
 #include "scenerender.h"
-#include "webrenderwindow.h"
 
 
 QT_FORWARD_DECLARE_CLASS(QOpenGLContext)
@@ -38,13 +37,13 @@ QT_FORWARD_DECLARE_CLASS(QQmlComponent)
 QT_FORWARD_DECLARE_CLASS(QQuickItem)
 
 class SceneRender;
-//class WebRenderWindow;
+class WebRenderWindow;
 
 class RenderWindow : public QWindow
 {
     Q_OBJECT
 
-  //  friend class WebRenderWindow;
+    friend class WebRenderWindow;
 
 public:
     RenderWindow(QMutex* mutex, const QString &filename);

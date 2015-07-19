@@ -1,11 +1,13 @@
 #ifndef WEBRENDERWINDOW_H
 #define WEBRENDERWINDOW_H
+#include "renderwindow.h"
 
-
-class WebRenderWindow
+class WebRenderWindow : public  RenderWindow
 {
+
 public:
-    WebRenderWindow();
+    WebRenderWindow(QMutex* mutex, const QString &filename);
+    ~WebRenderWindow();
 };
 
 #endif // WEBRENDERWINDOW_H
