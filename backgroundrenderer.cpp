@@ -13,12 +13,19 @@
 
 #include "eigenutil.h"
 
-BackGroundRenderer::BackGroundRenderer()
+BackGroundRenderer::BackGroundRenderer(int port)
     : m_program(0),
       m_vbo(0),
       m_vao(0)
 {
+    m_mtx = new std::mutex;
 
+    m_imgReceiver = new ImageReceiver(port,m_mtx);
+    imgthread = new QThread;
+    m_imgReceiver->moveToThread(imgthread);
+    QObject::connect(this, SIGNAL(imgstart()), m_imgReceiver, SLOT(run()));
+    imgthread->start();
+    imgstart();
 }
 
 BackGroundRenderer::~BackGroundRenderer()
@@ -45,8 +52,8 @@ void BackGroundRenderer::init(QOpenGLContext* share)
         "varying lowp vec2 v_coord;\n"
         "uniform sampler2D sampler;\n"
         "void main() {\n"
-        "   gl_FragColor = vec4(1.0,1.0,0.0, 0.5);\n"
-        " //  gl_FragColor = vec4(texture2D(sampler, v_coord).rgb, 1.0);\n"
+        "  // gl_FragColor = vec4(1.0,1.0,0.0, 0.5);\n"
+        "   gl_FragColor = vec4(texture2D(sampler, v_coord).rgb, 1.0);\n"
         "}\n";
 
     m_program = new QOpenGLShaderProgram;
@@ -80,6 +87,7 @@ void BackGroundRenderer::init(QOpenGLContext* share)
     m_vbo->write(sizeof(GLfloat) * vertexCount * 3, texCoords, sizeof(GLfloat) * vertexCount * 2);
     m_vbo->release();
 
+
     if (m_vao->isCreated())
         setupVertexAttribs(share);
 }
@@ -111,11 +119,27 @@ void BackGroundRenderer::render(QOpenGLContext* share)
 
     f->glFrontFace(GL_CW);
 
+
     f->glUseProgram(m_program->programId());
     f->glActiveTexture (GL_TEXTURE0);
     f->glUniform1i     (f->glGetUniformLocation (m_program->programId(), "sampler"), 0);
 
+
+    m_mtx->lock();
+      m_videoImage = m_imgReceiver->getImageData();
+    m_mtx->unlock();
+/*
+        QImage image(m_videoImage.data,640,480,QImage::Format_ARGB32);
+        if(m_videotex != nullptr) delete m_videotex;
+        m_videotex = new QOpenGLTexture(image.mirrored());
+        m_videotex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
+        m_videotex->setMagnificationFilter(QOpenGLTexture::Linear);
+
+    m_videotex->bind();
+*/
     QOpenGLVertexArrayObject::Binder vaoBinder(m_vao);
+
+
 
 
    // m_qmltex = new QOpenGLTexture(m_rwindow->qmlimage.mirrored());

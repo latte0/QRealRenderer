@@ -261,7 +261,7 @@ void RenderWindow::exposeEvent(QExposeEvent *)
     if (isExposed()) {
         render();
         if (!m_quickInitialized)
-            startQuick(QStringLiteral("flickr.qml"));
+            startQuick(QStringLiteral("Paint.qml"));
     }
 }
 

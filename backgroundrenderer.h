@@ -5,6 +5,9 @@
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 
+#include <QThread>
+#include <thread>
+
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include <QOpenGLFunctions_3_3_Core>
@@ -20,6 +23,7 @@
 #include <QMutex>
 
 #include "actor.h"
+#include "imagereceiver.h"
 
 QT_FORWARD_DECLARE_CLASS(QOpenGLContext)
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
@@ -29,11 +33,13 @@ QT_FORWARD_DECLARE_CLASS(QOpenGLVertexArrayObject)
 
 class BackGroundRenderer : Actor
 {
+    Q_OBJECT
+
 public:
-    BackGroundRenderer();
+    BackGroundRenderer(int port);
     ~BackGroundRenderer();
 
-    QMutex* m_mutex;
+    std::mutex * m_mtx;
 
     void resize(int w, int h);
     void render(QOpenGLContext* share);
@@ -43,14 +49,24 @@ public:
 
     Eigen::Vector3f m_positions[4];
 
+private:
+
     float m_scale = 10;
 
-
-private:
     QOpenGLContext* m_context;
     QOpenGLShaderProgram *m_program;
     QOpenGLBuffer *m_vbo;
     QOpenGLVertexArrayObject *m_vao;
+    QOpenGLTexture *m_videotex;
+
+    ImageReceiver *m_imgReceiver;
+    QThread *imgthread;
+
+    std::vector<uchar> video_ibuff;
+    cv::Mat m_videoImage;
+
+signals:
+    void imgstart();
 
 };
 

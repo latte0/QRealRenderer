@@ -568,7 +568,6 @@ HEADERS += \
     scenerendermodel.h \
     shaderobject.h \
     actor.h \
-    fbxdrawer.h \
     camera.h \
     scene.h \
     light.h \
@@ -581,11 +580,13 @@ HEADERS += \
     hmdinfo.h \
     lineobject.h \
     actorfactory.h \
-    qmlrenderer.h \
     renderwindow.h \
     cuberenderer.h \
     backgroundrenderer.h \
-    mouserenderer.h
+    mouserenderer.h \
+    glutil.h \
+    fbxrenderer.h \
+    fbxstruct.h
 
 SOURCES += adminwidget.cpp \
            main.cpp \
@@ -602,7 +603,6 @@ SOURCES += adminwidget.cpp \
     scenerendermodel.cpp \
     shaderobject.cpp \
     actor.cpp \
-    fbxdrawer.cpp \
     camera.cpp \
     scene.cpp \
     light.cpp \
@@ -614,11 +614,12 @@ SOURCES += adminwidget.cpp \
     ovrcondition.cpp \
     lineobject.cpp \
     actorfactory.cpp \
-    qmlrenderer.cpp \
     renderwindow.cpp \
     cuberenderer.cpp \
     backgroundrenderer.cpp \
-    mouserenderer.cpp
+    mouserenderer.cpp \
+    glutil.cpp \
+    fbxrenderer.cpp
 
 DISTFILES += \
     Test.qml \

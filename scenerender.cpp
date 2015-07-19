@@ -5,60 +5,26 @@
 #include "external/Leap.h"
 #include "external/cpplinq.hpp"
 #include "eigenutil.h"
-
-
-#include "Kernel/OVR_Threads.h"
-#include "Util/Util_SystemGUI.h"
+#include "fbxstruct.h"
 
 
 #include "external/external_opengl/glm/glm.hpp"
 #include "external/external_opengl/glm/gtc/type_ptr.hpp"
 
 SceneRender::SceneRender(QWidget *parent)
-    : QOpenGLWidget(parent),
-      m_maincamra(nullptr),
-      m_secondcamera(nullptr)
+    : QOpenGLWidget(parent)
 {
 
-    position = ThePlayer.getPosition();
-    eye = position;
-    center= QRRUtil::EigenVector3fMake(0.0f, 0.0f, 0.0f);
-    eyeUp= QRRUtil::EigenVector3fMake(0.0f, 1.0f , 0.0f);
-
-    m_ecamera = QRRUtil::lookAt(eye, center, eyeUp);
+    m_position = ThePlayer.getPosition();
     m_eworld = Eigen::Matrix4f::Identity();
 
     setMouseTracking(true);
     setCursor(Qt::BlankCursor);
-
 }
 
 SceneRender::~SceneRender()
 {
 
-}
-
-
-
-
-
-
-unsigned char* SceneRender::make_dummy_texture (int* width_, int* height_)
-{
-    int height = 256;
-    int width  = 256;
-    unsigned char* pixels = (unsigned char*)malloc (width*height*4);
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-            pixels[y*(width*4) + x*4 +0] = x % 256;
-            pixels[y*(width*4) + x*4 +1] = y % 256;
-            pixels[y*(width*4) + x*4 +2] = 0;
-            pixels[y*(width*4) + x*4 +3] = 255;
-        }
-    }
-    *width_  = width;
-    *height_ = height;
-    return pixels;
 }
 
 
@@ -69,7 +35,6 @@ void SceneRender::processing()
 
 void SceneRender::initializeGL ()
 {
-
     using boost::asio::ip::udp;
 
 
@@ -80,15 +45,16 @@ void SceneRender::initializeGL ()
     cube->m_uprot = 10;
     cube->m_rightrot = 10;
 
-    back = new BackGroundRenderer();
+    back = new BackGroundRenderer(1091);
     back->init(this->context());
 
     mouse = new MouseRenderer();
     mouse->init(this->context());
 
-    glClearColor(0, 0, 0, m_transparent ? 0 : 1);
+    fbxrender = new FbxRenderer();
+    fbxrender->init(this->context(), "");
 
-    OnStartup();
+    glClearColor(0, 0, 0, m_transparent ? 0 : 1);
 
     hand_program = new QOpenGLShaderProgram();
     distort_program = new QOpenGLShaderProgram();
@@ -194,7 +160,7 @@ void SceneRender::initializeGL ()
         m_meshlist.push_back(mesh);
     }
 
-    initOVR();
+
     initFB();
 
     m_frame = 0;
@@ -229,7 +195,7 @@ void SceneRender::initializeGL ()
         glSamplerParameteri (m_distortsampler, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         int   width=1000, height=1000, comp;
-           unsigned char* pixels = make_dummy_texture (&width, &height);
+           unsigned char* pixels = QRR::GLUtil::make_dummy_texture (&width, &height);
            std::cout << "texture width  = " << width  << "\n";
            std::cout << "texture height = " << height << "\n";
            assert (pixels != 0);
@@ -254,25 +220,14 @@ void SceneRender::initializeGL ()
 
     qDebug() << size();
 
-//---------------------------------------------net wrokd videl -----------
 
 
-    /*  sock = socket(AF_INET, SOCK_DGRAM, 0);
-       addr.sin_family = AF_INET;
-       addr.sin_port = htons(1080);
-       addr.sin_addr.s_addr = INADDR_ANY;
-       bind(sock, (struct sockaddr *)&addr, sizeof(addr));
-       */
+
 
     genVideoTexture();
 
 }
 
-
-
-void SceneRender::initOVR(){
-
-}
 
 void SceneRender::initFB(){
     m_rightEyeTex = new QOpenGLFramebufferObject(960,1080, QOpenGLFramebufferObject::Depth);
@@ -402,7 +357,8 @@ void SceneRender::paintGL()
 
     glUseProgram(hand_program->programId());
 
-    drawFunc(m_meshlist);
+   // drawFunc(m_meshlist);
+    fbxrender->render(this->context(),&m_handinfo, m_uniformVs);
 
 /*
     glEnable(GL_BLEND);
@@ -440,7 +396,7 @@ void SceneRender::paintGL()
 
     glUseProgram(hand_program->programId());
 
-    drawFunc(m_meshlist);
+  //  drawFunc(m_meshlist);
 
 /*
     glEnable(GL_BLEND);
@@ -583,88 +539,12 @@ void SceneRender::paintGL()
 
 
 
-
-
-    getOculusAngle();
+        m_ovrsender.send();
 
 
  //   lastcomposeEyeTex = composeEyeTex;
 }
 
-static void OVR_CDECL LogCallback(int level, const char* message)
-{
-    OVR_UNUSED2(level, message);
-}
-
-int SceneRender::OnStartup()
-{
-
-    //OVR::Thread::SetCurrentThreadName("OWDMain");
-
-
-    ovrInitParams params = {0, 0, nullptr, 0};
-    params.LogCallback = LogCallback;
-    ovrBool result = ovr_Initialize(&params);
-
-    ovr_TraceMessage(ovrLogLevel_Info, "Oculus World Demo OnStartup");
-
-    if (!result)
-    {
-        qDebug() << "oculusworlddemo", "unabel to initialize libovr";
-
-    }
-
-    Hmd = ovrHmd_Create(0);
-    if (!Hmd || !ovrHmd_ConfigureTracking(Hmd,
-        ovrTrackingCap_Orientation, 0))
-    {
-        qDebug() << "Unable to create hmd" << ovrHmd_GetLastError(NULL);
-    }
-
-    for (int i = 0; i < 10; ++i) {
-      ovrTrackingState state = ovrHmd_GetTrackingState(Hmd, 0);
-
-      ovrQuatf orientation = state.HeadPose.ThePose.Orientation;
-      qDebug () << orientation.x << orientation.y << orientation.z << orientation.w;
-      glm::quat q = glm::make_quat(&orientation.x);
-      glm::vec3 euler = glm::eulerAngles(q);
-
-      qDebug() << euler.x << euler.y << euler.z;
-
-    }
-
-
-    return 0;
-
-}
-
-void SceneRender::CalculateHmdValues()
-{
-
-}
-
-void SceneRender::getOculusAngle(){
-    ovrTrackingState state = ovrHmd_GetTrackingState(Hmd, 0);
-
-    ovrQuatf orientation = state.HeadPose.ThePose.Orientation;
-    qDebug () << orientation.x << orientation.y << orientation.z << orientation.w;
-    Eigen::Matrix4f testmat = QRRUtil::MakeMatrixfromQuat( orientation.x , orientation.y , orientation.z , orientation.w);
-    std::cout << testmat << std::endl;
-    glm::quat q = glm::make_quat(&orientation.x);
-    glm::vec3 euler = glm::eulerAngles(q);
-
- //   qDebug() << euler.x * 180/3.1415<< euler.y * 180/3.1415<< euler.z* 180/3.1415;
-
-    QByteArray datagram;
-    QDataStream out(&datagram, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_1);
-    out << euler.x * 180/3.1415<< euler.y * 180/3.1415<< euler.z* 180/3.1415;
-    QString send = QString("%1/%2/%3").arg(euler.x * 180/3.1415).arg(euler.y * 180/3.1415).arg(euler.z* 180/3.1415);
-
-    qDebug () << send;
-    udpsocket.writeDatagram(send.toLocal8Bit(),send.toLocal8Bit().length(), QHostAddress(QString("192.168.23.201")), 1500);
-     udpsocket.writeDatagram(send.toLocal8Bit(),send.toLocal8Bit().length(), QHostAddress::LocalHost, 1500);
-}
 
 void SceneRender::genVideoTexture()
 {

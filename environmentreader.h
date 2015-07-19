@@ -25,5 +25,11 @@ namespace RealInfo{
     static float EyeEye = 63.0;
     static float EyeHand = 400.0;
 }
+
+namespace Network{
+    static int Right = 1090;
+    static int Left = 1091;
+    static int Trans = 2000;
+}
 }
 #endif // ENVIRONMENTREADER_H

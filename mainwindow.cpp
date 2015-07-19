@@ -54,7 +54,7 @@ void MainWindow::onAddNew()
     //    dock->setWidget(new QLabel("\aaa", dock));
     //   dock->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
     // addDockWidget(Qt::RightDockWidgetArea, dock);
-    setCentralWidget(adminwidget);
+ //   setCentralWidget(adminwidget);
     //  }
     //else QMessageBox::information(0, tr("Cannot add new window"), tr("Already occupied. Undock first."));
 

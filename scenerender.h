@@ -62,6 +62,8 @@
 #include "external/cppitertools/itertools.hpp"
 #include "external/external_opengl/glm/glm.hpp"
 
+#include "glutil.h"
+
 #include "handFBXLoader.h"
 #include "handinfo.h"
 #include "camera.h"
@@ -73,23 +75,8 @@
 #include "cuberenderer.h"
 #include "backgroundrenderer.h"
 #include "mouserenderer.h"
-
-
-#include "OVR.h"
-#include "OVR_Kernel.h"
-#include "Kernel/OVR_Types.h"
-#include "Kernel/OVR_Allocator.h"
-#include "Kernel/OVR_RefCount.h"
-#include "Kernel/OVR_Log.h"
-#include "Kernel/OVR_System.h"
-#include "Kernel/OVR_Nullptr.h"
-#include "Kernel/OVR_String.h"
-#include "Kernel/OVR_Array.h"
-#include "Kernel/OVR_Timer.h"
-#include "Kernel/OVR_DebugHelp.h"
-#include "Extras/OVR_Math.h"
-#include "Render/Render_Device.h"
-#include "OVR_CAPI.h"
+#include "ovrcondition.h"
+#include "fbxrenderer.h"
 
 //http://stackoverflow.com/questions/17420739/opencv-2-4-5-and-qt5-error-s
 
@@ -110,10 +97,6 @@ class CubeRenderer;
 class MouseRenderer;
 
 
-#define MAX_BONE_COUNT 128
-
-#define BUFFER_OFFSET(i) ((char *)NULL + (i))
-
 using namespace Eigen;
 using namespace QRRUtil;
 
@@ -130,11 +113,17 @@ public:
     CubeRenderer *cube;
     CubeRenderer *kyou;
     BackGroundRenderer *back;
+    FbxRenderer *fbxrender;
     MouseRenderer *mouse;
     bool touched = false;
 
+    OVRCondition m_ovrsender;
 
-    void initOVR();
+    Eigen::Vector3f m_position;
+
+
+
+
     void initFB();
 
 
@@ -149,67 +138,6 @@ public:
 
 
 
-    enum
-    {
-        UNIFORM_VS,
-        UNIFORM_DIFFUSE_TEXTURE,
-        UNIFORM_FALLOFF_TEXTURE,
-        UNIFORM_RIMLIGHT_TEXTURE,
-        UNIFORM_SPECULAR_TEXTURE,
-        NUM_UNIFORMS
-    };
-    GLint uniformsSkin[NUM_UNIFORMS];
-    GLint uniformsCloth[NUM_UNIFORMS];
-
-    enum
-    {
-        ATTRIB_VERTEX,
-        ATTRIB_NORMAL,
-        ATTRIB_TEXCOORD0,
-        ATTRIB_BONE_INDEX,
-        ATTRIB_BONE_WEIGHT,
-        NUM_ATTRIBUTES
-    };
-
-    struct AppMaterial
-    {
-        GLuint diffuseTexture;
-        GLuint falloffTexture;
-        GLuint specularTexture;
-        GLuint rimlightTexture;
-        GLuint repeatSampler;
-        GLuint clampSampler;
-
-        bool diffuseHasAlpha;
-
-        const ModelMaterial* modelMaterial;
-    };
-
-    struct AppMesh
-    {
-        GLuint vertexArray;
-        GLuint vertexBuffer;
-        GLuint indexBuffer;
-
-        const AppMaterial* material;
-        const ModelMesh* modelMesh;
-
-        int modelMeshId;
-    };
-
-    struct UniformVs
-    {
-        Eigen::Matrix4f modelViewMatrix;
-        Eigen::Matrix4f projectionMatrix;
-        Eigen::Matrix4f normalMatrix;
-
-        Eigen::Vector4f lightDirection;
-        Eigen::Vector4f cameraPosition;
-
-        Eigen::Matrix4f meshMatrix;
-        Eigen::Matrix4f boneMatrixList[MAX_BONE_COUNT];
-    };
-
 
 protected:
     void initializeGL () override;
@@ -223,9 +151,7 @@ protected:
     void updateuniform(int index) ;
 
 private:
-	void setupVertexAttribs();
-
-	bool m_core;
+    bool m_core;
 	int m_xRot;
 	int m_yRot;
 	int m_zRot;
@@ -233,6 +159,9 @@ private:
 	QOpenGLVertexArrayObject m_vao;
 	QOpenGLShaderProgram *hand_program;
     QOpenGLShaderProgram *distort_program;
+
+    GLint uniformsSkin[NUM_UNIFORMS];
+    GLint uniformsCloth[NUM_UNIFORMS];
 
 
 	GLuint m_projMatrix;
@@ -265,10 +194,9 @@ private:
     float m_horizontalAngle = 3.14f;
     float m_verticalAngle = 0.0f;
 
-    Eigen::Vector3f position;
 
-    Camera *m_maincamra;
-    Camera *m_secondcamera;
+
+
 
     unsigned int m_quadpos_index;
     unsigned int m_quadpos_array;
@@ -300,27 +228,25 @@ private:
 
     const unsigned int m_quadindices[4] = {0,1,2,3};
 
-    unsigned char* make_dummy_texture (int* width_, int* height_);
 
     Player              ThePlayer;
 
+
+
+
 //----------------------------------- bullet -----------------------------
+
+
     btAlignedObjectArray<btCollisionShape*>	m_collisionShapes;
-
     btBroadphaseInterface*	m_broadphase;
-
     btCollisionDispatcher*	m_dispatcher;
-
     btConstraintSolver*	m_solver;
-
     btDefaultCollisionConfiguration* m_collisionConfiguration;
 
 
 //------------------------------------- net work -------------------------
 public:
-    QUdpSocket udpsocket;
 
-    QUdpSocket *videoudpSocket;
     int sock, numrcv;
     struct sockaddr_in addr;
 
@@ -334,24 +260,6 @@ public:
     void genVideoTexture();
     GLuint videotex_right_id;
     GLuint videotex_left_id;
-
-    //QByteArray video_datagram;
-
-private slots:
- //   void readvideodata();
-
-
-public:
-//-------------------------------------- oculsu  ---------------------------------------
-
-   ovrHmd              Hmd;
-   bool isHmdInitialized = false;
-   ovrHmd ovrhmd;
-
-
-    void getOculusAngle();
-    void CalculateHmdValues();
-    int OnStartup();
 
 //---------------------------------------------------------------------------------------------------
 

@@ -144,6 +144,7 @@ void CubeRenderer::render(QOpenGLContext* share, Eigen::Matrix4f mat, Eigen::Vec
         m_qmltex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
         m_qmltex->setMagnificationFilter(QOpenGLTexture::Linear);
     m_mutex->unlock();
+
     m_qmltex->bind();
 
 
