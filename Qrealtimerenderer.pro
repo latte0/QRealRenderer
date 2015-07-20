@@ -588,8 +588,7 @@ HEADERS += \
     fbxrenderer.h \
     fbxstruct.h \
     scenario.h \
-    urlutil.h \
-    webrenderwindow.h
+    urlutil.h
 
 SOURCES += adminwidget.cpp \
            main.cpp \
@@ -624,12 +623,13 @@ SOURCES += adminwidget.cpp \
     glutil.cpp \
     fbxrenderer.cpp \
     scenario.cpp \
-    urlutil.cpp \
-    webrenderwindow.cpp
+    urlutil.cpp
 
 DISTFILES += \
     Test.qml \
     youtube.qml \
     Paint.qml \
     imageview.qml \
-    flickr.qml
+    flickr.qml \
+    quickwindow.qml \
+    web.qml

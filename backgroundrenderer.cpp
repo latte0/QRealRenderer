@@ -17,7 +17,8 @@
 BackGroundRenderer::BackGroundRenderer(int port)
     : m_program(0),
       m_vbo(0),
-      m_vao(0)
+      m_vao(0),
+      m_videotex(nullptr)
 {
     m_mtx = new std::mutex;
 
@@ -53,8 +54,8 @@ void BackGroundRenderer::init(QOpenGLContext* share)
         "varying lowp vec2 v_coord;\n"
         "uniform sampler2D sampler;\n"
         "void main() {\n"
-        "  // gl_FragColor = vec4(1.0,1.0,0.0, 0.5);\n"
-        "   gl_FragColor = vec4(texture2D(sampler, v_coord).rgb, 1.0);\n"
+        "   gl_FragColor = vec4(1.0,1.0,0.0, 0.5);\n"
+        "  // gl_FragColor = vec4(texture2D(sampler, v_coord).rgb, 1.0);\n"
         "}\n";
 
     m_program = new QOpenGLShaderProgram;

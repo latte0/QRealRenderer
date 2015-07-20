@@ -41,9 +41,12 @@ void SceneRender::initializeGL ()
     initializeOpenGLFunctions();
 
     cube = new CubeRenderer();
-    cube->init(this->context(), "Paint.qml");
+    cube->init(this->context(), "quickwindow.qml");
+
+
     cube->m_uprot = 10;
     cube->m_rightrot = 10;
+
 
     back = new BackGroundRenderer(1091);
     back->init(this->context());

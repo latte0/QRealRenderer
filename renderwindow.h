@@ -36,14 +36,12 @@ QT_FORWARD_DECLARE_CLASS(QQmlEngine)
 QT_FORWARD_DECLARE_CLASS(QQmlComponent)
 QT_FORWARD_DECLARE_CLASS(QQuickItem)
 
-class SceneRender;
-class WebRenderWindow;
 
 class RenderWindow : public QWindow
 {
     Q_OBJECT
 
-    friend class WebRenderWindow;
+
 
 public:
     RenderWindow(QMutex* mutex, const QString &filename);
@@ -52,7 +50,10 @@ public:
     QImage qmlimage;
     QMutex *m_scenemutex;
 
+
+    virtual void init();
     void updateQuick();
+
 
     QQuickWindow *m_quickWindow;
 

@@ -71,8 +71,8 @@
 #include "shaderobject.h"
 #include "vertexbufferobject.h"
 #include "player.h"
-#include "renderwindow.h"
 #include "cuberenderer.h"
+#include "renderwindow.h"
 #include "backgroundrenderer.h"
 #include "mouserenderer.h"
 #include "ovrcondition.h"
@@ -92,9 +92,10 @@ class btDefaultCollisionConfiguration;
 
 
 
+
 class RenderWindow;
-//class WebRenderWindow;
 class CubeRenderer;
+
 class MouseRenderer;
 
 
@@ -112,7 +113,7 @@ public:
     GLuint loadTexture (const std::string &filename);
 
     CubeRenderer *cube;
-    CubeRenderer *kyou;
+
     BackGroundRenderer *back;
     FbxRenderer *fbxrender;
     MouseRenderer *mouse;

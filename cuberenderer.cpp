@@ -24,7 +24,8 @@ CubeRenderer::CubeRenderer()
     : m_program(0),
       m_vbo(0),
       m_vao(0),
-      m_matrixLoc(0)
+      m_matrixLoc(0),
+      m_qmltex(nullptr)
 {
 
     m_positions[0] = QRRUtil::EigenVector3fMake(-1.0, 1.0, 0.0);
@@ -49,7 +50,11 @@ CubeRenderer::~CubeRenderer()
 
 void CubeRenderer::init(QOpenGLContext* share, const QString &filename)
 {
-    m_rwindow = new RenderWindow(m_mutex,filename);
+
+        m_rwindow = new RenderWindow(m_mutex,filename);
+
+    m_rwindow->init();
+
     m_rwindow->resize(960, 1080);
     m_rwindow->show();
 

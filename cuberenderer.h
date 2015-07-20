@@ -34,7 +34,10 @@ QT_FORWARD_DECLARE_CLASS(QOpenGLVertexArrayObject)
 
 class CubeRenderer : public Actor
 {
+
 public:
+
+
     CubeRenderer();
     ~CubeRenderer();
 
@@ -45,7 +48,7 @@ public:
     void resize(int w, int h);
     void render(QOpenGLContext* share,Eigen::Matrix4f mat, Eigen::Vector3f top, Eigen::Vector3f mousepos);
 
-    void init(QOpenGLContext* share, const QString &filename);
+    virtual void init(QOpenGLContext* share, const QString &filename);
     void setupVertexAttribs(QOpenGLContext* share);
 
     float calcV(Eigen::Vector3f top){

@@ -1,6 +1,7 @@
 
 
 #include "renderwindow.h"
+
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>
 #include <QOpenGLFramebufferObject>
@@ -15,6 +16,9 @@
 #include <QQuickWindow>
 #include <QQuickRenderControl>
 #include <QCoreApplication>
+#include <QQmlContext>
+
+#include "urlutil.h"
 
 RenderWindow::RenderWindow(QMutex *mutex ,const QString &filename)
     : m_rootItem(0),
@@ -26,11 +30,12 @@ RenderWindow::RenderWindow(QMutex *mutex ,const QString &filename)
       m_scenemutex(nullptr)
 {
     setSurfaceType(QSurface::OpenGLSurface);
+
     m_filename = filename;
-        m_scenemutex = mutex;
+    m_scenemutex = mutex;
 
     QSurfaceFormat format;
-    // Qt Quick may need a depth and stencil buffer. Always make sure these are available.
+
     format.setDepthBufferSize(16);
     format.setStencilBufferSize(8);
     setFormat(format);
@@ -43,25 +48,6 @@ RenderWindow::RenderWindow(QMutex *mutex ,const QString &filename)
 
     m_offscreenSurface->setFormat(m_context->format());
     m_offscreenSurface->create();
-
-    m_renderControl = new QQuickRenderControl(this);
-
-
-    m_quickWindow = new QQuickWindow(m_renderControl);
-
-
-    m_qmlEngine = new QQmlEngine;
-    if (!m_qmlEngine->incubationController())
-        m_qmlEngine->setIncubationController(m_quickWindow->incubationController());
-
-    m_updateTimer.setSingleShot(true);
-    m_updateTimer.setInterval(8);
-    connect(&m_updateTimer, &QTimer::timeout, this, &RenderWindow::updateQuick);
-
-    connect(m_quickWindow, &QQuickWindow::sceneGraphInitialized, this, &RenderWindow::createFbo);
-    connect(m_quickWindow, &QQuickWindow::sceneGraphInvalidated, this, &RenderWindow::destroyFbo);
-    connect(m_renderControl, &QQuickRenderControl::renderRequested, this, &RenderWindow::requestUpdate);
-    connect(m_renderControl, &QQuickRenderControl::sceneChanged, this, &RenderWindow::requestUpdate);
 
 
 }
@@ -85,6 +71,34 @@ RenderWindow::~RenderWindow()
 
     delete m_offscreenSurface;
     delete m_context;
+}
+
+void RenderWindow::init()
+{
+    m_renderControl = new QQuickRenderControl(this);
+
+
+    m_quickWindow = new QQuickWindow(m_renderControl);
+
+
+    m_qmlEngine = new QQmlEngine;
+    if (!m_qmlEngine->incubationController())
+        m_qmlEngine->setIncubationController(m_quickWindow->incubationController());
+
+    m_qmlEngine->rootContext()->setContextProperty("utils", new Utils(this));
+    //m_qmlEngine->load(QUrl("qrc:/quickwindow.qml"));
+  //  QMetaObject::invokeMethod(m_qmlEngine->roo, "load", Q_ARG(QVariant, startupUrl()));
+
+    m_updateTimer.setSingleShot(true);
+    m_updateTimer.setInterval(8);
+    connect(&m_updateTimer, &QTimer::timeout, this, &RenderWindow::updateQuick);
+
+    connect(m_quickWindow, &QQuickWindow::sceneGraphInitialized, this, &RenderWindow::createFbo);
+    connect(m_quickWindow, &QQuickWindow::sceneGraphInvalidated, this, &RenderWindow::destroyFbo);
+    connect(m_renderControl, &QQuickRenderControl::renderRequested, this, &RenderWindow::requestUpdate);
+    connect(m_renderControl, &QQuickRenderControl::sceneChanged, this, &RenderWindow::requestUpdate);
+
+
 }
 
 void RenderWindow::createFbo()

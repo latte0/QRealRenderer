@@ -14,5 +14,14 @@ QUrl startupUrl();
 }
 }
 
+
+class Utils : public QObject {
+    Q_OBJECT
+public:
+    Utils(QObject* parent = 0) : QObject(parent) { }
+    Q_INVOKABLE static QUrl fromUserInput(const QString& userInput) { return QRR::Util::urlFromUserInput(userInput); }
+};
+
+
 #endif // URLUTIL
 
