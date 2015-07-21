@@ -9,7 +9,57 @@ Rectangle {
     property var xpos
     property var ypos
 
+    Rectangle{
+        id:penbox
+        width:100
+        height:400
+        y:0
 
+        border.width: 5
+        border.color: "red"
+
+        Text{
+            anchors.centerIn:parent
+            text:"Pen"
+            font.pixelSize: 30
+        }
+    }
+
+    Rectangle{
+        id:eracerbox
+        width:100
+        height:400
+        y:400
+
+        border.width: 5
+        border.color: "red"
+
+        Text{
+            anchors.centerIn:parent
+            text:"Eraser"
+            font.pixelSize: 30
+        }
+    }
+
+
+
+    Rectangle{
+        id:deletebox
+        width:100
+        height:200
+        y:800
+
+        border.width: 5
+        border.color: "red"
+
+        Text{
+            anchors.centerIn:parent
+            text:"Delete"
+            font.pixelSize: 30
+        }
+    }
+
+/*
     Column{
         id:column
         anchors.top: parent.top
@@ -82,11 +132,12 @@ Rectangle {
 
 
     }
+    */
 
     Canvas {
         id: canvas
         anchors.top: parent.top
-        anchors.left: column.right
+        anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.margins: 5
@@ -95,8 +146,8 @@ Rectangle {
         renderStrategy: Canvas.Immediate
         antialiasing: true
 
-        property color strokeColor: "#ff0000"
-        property int lineWidth: 20
+        property color strokeColor: "#000000"
+        property int lineWidth: 5
 
         property bool doClear: true
         property string loadImageUrl: ""
@@ -158,11 +209,19 @@ Rectangle {
         MouseArea{
             anchors.fill:parent
             onPressed: {
-                console.log("hello qml" )
-
-                clearPoint()
-                updatePoint(mouse)
-                canvas.requestPaint()
+                if(mouse.y > 0 && mouse.y < 400 &&mouse.x > 0 && mouse.x < 400){
+                    canvas.strokeColor= "#000000"
+                    canvas.lineWidth= 5
+                }else if(mouse.y > 400 && mouse.y < 800 && mouse.x > 0 && mouse.x < 100){
+                    canvas.strokeColor="#ffffff"
+                    canvas.lineWidth= 30
+                }else if(mouse.y > 800 && mouse.x > 0 && mouse.x < 100){
+                    canvas.doClear = true
+                }else{
+                    clearPoint()
+                    updatePoint(mouse)
+                    canvas.requestPaint()
+                }
             }
 
             onPositionChanged: {

@@ -40,12 +40,17 @@ void SceneRender::initializeGL ()
 
     initializeOpenGLFunctions();
 
-    cube = new CubeRenderer();
-    cube->init(this->context(), "quickwindow.qml");
+    cube = new qmlRenderer();
+    cube->init(this->context(), "web.qml");
+    cube->setCondition(75 ,QRRUtil::EigenVector3fMake(0,0,-200) ,20,0,false);
+
+    kyou = new qmlRenderer();
+    kyou->init(this->context(), "imageview.qml");
+    kyou->setCondition(20 ,QRRUtil::EigenVector3fMake(20,20,-8) ,-20,-10,true);
+ //   kyou->setCondition(30 ,QRRUtil::EigenVector3fMake(10,10,-8) ,-10,-10,true);
 
 
-    cube->m_uprot = 10;
-    cube->m_rightrot = 10;
+
 
 
     back = new BackGroundRenderer(1091);
@@ -63,18 +68,23 @@ void SceneRender::initializeGL ()
 
     glClearColor(0, 0, 0, m_transparent ? 0 : 1);
 
-    hand_program = new QOpenGLShaderProgram();
+
     distort_program = new QOpenGLShaderProgram();
+    distort_program->addShaderFromSourceFile(QOpenGLShader::Vertex, QString("./resources/Shaders/rift.vert"));
+    distort_program->addShaderFromSourceFile(QOpenGLShader::Fragment, QString("./resources/Shaders/rift.frag"));
+    distort_program->link();
+
+/*
+
+      //  hand_program = new QOpenGLShaderProgram();
 
     hand_program->addShaderFromSourceFile(QOpenGLShader::Vertex, QString("./resources/Shaders/SkinCloth.vert"));
     hand_program->addShaderFromSourceFile(QOpenGLShader::Fragment, QString("./resources/Shaders/Skin.frag"));
     hand_program->link();
 
-    distort_program->addShaderFromSourceFile(QOpenGLShader::Vertex, QString("./resources/Shaders/rift.vert"));
-    distort_program->addShaderFromSourceFile(QOpenGLShader::Fragment, QString("./resources/Shaders/rift.frag"));
-    distort_program->link();
 
-    glUseProgram(hand_program->programId());
+
+   // glUseProgram(hand_program->programId());
 
     uniformsSkin[UNIFORM_VS] = glGetUniformBlockIndex(hand_program->programId(), "UniformVs");
     uniformsSkin[UNIFORM_DIFFUSE_TEXTURE] = glGetUniformBlockIndex(hand_program->programId(), "diffuseTexture");
@@ -84,16 +94,13 @@ void SceneRender::initializeGL ()
 
     glGenBuffers(1, &m_uniformBufferVs);
 
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_CULL_FACE);
 
 
     m_fbxLoader.Initialize("./resources/model/hand_rig_fixed.fbx");
     qDebug() << "initialize ?" << m_fbxLoader.GetMaterialCount() ;
     m_fbxLoader.LoadAnimation("./resources/model/hand_rig_fixed.fbx");
     qDebug() << "load animation ? ";
-
+*/
 
     /*
     for(int i = 0; i < m_fbxLoader.GetMaterialCount(); ++i)
@@ -127,7 +134,9 @@ void SceneRender::initializeGL ()
             m_materialList.push_back(material);
 
     }
-*/
+
+
+
     for (int i = 0; i < m_fbxLoader.GetMeshCount(); ++i)
     {
         auto& modelMesh = m_fbxLoader.GetMesh(i);
@@ -166,7 +175,7 @@ void SceneRender::initializeGL ()
 
         m_meshlist.push_back(mesh);
     }
-
+*/
 
     initFB();
 
@@ -356,13 +365,12 @@ void SceneRender::paintGL()
         updateuniform(0);
 
     cube->render(this->context(),m_eproj * m_ecamera, m_handinfo.m_fingerdata[1][3].position,ThePlayer.getPosition() - mouse->m_centerpos);
+    kyou->render(this->context(),m_eproj * m_ecamera, m_handinfo.m_fingerdata[1][3].position,ThePlayer.getPosition() - mouse->m_centerpos);
 
     back->render(this->context());
     mouse->render(this->context(),m_eproj * m_ecamera);
 
     glFrontFace(GL_CCW);
-
-    glUseProgram(hand_program->programId());
 
    // drawFunc(m_meshlist);
     fbxrender->render(this->context(),&m_handinfo, m_uniformVs);
@@ -393,15 +401,15 @@ void SceneRender::paintGL()
 
     updateuniform(1);
 
+    std::cout << "m_handinfo.m_fingerdata[1][3].position" << m_handinfo.m_fingerdata[1][3].position << std::endl;
+
     cube->render(this->context(),m_eproj * m_ecamera,m_handinfo.m_fingerdata[1][3].position, ThePlayer.getPosition() - mouse->m_centerpos);
+    kyou->render(this->context(),m_eproj * m_ecamera, m_handinfo.m_fingerdata[1][3].position,ThePlayer.getPosition() - mouse->m_centerpos);
 
     back->render(this->context());
     mouse->render(this->context(),m_eproj * m_ecamera);
 
     glFrontFace(GL_CCW);
-
-
-    glUseProgram(hand_program->programId());
 
     fbxrender->render(this->context(),&m_handinfo, m_uniformVs);
 
@@ -681,10 +689,16 @@ void SceneRender::mouseReleaseEvent(QMouseEvent *e)
 
 void SceneRender::mouseMoveEvent(QMouseEvent *e)
 {
+    /*
     mouse->m_rightrot -= (e->pos().x() - m_lastPos.x()) /4.0;
     mouse->m_uprot += (e->pos().y() - m_lastPos.y() ) /4.0;
 
     m_lastPos = e->pos();
+*/
+
+    mouse->m_rightrot = -(-60 + (e->pos().y()*(891/256) / (11*2.0)  ));
+
+    mouse->m_uprot = -50 +  (e->pos().x() ) / (11.0 * 1.7);
 
     if(touched){
         Eigen::Vector2f pos = cube->calcPos(mouse->m_centerpos);

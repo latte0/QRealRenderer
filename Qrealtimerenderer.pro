@@ -581,7 +581,6 @@ HEADERS += \
     lineobject.h \
     actorfactory.h \
     renderwindow.h \
-    cuberenderer.h \
     backgroundrenderer.h \
     mouserenderer.h \
     glutil.h \
@@ -589,7 +588,9 @@ HEADERS += \
     fbxstruct.h \
     scenario.h \
     urlutil.h \
-    singleton.h
+    singleton.h \
+    windowrenderer.h \
+    qmlrenderer.h
 
 SOURCES += adminwidget.cpp \
            main.cpp \
@@ -618,13 +619,14 @@ SOURCES += adminwidget.cpp \
     lineobject.cpp \
     actorfactory.cpp \
     renderwindow.cpp \
-    cuberenderer.cpp \
     backgroundrenderer.cpp \
     mouserenderer.cpp \
     glutil.cpp \
     fbxrenderer.cpp \
     scenario.cpp \
-    urlutil.cpp
+    urlutil.cpp \
+    windowrenderer.cpp \
+    qmlrenderer.cpp
 
 DISTFILES += \
     Test.qml \

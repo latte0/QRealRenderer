@@ -90,7 +90,7 @@ void RenderWindow::init()
   //  QMetaObject::invokeMethod(m_qmlEngine->roo, "load", Q_ARG(QVariant, startupUrl()));
 
     m_updateTimer.setSingleShot(true);
-    m_updateTimer.setInterval(8);
+    m_updateTimer.setInterval(4);
     connect(&m_updateTimer, &QTimer::timeout, this, &RenderWindow::updateQuick);
 
     connect(m_quickWindow, &QQuickWindow::sceneGraphInitialized, this, &RenderWindow::createFbo);

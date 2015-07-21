@@ -5,14 +5,26 @@ import QtQuick.Controls 1.0
 
 
 Rectangle {
+
     id: window
     width: 1000
     height: 1000
+    border.color: red
+    border.width: 0
 
     property int highestZ: 0
     property real defaultSize: 1000
     property var currentFrame: undefined
 
+    MouseArea{
+        anchors.fill:parent
+        onClicked: {
+            window.width = 100
+        }
+        onReleased:{
+            window.width = 0
+        }
+    }
 
         ListView {
             anchors.fill: parent
@@ -35,12 +47,7 @@ Rectangle {
                         scale: defaultSize / Math.max(sourceSize.width, sourceSize.height)
                         antialiasing: true
                     }
-                    MouseArea{
-                        anchors.fill:parent
-                        onClicked: {
 
-                        }
-                    }
                 }
     }
 

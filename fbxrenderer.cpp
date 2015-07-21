@@ -10,9 +10,9 @@ void FbxRenderer::init(QOpenGLContext *share, const std::string &filename)
     QOpenGLFunctions_3_3_Core* f = 0;
     f = share->versionFunctions<QOpenGLFunctions_3_3_Core>();
 
-    m_fbxLoader.Initialize("./resources/model/hand_rig_fixed.fbx");
+    m_fbxLoader.Initialize("./resources/model/hand_rig2.fbx");
     qDebug() << "initialize ?" << m_fbxLoader.GetMaterialCount() ;
-    m_fbxLoader.LoadAnimation("./resources/model/hand_rig_fixed.fbx");
+    m_fbxLoader.LoadAnimation("./resources/model/hand_rig2.fbx");
     qDebug() << "load animation ? ";
 
     hand_program = new QOpenGLShaderProgram();

@@ -71,12 +71,13 @@
 #include "shaderobject.h"
 #include "vertexbufferobject.h"
 #include "player.h"
-#include "cuberenderer.h"
+#include "windowrenderer.h"
 #include "renderwindow.h"
 #include "backgroundrenderer.h"
 #include "mouserenderer.h"
 #include "ovrcondition.h"
 #include "fbxrenderer.h"
+#include "qmlrenderer.h"
 
 //http://stackoverflow.com/questions/17420739/opencv-2-4-5-and-qt5-error-s
 
@@ -94,7 +95,8 @@ class btDefaultCollisionConfiguration;
 
 
 class RenderWindow;
-class CubeRenderer;
+class qmlRenderer;
+class WindowRenderer;
 
 class MouseRenderer;
 
@@ -112,7 +114,8 @@ public:
 
     GLuint loadTexture (const std::string &filename);
 
-    CubeRenderer *cube;
+    qmlRenderer *cube;
+    qmlRenderer *kyou;
 
     BackGroundRenderer *back;
     FbxRenderer *fbxrender;

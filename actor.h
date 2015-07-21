@@ -25,7 +25,6 @@ public:
 
     Eigen::Vector3f m_position;
     Eigen::Matrix4f m_basis;
-
     Eigen::Matrix4f m_world;
 
     void setPosition(Eigen::Vector3f pos){
