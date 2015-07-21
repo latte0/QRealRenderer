@@ -588,7 +588,8 @@ HEADERS += \
     fbxrenderer.h \
     fbxstruct.h \
     scenario.h \
-    urlutil.h
+    urlutil.h \
+    singleton.h
 
 SOURCES += adminwidget.cpp \
            main.cpp \
