@@ -590,7 +590,9 @@ HEADERS += \
     urlutil.h \
     singleton.h \
     windowrenderer.h \
-    qmlrenderer.h
+    qmlrenderer.h \
+    actorid.h \
+    windowbarrenderer.h
 
 SOURCES += adminwidget.cpp \
            main.cpp \
@@ -626,7 +628,9 @@ SOURCES += adminwidget.cpp \
     scenario.cpp \
     urlutil.cpp \
     windowrenderer.cpp \
-    qmlrenderer.cpp
+    qmlrenderer.cpp \
+    actorid.cpp \
+    windowbarrenderer.cpp
 
 DISTFILES += \
     Test.qml \

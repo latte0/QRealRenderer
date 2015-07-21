@@ -1,12 +1,15 @@
 #ifndef ACTOR_H
 #define ACTOR_H
 
-#include <QDebug>
+#include <QObject>
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
+#include <random>
+
 
 #include "eigenutil.h"
+
 
 enum ActorSpecies: int{
     FBX = 0,
@@ -23,9 +26,6 @@ public:
     Actor();
     ~Actor();
 
-    Eigen::Vector3f m_position;
-    Eigen::Matrix4f m_basis;
-    Eigen::Matrix4f m_world;
 
     void setPosition(Eigen::Vector3f pos){
         m_position = pos;
@@ -59,8 +59,23 @@ public:
         return m_world;
     }
 
+    bool operator <(const Actor& ractor){
+        return this->id < ractor.id;
+    }
+
+    int getId(){ return id; }
 
 
+
+    Eigen::Vector3f m_position;
+    Eigen::Matrix4f m_basis;
+    Eigen::Matrix4f m_world;
+
+
+private:
+
+    int id;
+    std::random_device rd;
 
 };
 

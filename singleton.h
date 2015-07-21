@@ -11,9 +11,9 @@ class Singleton
 public :
     static T& singleton()
     {
-        static typename T& singleton_pointer_types_singleton(T::createInstance());
+        static typename T::singleton_pointer_type s_singleton(T::createInstance());
 
-        return getReference(s_singileton);
+        return getReference(s_singleton);
     }
 
 private:
@@ -21,7 +21,7 @@ private:
 
     inline static T *createInstance() { return new T() ;}
 
-    inline static &getReference(const singleton_pointer_type &ptr){
+    inline static T &getReference(const singleton_pointer_type &ptr){
         return *ptr;
     }
 

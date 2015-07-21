@@ -18,7 +18,6 @@ public:
 
 
     RenderWindow *m_rwindow;
-
     QOpenGLTexture *m_qmltex;
 
 };
