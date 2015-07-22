@@ -48,8 +48,13 @@ void SceneRender::initializeGL ()
     kyou->init(this->context(), "imageview.qml");
     kyou->setCondition(20 ,QRRUtil::EigenVector3fMake(20,20,-8) ,-20,-10,true);
  //   kyou->setCondition(30 ,QRRUtil::EigenVector3fMake(10,10,-8) ,-10,-10,true);
-
-
+/*
+    scenemutex = new QMutex();
+    copywindow = new CopyWindow(scenemutex, &sceneimage);
+    //copywindow->init();
+    copywindow->resize(1920,1080);
+    copywindow->show();
+*/
 
 
 
@@ -249,6 +254,7 @@ void SceneRender::initFB(){
     m_rightEyeTex = new QOpenGLFramebufferObject(960,1080, QOpenGLFramebufferObject::Depth);
     m_leftEyeTex = new QOpenGLFramebufferObject(960,1080, QOpenGLFramebufferObject::CombinedDepthStencil);
     composeEyeTex = new QOpenGLFramebufferObject(960,1080, QOpenGLFramebufferObject::CombinedDepthStencil);
+    finalTexture = new QOpenGLFramebufferObject(1920,1080, QOpenGLFramebufferObject::CombinedDepthStencil);
  //   lastcomposeEyeTex = new QOpenGLFramebufferObject(1000,1000, QOpenGLFramebufferObject::CombinedDepthStencil);
 }
 
@@ -426,6 +432,9 @@ void SceneRender::paintGL()
 //********************************************
 
     makeCurrent();
+
+  //  finalTexture->bind();
+
     auto status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
      switch(status)
      {
@@ -439,15 +448,9 @@ void SceneRender::paintGL()
 
     glUseProgram(distort_program->programId());
 
-    qDebug() << size().width();
     glViewport(0,0, size().width() / 2.0, size().height());
     glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    glDisable(GL_CULL_FACE);
-    glDisable(GL_BLEND);
-    glDisable(GL_DEPTH_TEST);
-    glEnable(GL_TEXTURE);
 
 
     glActiveTexture (GL_TEXTURE0);
@@ -496,7 +499,6 @@ void SceneRender::paintGL()
                   GL_UNSIGNED_BYTE, video_right_image.data);
 
 */
-    int width, height;
 
     glBindSampler   (0, m_quadsampler);
 
@@ -505,12 +507,6 @@ void SceneRender::paintGL()
     glBindBuffer      (GL_ELEMENT_ARRAY_BUFFER, m_quadindex_array);
 
     glDrawElements    (GL_TRIANGLE_STRIP, sizeof( m_quadindices)/sizeof( m_quadindices[0]), GL_UNSIGNED_INT, 0);
-
-
-
-
-
-
 
 
 
@@ -555,12 +551,59 @@ void SceneRender::paintGL()
 
         glDrawElements    (GL_TRIANGLE_STRIP, sizeof( m_quadindices)/sizeof( m_quadindices[0]), GL_UNSIGNED_INT, 0);
 
-
-
         m_ovrsender.send();
 
+        //scenemutex->lock();
+        //     sceneimage = finalTexture->toImage();
+        //scenemutex->unlock();
 
- //   lastcomposeEyeTex = composeEyeTex;
+
+
+
+
+
+/*
+        makeCurrent();
+
+
+        glUseProgram(distort_program->programId());
+
+        glViewport(0,0, size().width() / 2.0, size().height());
+        glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glActiveTexture (GL_TEXTURE0);
+        glUniform1i     (glGetUniformLocation (distort_program->programId(), "sampler"), 0);
+
+        glBindTexture(GL_TEXTURE_2D, m_leftEyeTex->texture());
+
+
+
+        glBindSampler   (0, m_quadsampler);
+
+        glBindVertexArray (m_quadvertex_arrays);
+        glBindBuffer      (GL_ELEMENT_ARRAY_BUFFER, m_quadindex_array);
+
+        glDrawElements    (GL_TRIANGLE_STRIP, sizeof( m_quadindices)/sizeof( m_quadindices[0]), GL_UNSIGNED_INT, 0);
+
+
+            glViewport(size().width() / 2.0 ,0, size().width() / 2.0, size().height());
+
+            glActiveTexture (GL_TEXTURE1);
+            glUniform1i     (glGetUniformLocation (distort_program->programId(), "sampler"), 1);
+
+
+            glBindTexture(GL_TEXTURE_2D, m_rightEyeTex->texture());
+
+            glBindSampler   (1, m_quadsampler);
+
+            // vertices
+            glBindVertexArray (m_quadvertex_arrays);
+            glBindBuffer      (GL_ELEMENT_ARRAY_BUFFER, m_quadindex_array);
+
+            glDrawElements    (GL_TRIANGLE_STRIP, sizeof( m_quadindices)/sizeof( m_quadindices[0]), GL_UNSIGNED_INT, 0);
+*/
+
 }
 
 

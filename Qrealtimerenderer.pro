@@ -592,7 +592,10 @@ HEADERS += \
     windowrenderer.h \
     qmlrenderer.h \
     actorid.h \
-    windowbarrenderer.h
+    windowbarrenderer.h \
+    copywindow.h \
+    rectangleobject.h \
+    boardobject.h
 
 SOURCES += adminwidget.cpp \
            main.cpp \
@@ -630,7 +633,10 @@ SOURCES += adminwidget.cpp \
     windowrenderer.cpp \
     qmlrenderer.cpp \
     actorid.cpp \
-    windowbarrenderer.cpp
+    windowbarrenderer.cpp \
+    copywindow.cpp \
+    rectangleobject.cpp \
+    boardobject.cpp
 
 DISTFILES += \
     Test.qml \

@@ -40,20 +40,20 @@ void qmlRenderer::collide(Eigen::Vector3f top){
 
 
     Eigen::Vector2f pos = calcPos(top);
-    auto insideRect = [&pos](const int length) -> bool{
+
+
+    auto insideRect = [&pos](const int length) -> bool
+    {
         return ( pos.x() < 1.0  + length&& pos.x() > 0.0 -length &&pos.y() < 1.0 + length && pos.y() > 0.0 -length );
     };
 
 
-
-
-    if(getH(top) > -touchdistance /1.4 && getH(top) < touchdistance &&
-            m_handtouch == true &&
-            insideRect(0.5)
-            )
+    if( getH(top) > -touchdistance /1.4 && getH(top) < touchdistance &&
+          m_handtouch == true &&
+            insideRect(0.5f)   )
     {
 
-        if(insideRect(0.0) && m_pressed == false){
+        if(insideRect(0.0f) && m_pressed == false){
             QMouseEvent mappedPressEvent(QEvent::MouseButtonPress,  QPointF(1000* pos.x(), 1000 * pos.y()), Qt::LeftButton, Qt::LeftButton,   Qt::NoModifier   );
             QCoreApplication::sendEvent(m_rwindow->m_quickWindow, &mappedPressEvent);
             m_pressed = true;
@@ -65,7 +65,6 @@ void qmlRenderer::collide(Eigen::Vector3f top){
 
     }else{
         if(m_touched == true){
-
             QMouseEvent mappedReleaseEvent(QEvent::MouseButtonRelease,  QPointF(1000* pos.x(), 1000 * pos.y()), Qt::LeftButton, Qt::LeftButton,   Qt::NoModifier   );
             QCoreApplication::sendEvent(m_rwindow->m_quickWindow, &mappedReleaseEvent);
             m_touched = false;

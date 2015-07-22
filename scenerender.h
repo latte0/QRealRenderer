@@ -78,6 +78,7 @@
 #include "ovrcondition.h"
 #include "fbxrenderer.h"
 #include "qmlrenderer.h"
+#include "copywindow.h"
 
 //http://stackoverflow.com/questions/17420739/opencv-2-4-5-and-qt5-error-s
 
@@ -97,7 +98,6 @@ class btDefaultCollisionConfiguration;
 class RenderWindow;
 class qmlRenderer;
 class WindowRenderer;
-
 class MouseRenderer;
 
 
@@ -121,6 +121,10 @@ public:
     FbxRenderer *fbxrender;
     MouseRenderer *mouse;
     bool touched = false;
+
+    CopyWindow *copywindow;
+    QMutex* scenemutex;
+    QImage sceneimage;
 
     OVRCondition m_ovrsender;
 

@@ -146,13 +146,10 @@ void RenderWindow::run()
         return;
     }
 
-    // The root item is ready. Associate it with the window.
     m_rootItem->setParentItem(m_quickWindow->contentItem());
 
-    // Update item and rendering related geometries.
     updateSizes();
 
-    // Initialize the render control and our OpenGL resources.
     m_context->makeCurrent(m_offscreenSurface);
     m_renderControl->initialize(m_context);
 
@@ -230,8 +227,6 @@ void RenderWindow::run()
     if (m_vao->isCreated())
         setupVertexAttribs();
 
-    // Must unbind before changing the current context. Hence the absence of
-    // QOpenGLVertexArrayObject::Binder here.
     m_vao->release();
 
     m_context->doneCurrent();
@@ -281,8 +276,7 @@ void RenderWindow::exposeEvent(QExposeEvent *)
 
 void RenderWindow::resizeEvent(QResizeEvent *)
 {
-    // If this is a resize after the scene is up and running, recreate the fbo and the
-    // Quick item and scene.
+
     if (m_rootItem && m_context->makeCurrent(m_offscreenSurface)) {
         delete m_fbo;
         createFbo();

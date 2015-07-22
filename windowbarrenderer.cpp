@@ -4,4 +4,3 @@ WindowBarRenderer::WindowBarRenderer()
 {
 
 }
-

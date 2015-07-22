@@ -14,7 +14,7 @@ Rectangle {
         anchors.fill: parent
         opacity: 0.5
 
-        url: "https://youtube.com/watch?v=PJ10D-q8kLw"
+        url: "https://youtube.com/watch?v=qLUnhoeaMwA"
 
         Behavior on opacity {
             NumberAnimation { duration: 200 }
