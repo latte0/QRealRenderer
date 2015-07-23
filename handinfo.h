@@ -3,6 +3,7 @@
 
 #include "external/Leap.h"
 #include "eigenutil.h"
+#include "actor.h"
 
 struct FingerData
 {
@@ -12,7 +13,7 @@ struct FingerData
     Eigen::Matrix4f position_mat;
 };
 
-class HandInfo
+class HandInfo : public Actor
 {
 public:
     HandInfo();

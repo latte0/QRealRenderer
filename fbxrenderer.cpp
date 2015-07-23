@@ -182,7 +182,7 @@ void FbxRenderer::render(QOpenGLContext *share, HandInfo *handinfo , UniformVs u
 
     f->glUseProgram(hand_program->programId());
 
-    drawFunc(m_meshlist);
+    if(handinfo->m_righthand) drawFunc(m_meshlist);
 }
 
 

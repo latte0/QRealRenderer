@@ -38,6 +38,7 @@ void qmlRenderer::bindTex(){
 void qmlRenderer::collide(Eigen::Vector3f top){
 
 
+    int qmlwidth = 1000, qmlheigt = 1000;
 
     Eigen::Vector2f pos = calcPos(top);
 
@@ -54,18 +55,18 @@ void qmlRenderer::collide(Eigen::Vector3f top){
     {
 
         if(insideRect(0.0f) && m_pressed == false){
-            QMouseEvent mappedPressEvent(QEvent::MouseButtonPress,  QPointF(1000* pos.x(), 1000 * pos.y()), Qt::LeftButton, Qt::LeftButton,   Qt::NoModifier   );
+            QMouseEvent mappedPressEvent(QEvent::MouseButtonPress,  QPointF(qmlwidth* pos.x(), qmlheigt * pos.y()), Qt::LeftButton, Qt::LeftButton,   Qt::NoModifier   );
             QCoreApplication::sendEvent(m_rwindow->m_quickWindow, &mappedPressEvent);
             m_pressed = true;
         }
 
-        QMouseEvent mappedMoveEvent(QEvent::MouseMove,  QPointF(1000* pos.x(), 1000 * pos.y()), Qt::LeftButton, Qt::LeftButton,   Qt::NoModifier   );
+        QMouseEvent mappedMoveEvent(QEvent::MouseMove,  QPointF(qmlwidth* pos.x(), qmlheigt * pos.y()), Qt::LeftButton, Qt::LeftButton,   Qt::NoModifier   );
         QCoreApplication::sendEvent(m_rwindow->m_quickWindow, &mappedMoveEvent);
         m_touched = true;
 
     }else{
         if(m_touched == true){
-            QMouseEvent mappedReleaseEvent(QEvent::MouseButtonRelease,  QPointF(1000* pos.x(), 1000 * pos.y()), Qt::LeftButton, Qt::LeftButton,   Qt::NoModifier   );
+            QMouseEvent mappedReleaseEvent(QEvent::MouseButtonRelease,  QPointF(qmlwidth* pos.x(), qmlheigt * pos.y()), Qt::LeftButton, Qt::LeftButton,   Qt::NoModifier   );
             QCoreApplication::sendEvent(m_rwindow->m_quickWindow, &mappedReleaseEvent);
             m_touched = false;
             m_pressed = false;

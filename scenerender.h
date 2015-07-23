@@ -155,6 +155,7 @@ protected:
     void mousePressEvent(QMouseEvent *e) override;
     void mouseReleaseEvent(QMouseEvent *e) override;
     void mouseMoveEvent(QMouseEvent *e) override;
+    virtual void keyPressEvent(QKeyEvent *e) override;
 
 
     void updateuniform(int index) ;
@@ -176,7 +177,6 @@ private:
 	GLuint m_projMatrix;
 
     HandInfo m_handinfo;
-
 
     GLuint m_uniformBufferVs;
     UniformVs m_uniformVs;

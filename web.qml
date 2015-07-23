@@ -3,8 +3,8 @@ import QtWebKit 3.0
 import QtQuick.XmlListModel 2.0
 
 Rectangle {
-    width:1000
-    height:1000
+    width:500
+    height:500
 
     color: "black"
 
@@ -14,7 +14,8 @@ Rectangle {
         anchors.fill: parent
         opacity: 0.5
 
-        url: "https://youtube.com/watch?v=qLUnhoeaMwA"
+      //  url: "https://www.youtube.com/watch?v=3QuBpxjMLKc"
+        url:"file:///home/k/abc.mp4"
 
         Behavior on opacity {
             NumberAnimation { duration: 200 }

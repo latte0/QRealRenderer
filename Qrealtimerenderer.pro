@@ -645,4 +645,5 @@ DISTFILES += \
     imageview.qml \
     flickr.qml \
     quickwindow.qml \
-    web.qml
+    web.qml \
+    movie.qml

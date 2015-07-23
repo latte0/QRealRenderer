@@ -30,7 +30,7 @@
 
 #include "camera.h"
 #include "eigenutil.h"
-
+#include "singleton.h"
 #include "environmentreader.h"
 
 /****************
@@ -38,8 +38,9 @@
  * ***************/
 
 
-class Player
+class Player : public Actor, QRR::Singleton<Player>
 {
+    friend class QRR::Singleton<Player>;
 public:
 
     Player();
@@ -48,6 +49,8 @@ public:
     void PlayerInit();
     void HmdInit();
     void update();
+
+    float speed = 1;
 
     bool singleEye = false;
 
@@ -59,12 +62,20 @@ public:
     Eigen::Matrix4f getLeftEyeMat();
     Eigen::Matrix4f getRightEyeMat();
 
+    void toUp();
+    void toDown();
+    void toRight();
+    void toLeft();
+    void toOver();
+    void toBelow();
+
     Camera m_LeftEyeCam;
     Camera m_RightEyeCam;
 
 
 private:
 
+    Eigen::MatrixX4f m_cam_rot;
     float const m_height = 1700;
     float const m_eyewidth = 3;
 

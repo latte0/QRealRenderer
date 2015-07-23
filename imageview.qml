@@ -7,8 +7,8 @@ import QtQuick.Controls 1.0
 Rectangle {
 
     id: window
-    width: 1000
-    height: 1000
+    width: 500
+    height: 500
     border.color: red
     border.width: 0
 
