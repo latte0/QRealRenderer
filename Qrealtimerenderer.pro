@@ -595,7 +595,8 @@ HEADERS += \
     windowbarrenderer.h \
     copywindow.h \
     rectangleobject.h \
-    boardobject.h
+    boardobject.h \
+    cvutil.h
 
 SOURCES += adminwidget.cpp \
            main.cpp \
@@ -636,7 +637,8 @@ SOURCES += adminwidget.cpp \
     windowbarrenderer.cpp \
     copywindow.cpp \
     rectangleobject.cpp \
-    boardobject.cpp
+    boardobject.cpp \
+    cvutil.cpp
 
 DISTFILES += \
     Test.qml \

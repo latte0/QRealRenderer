@@ -253,23 +253,6 @@ private:
     btDefaultCollisionConfiguration* m_collisionConfiguration;
 
 
-//------------------------------------- net work -------------------------
-public:
-
-    int sock, numrcv;
-    struct sockaddr_in addr;
-
-    cv::Mat video_right_image;
-    cv::Mat video_left_image;
-    static constexpr int video_receiveSize = 65500;
-    static char buff[video_receiveSize];
-
-    std::vector<uchar> video_ibuff;
-
-    void genVideoTexture();
-    GLuint videotex_right_id;
-    GLuint videotex_left_id;
-
 //---------------------------------------------------------------------------------------------------
 
 

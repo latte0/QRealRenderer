@@ -25,6 +25,8 @@
 #include "actor.h"
 #include "imagereceiver.h"
 
+#include "cvutil.h"
+
 QT_FORWARD_DECLARE_CLASS(QOpenGLContext)
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
 QT_FORWARD_DECLARE_CLASS(QOpenGLBuffer)

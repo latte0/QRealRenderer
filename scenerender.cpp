@@ -48,7 +48,7 @@ void SceneRender::initializeGL ()
     kyou = new qmlRenderer();
     kyou->init(this->context(), "imageview.qml");
     kyou->setCondition(20 ,QRRUtil::EigenVector3fMake(20,20,-8) ,-20,-10,true);
- //   kyou->setCondition(30 ,QRRUtil::EigenVector3fMake(10,10,-8) ,-10,-10,true);
+
 /*
     scenemutex = new QMutex();
     copywindow = new CopyWindow(scenemutex, &sceneimage);
@@ -242,12 +242,6 @@ void SceneRender::initializeGL ()
 
     qDebug() << size();
 
-
-
-
-
-    genVideoTexture();
-
 }
 
 
@@ -436,7 +430,6 @@ void SceneRender::paintGL()
 
     makeCurrent();
 
-  //  finalTexture->bind();
 
     auto status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
      switch(status)
@@ -458,50 +451,11 @@ void SceneRender::paintGL()
 
     glActiveTexture (GL_TEXTURE0);
     glUniform1i     (glGetUniformLocation (distort_program->programId(), "sampler"), 0);
-    //glBindTexture   (GL_TEXTURE_2D, m_quadtexture)
-
 
     glBindTexture(GL_TEXTURE_2D, m_leftEyeTex->texture());
 
 
 
-
-
-
-    //glBindTexture(GL_TEXTURE_2D, m_quickRenderer->qmlimage.bits());
-
-
-    //glBindTexture(GL_TEXTURE_2D,videotex_right_id);
-     //auto numrcv = recvfrom(sock, buff, video_receiveSize, 0,nullptr, nullptr);
-    for(int i=0; i<sizeof(buff) ; i++){
-     //   video_ibuff.push_back((uchar)buff[i]);
-    }
-
-    using boost::asio::ip::udp;
-
-/*
-    boost::asio::io_service io_service;
-    udp::socket socket(io_service, udp::endpoint(udp::v4(), 1081));
-
-    boost::array<char,65500> recv_buf;
-    udp::endpoint remote_endpoint;
-    boost::system::error_code error;
-    size_t len = socket.receive_from(boost::asio::buffer(recv_buf), remote_endpoint, 0, error);
-
-    for(int i=0; i<recv_buf.size() ; i++){
-        video_ibuff.push_back((uchar)recv_buf.data()[i]);
-    }
-
-    video_right_image = cv::imdecode(cv::Mat(video_ibuff), CV_LOAD_IMAGE_COLOR);
-
-
-    video_ibuff.clear();
-
-    glTexImage2D (GL_TEXTURE_2D, 0, GL_RGB,
-                  640,480, 0, GL_RGB,
-                  GL_UNSIGNED_BYTE, video_right_image.data);
-
-*/
 
     glBindSampler   (0, m_quadsampler);
 
@@ -521,31 +475,6 @@ void SceneRender::paintGL()
 
         glBindTexture(GL_TEXTURE_2D, m_rightEyeTex->texture());
 
-     //   glBindTexture(GL_TEXTURE_2D,videotex_left_id);
-        using boost::asio::ip::udp;
-
-/*
-        boost::asio::io_service io_service2;
-        udp::socket socket2(io_service, udp::endpoint(udp::v4(), 1080));
-
-        boost::array<char,65500> recv_buf2;
-        udp::endpoint remote_endpoint2;
-        boost::system::error_code error2;
-        size_t len2 = socket2.receive_from(boost::asio::buffer(recv_buf2), remote_endpoint2, 0, error2);
-
-        for(int i=0; i<recv_buf2.size() ; i++){
-            video_ibuff.push_back((uchar)recv_buf2.data()[i]);
-        }
-
-         video_left_image = cv::imdecode(cv::Mat(video_ibuff), CV_LOAD_IMAGE_COLOR);
-
-
-        video_ibuff.clear();
-
-        glTexImage2D (GL_TEXTURE_2D, 0, GL_RGB,
-                      640,480, 0, GL_RGB,
-                      GL_UNSIGNED_BYTE, video_left_image.data);
-*/
         glBindSampler   (1, m_quadsampler);
 
         // vertices
@@ -564,72 +493,9 @@ void SceneRender::paintGL()
 
 
 
-
-/*
-        makeCurrent();
-
-
-        glUseProgram(distort_program->programId());
-
-        glViewport(0,0, size().width() / 2.0, size().height());
-        glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
-         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glActiveTexture (GL_TEXTURE0);
-        glUniform1i     (glGetUniformLocation (distort_program->programId(), "sampler"), 0);
-
-        glBindTexture(GL_TEXTURE_2D, m_leftEyeTex->texture());
-
-
-
-        glBindSampler   (0, m_quadsampler);
-
-        glBindVertexArray (m_quadvertex_arrays);
-        glBindBuffer      (GL_ELEMENT_ARRAY_BUFFER, m_quadindex_array);
-
-        glDrawElements    (GL_TRIANGLE_STRIP, sizeof( m_quadindices)/sizeof( m_quadindices[0]), GL_UNSIGNED_INT, 0);
-
-
-            glViewport(size().width() / 2.0 ,0, size().width() / 2.0, size().height());
-
-            glActiveTexture (GL_TEXTURE1);
-            glUniform1i     (glGetUniformLocation (distort_program->programId(), "sampler"), 1);
-
-
-            glBindTexture(GL_TEXTURE_2D, m_rightEyeTex->texture());
-
-            glBindSampler   (1, m_quadsampler);
-
-            // vertices
-            glBindVertexArray (m_quadvertex_arrays);
-            glBindBuffer      (GL_ELEMENT_ARRAY_BUFFER, m_quadindex_array);
-
-            glDrawElements    (GL_TRIANGLE_STRIP, sizeof( m_quadindices)/sizeof( m_quadindices[0]), GL_UNSIGNED_INT, 0);
-*/
-
 }
 
 
-void SceneRender::genVideoTexture()
-{
-    glGenTextures (1, &videotex_right_id);
-    glBindTexture (GL_TEXTURE_2D, videotex_right_id);
-
-    video_right_image = cv::Mat(480,640,CV_8UC3);
-
-    glTexImage2D (GL_TEXTURE_2D, 0, GL_RGB,
-                  640,480, 0, GL_RGB,
-                  GL_UNSIGNED_BYTE, video_right_image.data);
-
-    glGenTextures (1, &videotex_left_id);
-    glBindTexture (GL_TEXTURE_2D, videotex_left_id);
-
-    video_left_image = cv::Mat(480,640,CV_8UC3);
-
-    glTexImage2D (GL_TEXTURE_2D, 0, GL_RGB,
-                  640,480, 0, GL_RGB,
-                  GL_UNSIGNED_BYTE, video_left_image.data);
-}
 
 GLuint SceneRender::loadTexture (const std::string & filename)
 {

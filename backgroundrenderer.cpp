@@ -55,7 +55,8 @@ void BackGroundRenderer::init(QOpenGLContext* share)
         "uniform sampler2D sampler;\n"
         "void main() {\n"
         "   gl_FragColor = vec4(1.0,1.0,0.0, 0.5);\n"
-        "  // gl_FragColor = vec4(texture2D(sampler, v_coord).rgb, 1.0);\n"
+        "   vec4 riftcolor = texture2D(sampler,  v_coord);"
+        "   gl_FragColor = vec4(riftcolor.b, riftcolor.g, riftcolor.r, 0);\n"
         "}\n";
 
     m_program = new QOpenGLShaderProgram;
@@ -74,8 +75,8 @@ void BackGroundRenderer::init(QOpenGLContext* share)
     m_vbo->bind();
 
     GLfloat v[] = {
-            -1,1,1,    1,-1,1,     -1,-1,1,
-            1,-1,1,   -1,1,1,       1,1, 1
+            -1,-1,1,    1,1,1,     1,-1,1,
+            1,1,1,   -1,-1,1,       -1,1, 1
         };
 
     GLfloat texCoords[] = {
@@ -133,7 +134,7 @@ void BackGroundRenderer::render(QOpenGLContext* share)
       m_videoImage = m_imgReceiver->getImageData();
     m_mtx->unlock();
 
-        QImage image(m_videoImage.data,640,480,QImage::Format_ARGB32);
+        QImage image = QRR::CV::cvMatToQImage(m_videoImage);
         if(m_videotex != nullptr) delete m_videotex;
         m_videotex = new QOpenGLTexture(image.mirrored());
         m_videotex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
@@ -149,6 +150,5 @@ void BackGroundRenderer::render(QOpenGLContext* share)
 
     f->glDrawArrays(GL_TRIANGLES, 0, 6);
 
-    qDebug() << "backcomen";
 
 }
