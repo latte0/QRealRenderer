@@ -7,39 +7,40 @@ import QtQuick.Controls 1.0
 Rectangle {
 
     id: window
-    width: 500
-    height: 500
-    border.color: red
-    border.width: 0
+    width: 700
+    height: 700
+
+    rotation:-90
 
     property int highestZ: 0
     property real defaultSize: 1000
     property var currentFrame: undefined
 
-    MouseArea{
-        anchors.fill:parent
-        onClicked: {
-            window.width = 100
-        }
-        onReleased:{
-            window.width = 0
-        }
-    }
+    property int xpos :250
+    property int ypos :250
+
+
+
+
+
+
+
 
         ListView {
             anchors.fill: parent
                 model: FolderListModel {
                     id: folderModel
                     objectName: "folderModel"
-                    folder: "file:///home/k/research/qrealrenderer/resources/photo/"
+                    folder: "file:///home/k/research/qrealrenderer/resources/book/"
                     showDirs: true
                     nameFilters: ["*.png", "*.jpg", "*.gif"]
                 }
                 delegate: Rectangle {
-                    width: 1000; height: 1000
+                    width: window.width; height: window.height
                     border.width: 1
                     color: "black"
                     Image {
+                        rotation:90
                         id: image
                         anchors.centerIn: parent
                         fillMode: Image.PreserveAspectFit
@@ -49,6 +50,9 @@ Rectangle {
                     }
 
                 }
-    }
+          }
+
+
+
 
 }

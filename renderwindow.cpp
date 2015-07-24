@@ -89,6 +89,8 @@ void RenderWindow::init()
     //m_qmlEngine->load(QUrl("qrc:/quickwindow.qml"));
   //  QMetaObject::invokeMethod(m_qmlEngine->roo, "load", Q_ARG(QVariant, startupUrl()));
 
+
+
     m_updateTimer.setSingleShot(true);
     m_updateTimer.setInterval(4);
     connect(&m_updateTimer, &QTimer::timeout, this, &RenderWindow::updateQuick);
@@ -118,6 +120,14 @@ void RenderWindow::requestUpdate()
 {
     if (!m_updateTimer.isActive())
         m_updateTimer.start();
+}
+
+QOpenGLContext* RenderWindow::getContext(){
+    return m_context;
+}
+
+QOpenGLFramebufferObject * RenderWindow::getQmlFbo(){
+    return m_fbo;
 }
 
 void RenderWindow::run()
@@ -235,7 +245,7 @@ void RenderWindow::run()
 
 void RenderWindow::updateSizes()
 {
-    // Behave like SizeRootObjectToView.
+
     m_rootItem->setWidth(width());
     m_rootItem->setHeight(height());
 

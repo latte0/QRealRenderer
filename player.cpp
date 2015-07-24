@@ -111,12 +111,12 @@ Eigen::Matrix4f Player::getRightEyeMat(){
 }
 
 void Player::toUp(){
-    Eigen::Vector3f s = QRRUtil::EigenVector3fMake(m_cam_rot(2,0),m_cam_rot(2,1),m_cam_rot(2,2));
+    Eigen::Vector3f s = QRRUtil::EigenVector3fMake(m_cam_rot(2,0),0,m_cam_rot(2,2));
     m_position -= s * speed;
 }
 
 void Player::toDown(){
-    Eigen::Vector3f s = QRRUtil::EigenVector3fMake(m_cam_rot(2,0),m_cam_rot(2,1),m_cam_rot(2,2));
+    Eigen::Vector3f s = QRRUtil::EigenVector3fMake(m_cam_rot(2,0),0,m_cam_rot(2,2));
     m_position += s * speed;
 }
 

@@ -12,7 +12,7 @@ public:
     qmlRenderer();
     ~qmlRenderer();
 
-    virtual void inittex();
+    virtual void inittex(QOpenGLContext * share);
     virtual void bindTex();
     virtual void collide(Eigen::Vector3f top);
 
@@ -20,6 +20,7 @@ public:
     RenderWindow *m_rwindow;
     QOpenGLTexture *m_qmltex;
 
+    float touch_x = 0, touch_y = 0;
 };
 
 #endif // QMLRENDER_H

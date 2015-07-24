@@ -48,7 +48,7 @@ WindowRenderer::~WindowRenderer()
 
 }
 
-void WindowRenderer::inittex(){
+void WindowRenderer::inittex(QOpenGLContext* share){
 
 }
 
@@ -57,7 +57,7 @@ void WindowRenderer::init(QOpenGLContext* share, const QString &filename)
 
 
     m_filename = filename;
-    inittex();
+    inittex(share);
 
     auto *f = share->functions();
 
@@ -113,6 +113,7 @@ void WindowRenderer::init(QOpenGLContext* share, const QString &filename)
 
     if (m_vao->isCreated())
         setupVertexAttribs(share);
+
 }
 
 void WindowRenderer::resize(int w, int h)

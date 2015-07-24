@@ -49,7 +49,7 @@ public:
     void render(QOpenGLContext* share,Eigen::Matrix4f mat, Eigen::Vector3f top, Eigen::Vector3f mousepos);
 
     virtual void bindTex();
-    virtual void inittex();
+    virtual void inittex(QOpenGLContext* share);
     virtual void collide(Eigen::Vector3f top);
 
 

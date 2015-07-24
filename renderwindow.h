@@ -53,9 +53,14 @@ public:
 
     virtual void init();
     void updateQuick();
+    QOpenGLContext * getContext();
+    QOpenGLFramebufferObject *getQmlFbo();
 
 
     QQuickWindow *m_quickWindow;
+    QOpenGLVertexArrayObject *m_vao;
+
+    QQuickItem *m_rootItem;
 
 protected:
     void exposeEvent(QExposeEvent *e) Q_DECL_OVERRIDE;
@@ -86,11 +91,11 @@ private:
 
     QQmlEngine *m_qmlEngine;
     QQmlComponent *m_qmlComponent;
-    QQuickItem *m_rootItem;
+
     QOpenGLFramebufferObject *m_fbo;
     QOpenGLShaderProgram *m_program;
     QOpenGLBuffer *m_vbo;
-    QOpenGLVertexArrayObject *m_vao;
+
     bool m_quickInitialized;
     bool m_quickReady;
     int m_matrixLoc;

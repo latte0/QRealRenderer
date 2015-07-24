@@ -7,7 +7,7 @@ Rectangle {
 
     MediaPlayer {
         id: player
-        source: "/home/k/abc.mp4" // Point this to a suitable video file
+        source: "/home/k/smile.mp4" // Point this to a suitable video file
         autoPlay: true
     }
 

@@ -5,7 +5,7 @@
 class OculusInfo
 {
 public:
-    static constexpr float eyeProjection = 90;
+    static constexpr float eyeProjection = 100;
     static constexpr float eyeAspect = 960.0/1080.0;
     static constexpr float width = 40;
     static constexpr float height = 57.1;

@@ -126,6 +126,8 @@ public:
     QMutex* scenemutex;
     QImage sceneimage;
 
+    int debugmode = 0;
+
     OVRCondition m_ovrsender;
 
     Eigen::Vector3f m_position;

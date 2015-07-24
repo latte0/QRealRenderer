@@ -5,7 +5,7 @@ QImage QRR::CV::cvMatToQImage( const cv::Mat &inMat )
 {
      switch ( inMat.type() )
      {
-        // 8-bit, 4 channel
+
         case CV_8UC4:
         {
            QImage image( inMat.data, inMat.cols, inMat.rows, inMat.step, QImage::Format_RGB32 );
@@ -13,7 +13,7 @@ QImage QRR::CV::cvMatToQImage( const cv::Mat &inMat )
            return image;
         }
 
-        // 8-bit, 3 channel
+
         case CV_8UC3:
         {
            QImage image( inMat.data, inMat.cols, inMat.rows, inMat.step, QImage::Format_RGB888 );
@@ -21,12 +21,11 @@ QImage QRR::CV::cvMatToQImage( const cv::Mat &inMat )
            return image.rgbSwapped();
         }
 
-        // 8-bit, 1 channel
+
         case CV_8UC1:
         {
            static QVector<QRgb>  sColorTable;
 
-           // only create our color table once
            if ( sColorTable.isEmpty() )
            {
               for ( int i = 0; i < 256; ++i )
@@ -41,7 +40,7 @@ QImage QRR::CV::cvMatToQImage( const cv::Mat &inMat )
         }
 
         default:
-           qWarning() << "ASM::cvMatToQImage() - cv::Mat image type not handled in switch:" << inMat.type();
+           qWarning() << "QRR::CV::cvMatToQImage()" << inMat.type();
            break;
      }
 

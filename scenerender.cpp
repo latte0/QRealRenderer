@@ -42,12 +42,14 @@ void SceneRender::initializeGL ()
     initializeOpenGLFunctions();
 
     cube = new qmlRenderer();
-    cube->init(this->context(), "web.qml");
+    cube->init(this->context(), "movie.qml");
     cube->setCondition(75 ,QRRUtil::EigenVector3fMake(0,200,-200) ,90,90,true);
 
     kyou = new qmlRenderer();
     kyou->init(this->context(), "imageview.qml");
     kyou->setCondition(20 ,QRRUtil::EigenVector3fMake(20,20,-8) ,-20,-10,true);
+
+    qDebug() << "qmlok";
 
 /*
     scenemutex = new QMutex();
@@ -367,12 +369,13 @@ void SceneRender::paintGL()
 
         updateuniform(0);
 
-   cube->render(this->context(),m_eproj * m_ecamera, m_handinfo.m_fingerdata[1][3].position + ThePlayer.getPosition() + QRRUtil::EigenVector3fMake(0,0,-400/QRR::Environment::mmDiv),ThePlayer.getPosition() - mouse->m_centerpos);
-    kyou->render(this->context(),m_eproj * m_ecamera, m_handinfo.m_fingerdata[1][3].position+ ThePlayer.getPosition() + QRRUtil::EigenVector3fMake(0,0,-400/QRR::Environment::mmDiv),ThePlayer.getPosition() - mouse->m_centerpos);
+    if(debugmode == 0){
+        cube->render(this->context(),m_eproj * m_ecamera, m_handinfo.m_fingerdata[1][3].position + ThePlayer.getPosition() + QRRUtil::EigenVector3fMake(0,0,-400/QRR::Environment::mmDiv),ThePlayer.getPosition() - mouse->m_centerpos);
+        kyou->render(this->context(),m_eproj * m_ecamera, m_handinfo.m_fingerdata[1][3].position+ ThePlayer.getPosition() + QRRUtil::EigenVector3fMake(0,0,-400/QRR::Environment::mmDiv),ThePlayer.getPosition() - mouse->m_centerpos);
 
+        mouse->render(this->context(),m_eproj * m_ecamera);
+       }
     back->render(this->context());
-    mouse->render(this->context(),m_eproj * m_ecamera);
-
     glFrontFace(GL_CCW);
 
    // drawFunc(m_meshlist);
@@ -406,12 +409,12 @@ void SceneRender::paintGL()
 
     std::cout << "m_handinfo.m_fingerdata[1][3].position" << m_handinfo.m_fingerdata[1][3].position << std::endl;
 
-    cube->render(this->context(),m_eproj * m_ecamera,m_handinfo.m_fingerdata[1][3].position  + ThePlayer.getPosition() + QRRUtil::EigenVector3fMake(0,0,-400/QRR::Environment::mmDiv) , ThePlayer.getPosition() - mouse->m_centerpos);
-    kyou->render(this->context(),m_eproj * m_ecamera, m_handinfo.m_fingerdata[1][3].position  + ThePlayer.getPosition() + QRRUtil::EigenVector3fMake(0,0,-400/QRR::Environment::mmDiv),ThePlayer.getPosition() - mouse->m_centerpos);
-
+    if(debugmode == 0){
+        cube->render(this->context(),m_eproj * m_ecamera,m_handinfo.m_fingerdata[1][3].position  + ThePlayer.getPosition() + QRRUtil::EigenVector3fMake(0,0,-400/QRR::Environment::mmDiv) , ThePlayer.getPosition() - mouse->m_centerpos);
+        kyou->render(this->context(),m_eproj * m_ecamera, m_handinfo.m_fingerdata[1][3].position  + ThePlayer.getPosition() + QRRUtil::EigenVector3fMake(0,0,-400/QRR::Environment::mmDiv),ThePlayer.getPosition() - mouse->m_centerpos);
+        mouse->render(this->context(),m_eproj * m_ecamera);
+    }
     back->render(this->context());
-    mouse->render(this->context(),m_eproj * m_ecamera);
-
     glFrontFace(GL_CCW);
 
    fbxrender->render(this->context(),&m_handinfo, m_uniformVs);
@@ -641,7 +644,7 @@ void SceneRender::keyPressEvent(QKeyEvent *e){
     if(keyconf(Qt::Key_R)) ThePlayer.toOver();
     if(keyconf(Qt::Key_F)) ThePlayer.toBelow();
 
-
+    if(keyconf(Qt::Key_B)) debugmode = ++debugmode % 2;
 
 
 }
