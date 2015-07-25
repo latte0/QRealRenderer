@@ -10,16 +10,14 @@
 #include "fbxloader.h"
 #include "eigenutil.h"
 
-
-using namespace Eigen;
-using namespace QRRUtil;
-
 //fbx no reader dayo
 //dependent eigen libraryp
 
 fbxLoader::fbxLoader(){
 }
 
+fbxLoader::~fbxLoader(){
+}
 std::vector<int> fbxLoader::GetIndexList(FbxMesh* mesh)
 {
   // to triangel
@@ -38,17 +36,17 @@ std::vector<int> fbxLoader::GetIndexList(FbxMesh* mesh)
   return indexList;
 }
 
-std::vector<Vector3f> fbxLoader::GetPositionList(FbxMesh* mesh, const std::vector<int>& indexList)
+std::vector<Eigen::Vector3f> fbxLoader::GetPositionList(FbxMesh* mesh, const std::vector<int>& indexList)
 {
   // controlpoint
-  std::vector<Vector3f> positionList;
+  std::vector<Eigen::Vector3f> positionList;
   positionList.reserve(indexList.size());
 
   for (auto index : indexList)
   {
     auto controlPoint = mesh->GetControlPointAt(index);
 
-    positionList.push_back(EigenVector3fMake(controlPoint[0], controlPoint[1], controlPoint[2]));
+    positionList.push_back(QRRUtil::EigenVector3fMake(controlPoint[0], controlPoint[1], controlPoint[2]));
 
     Q_ASSERT(controlPoint[3] == 0.0);
   }
@@ -56,7 +54,7 @@ std::vector<Vector3f> fbxLoader::GetPositionList(FbxMesh* mesh, const std::vecto
   return positionList;
 }
 
-std::vector<Vector3f> fbxLoader::GetNormalList(FbxMesh* mesh, const std::vector<int>& indexList)
+std::vector<Eigen::Vector3f> fbxLoader::GetNormalList(FbxMesh* mesh, const std::vector<int>& indexList)
 {
   auto elementCount = mesh->GetElementNormalCount();
 
@@ -72,7 +70,7 @@ std::vector<Vector3f> fbxLoader::GetNormalList(FbxMesh* mesh, const std::vector<
 
   Q_ASSERT((referenceMode == FbxGeometryElement::eDirect) || (referenceMode == FbxGeometryElement::eIndexToDirect));
 
-  std::vector<Vector3f> normalList;
+  std::vector<Eigen::Vector3f> normalList;
   normalList.reserve(indexList.size());
 
   if (mappingMode == FbxGeometryElement::eByControlPoint)
@@ -84,7 +82,7 @@ std::vector<Vector3f> fbxLoader::GetNormalList(FbxMesh* mesh, const std::vector<
       ? index
       : indexArray.GetAt(index);
       auto normal = directArray.GetAt(normalIndex);
-      normalList.push_back(EigenVector3fMake(normal[0], normal[1], normal[2]));
+      normalList.push_back(QRRUtil::EigenVector3fMake(normal[0], normal[1], normal[2]));
 
 
       //Q_ASSERT(normal[3] == 1.0);
@@ -106,7 +104,7 @@ std::vector<Vector3f> fbxLoader::GetNormalList(FbxMesh* mesh, const std::vector<
         : indexArray.GetAt(indexByPolygonVertex);
         auto normal = directArray.GetAt(normalIndex);
 
-        normalList.push_back(EigenVector3fMake(normal[0], normal[1], normal[2]));
+        normalList.push_back(QRRUtil::EigenVector3fMake(normal[0], normal[1], normal[2]));
 
 
         //Q_ASSERT(normal[3] == 1.0);
@@ -125,9 +123,9 @@ std::vector<Vector3f> fbxLoader::GetNormalList(FbxMesh* mesh, const std::vector<
   return normalList;
 }
 
-std::vector<Vector2f> fbxLoader::GetUVList(FbxMesh* mesh, const std::vector<int>& indexList, int uvNo)
+std::vector<Eigen::Vector2f> fbxLoader::GetUVList(FbxMesh* mesh, const std::vector<int>& indexList, int uvNo)
 {
-  std::vector<Vector2f> uvList;
+  std::vector<Eigen::Vector2f> uvList;
 
   auto elementCount = mesh->GetElementUVCount();
   if (uvNo + 1 > elementCount)
@@ -155,7 +153,7 @@ std::vector<Vector2f> fbxLoader::GetUVList(FbxMesh* mesh, const std::vector<int>
       ? index
       : indexArray.GetAt(index);
       auto uv = directArray.GetAt(uvIndex);
-      uvList.push_back(EigenVector2fMake(uv[0], uv[1]));
+      uvList.push_back(QRRUtil::EigenVector2fMake(uv[0], uv[1]));
     }
   }
   else if (mappingMode == FbxGeometryElement::eByPolygonVertex)
@@ -174,7 +172,7 @@ std::vector<Vector2f> fbxLoader::GetUVList(FbxMesh* mesh, const std::vector<int>
         : indexArray.GetAt(indexByPolygonVertex);
         auto uv = directArray.GetAt(uvIndex);
 
-        uvList.push_back(EigenVector2fMake(uv[0], uv[1]));
+        uvList.push_back(QRRUtil::EigenVector2fMake(uv[0], uv[1]));
 
         ++indexByPolygonVertex;
       }
@@ -189,7 +187,7 @@ std::vector<Vector2f> fbxLoader::GetUVList(FbxMesh* mesh, const std::vector<int>
   return uvList;
 }
 
-void fbxLoader::GetWeight(FbxMesh* mesh, const std::vector<int>& indexList, std::vector<ModelBoneWeight>& boneWeightList, std::vector<std::string>& boneNodeNameList, std::vector<Matrix4f>& invBaseposeMatrixList)
+void fbxLoader::GetWeight(FbxMesh* mesh, const std::vector<int>& indexList, std::vector<ModelBoneWeight>& boneWeightList, std::vector<std::string>& boneNodeNameList, std::vector<Eigen::Matrix4f>& invBaseposeMatrixList)
 {
   auto skinCount = mesh->GetDeformerCount(FbxDeformer::eSkin);
   if (skinCount == 0)
@@ -441,7 +439,7 @@ ModelMesh fbxLoader::ParseMesh(FbxMesh* mesh)
     ModelVertex vertex;
     vertex.position = positionList[i];
     vertex.normal = normalList[i];
-    if(uv0List.size() == 0) vertex.uv0 = EigenVector2fMake(0.0f, 0.0f);
+    if(uv0List.size() == 0) vertex.uv0 = QRRUtil::EigenVector2fMake(0.0f, 0.0f);
     else vertex.uv0= uv0List[i];
 
     if (boneWeightList.size() > 0)
@@ -458,7 +456,7 @@ ModelMesh fbxLoader::ParseMesh(FbxMesh* mesh)
       {
         vertex.boneIndex[j] = 0;
       }
-      vertex.boneWeight = EigenVector4fMake(1, 0, 0, 0);
+      vertex.boneWeight = QRRUtil::EigenVector4fMake(1, 0, 0, 0);
     }
 
   // qDebug() << "weight " <<  i <<  vertex.boneWeight.x <<  vertex.boneWeight.y <<  vertex.boneWeight.z << vertex.boneWeight.w;
@@ -572,7 +570,7 @@ ModelMaterial fbxLoader::ParseMaterial(FbxSurfaceMaterial* material)
   return modelMaterial;
 }
 
-void fbxLoader::GetMeshMatrix(float frame, int meshId, Matrix4f& out_matrix) const
+void fbxLoader::GetMeshMatrix(float frame, int meshId, Eigen::Matrix4f& out_matrix) const
 {
   auto& modelMesh = this->meshList[meshId];
 
@@ -580,7 +578,7 @@ void fbxLoader::GetMeshMatrix(float frame, int meshId, Matrix4f& out_matrix) con
 
   if (it == this->nodeIdDictionaryAnimation.end())
   {
-    out_matrix = Matrix4f::Identity();
+    out_matrix = Eigen::Matrix4f::Identity();
     return;
   }
 
@@ -602,7 +600,7 @@ void fbxLoader::GetMeshMatrix(float frame, int meshId, Matrix4f& out_matrix) con
   out_matrix = out_matrix * modelMesh.invMeshBaseposeMatrix;
 }
 
-void fbxLoader::GetBoneMatrix(float frame, int meshId, Matrix4f* out_matrixList, int matrixCount)
+void fbxLoader::GetBoneMatrix(float frame, int meshId, Eigen::Matrix4f* out_matrixList, int matrixCount)
 {
   auto& modelMesh = this->meshList[meshId];
 
@@ -610,7 +608,7 @@ void fbxLoader::GetBoneMatrix(float frame, int meshId, Matrix4f* out_matrixList,
 
   if (modelMesh.boneNodeNameList.size() == 0)
   {
-    out_matrixList[0] = Matrix4f::Identity();
+    out_matrixList[0] = Eigen::Matrix4f::Identity();
     return;
   }
 
@@ -635,7 +633,7 @@ void fbxLoader::GetBoneMatrix(float frame, int meshId, Matrix4f* out_matrixList,
     }
 
 
-    Matrix4f trans = Matrix4f::Identity();
+    Eigen::Matrix4f trans = Eigen::Matrix4f::Identity();
 
 
 

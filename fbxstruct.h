@@ -5,11 +5,63 @@
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
+#include "fbxloader.h"
 
 
 #define MAX_BONE_COUNT 128
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
+
+
+
+
+
+struct ModelBoneWeight
+{
+    uint8_t boneIndex[4];
+    Eigen::Vector4f boneWeight;
+};
+
+struct ModelVertex
+{
+    Eigen::Vector3f position;
+    Eigen::Vector3f normal;
+    Eigen::Vector2f uv0;
+    uint8_t boneIndex[4];
+    Eigen::Vector4f boneWeight;
+
+    bool operator == (const ModelVertex& v) const
+    {
+        return std::memcmp(this, &v, sizeof(ModelVertex)) == 0;
+    }
+};
+
+struct ModelMesh
+{
+    std::string nodeName;
+    std::string materialName;
+
+    std::vector<ModelVertex> vertexList;
+    std::vector<uint16_t> indexList;
+
+    Eigen::Matrix4f invMeshBaseposeMatrix;
+    std::vector<std::string> boneNodeNameList;
+    std::vector<Eigen::Matrix4f> invBoneBaseposeMatrixList;
+};
+
+
+struct ModelMaterial
+{
+    std::string materialName;
+
+    std::string diffuseTextureName;
+    std::string normalTextureName;
+    std::string specularTextureName;
+    std::string falloffTextureName;
+    std::string reflectionMapTextureName;
+};
+
+
 
 
 enum
@@ -70,6 +122,9 @@ struct UniformVs
     Eigen::Matrix4f meshMatrix;
     Eigen::Matrix4f boneMatrixList[MAX_BONE_COUNT];
 };
+
+
+
 
 #endif // FBXSTRUCT
 

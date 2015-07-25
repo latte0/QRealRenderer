@@ -1,18 +1,34 @@
-#include "fbxrenderer.h"
+#include "handfbxrenderer.h"
 
-FbxRenderer::FbxRenderer(){
+handFbxRenderer::handFbxRenderer()
+{
 
 }
 
-void FbxRenderer::init(QOpenGLContext *share, const std::string &filename)
+handFbxRenderer::~handFbxRenderer()
+{
+
+}
+
+
+void handFbxRenderer::update( UniformVs uniformvs){
+    m_uniformVs.lightDirection = uniformvs.lightDirection;
+    m_uniformVs.normalMatrix = uniformvs.normalMatrix;
+    m_uniformVs.modelViewMatrix = uniformvs.modelViewMatrix;
+    m_uniformVs.projectionMatrix = uniformvs.projectionMatrix;
+
+
+}
+
+void handFbxRenderer::init(QOpenGLContext *share, const std::string &filename)
 {
 
     QOpenGLFunctions_3_3_Core* f = 0;
     f = share->versionFunctions<QOpenGLFunctions_3_3_Core>();
 
-    m_fbxLoader.Initialize("./resources/model/hand_rig2.fbx");
-    qDebug() << "initialize ?" << m_fbxLoader.GetMaterialCount() ;
-    m_fbxLoader.LoadAnimation("./resources/model/hand_rig2.fbx");
+    m_handfbxLoader.Initialize("./resources/model/hand_rig2.fbx");
+    qDebug() << "initialize ?" << m_handfbxLoader.GetMaterialCount() ;
+    m_handfbxLoader.LoadAnimation("./resources/model/hand_rig2.fbx");
     qDebug() << "load animation ? ";
 
     hand_program = new QOpenGLShaderProgram();
@@ -37,10 +53,10 @@ void FbxRenderer::init(QOpenGLContext *share, const std::string &filename)
 
     f->glGenBuffers(1, &m_uniformBufferVs);
 
-
-    for(int i = 0; i < m_fbxLoader.GetMaterialCount(); ++i)
+/*
+    for(int i = 0; i < m_handfbxLoader.GetMaterialCount(); ++i)
     {
-        auto& modelMaterial = m_fbxLoader.GetMaterial(i);
+        auto& modelMaterial = m_handfbxLoader.GetMaterial(i);
 
         AppMaterial material;
         material.modelMaterial = &modelMaterial;
@@ -69,17 +85,18 @@ void FbxRenderer::init(QOpenGLContext *share, const std::string &filename)
             m_materialList.push_back(material);
 
     }
+*/
 
-    for (int i = 0; i < m_fbxLoader.GetMeshCount(); ++i)
+    for (int i = 0; i < m_handfbxLoader.GetMeshCount(); ++i)
     {
-        auto& modelMesh = m_fbxLoader.GetMesh(i);
+        auto& modelMesh = m_handfbxLoader.GetMesh(i);
         auto& modelVertexList = modelMesh.vertexList;
         auto& modelIndexList = modelMesh.indexList;
 
         AppMesh mesh;
         mesh.modelMeshId = i;
         mesh.modelMesh = &modelMesh;
-        mesh.material = 0;//&m_materialList[m_fbxLoader.GetMaterialId(modelMesh.materialName)];
+        mesh.material = 0;//&m_materialList[m_handfbxLoader.GetMaterialId(modelMesh.materialName)];
 
         f->glGenVertexArrays(1, &mesh.vertexArray);
         f->glBindVertexArray(mesh.vertexArray);
@@ -111,22 +128,7 @@ void FbxRenderer::init(QOpenGLContext *share, const std::string &filename)
 
 }
 
-void FbxRenderer::update( UniformVs uniformvs)
-{
-
-
-    m_uniformVs.lightDirection = uniformvs.lightDirection;
-    m_uniformVs.normalMatrix = uniformvs.normalMatrix;
-    m_uniformVs.modelViewMatrix = uniformvs.modelViewMatrix;
-    m_uniformVs.projectionMatrix = uniformvs.projectionMatrix;
-
-
-}
-
-
-void FbxRenderer::render(QOpenGLContext *share,  UniformVs uniformvs)
-{
-
+void handFbxRenderer::render(QOpenGLContext *share, HandInfo *handinfo,  UniformVs uniformvs){
     this->update(uniformvs);
 
     QOpenGLFunctions_3_3_Core* f = 0;
@@ -143,8 +145,8 @@ void FbxRenderer::render(QOpenGLContext *share,  UniformVs uniformvs)
 
             hand_program->bind();
 
-            m_fbxLoader.GetMeshMatrix(m_frame, mesh.modelMeshId, m_uniformVs.meshMatrix);
-            m_fbxLoader.GetBoneMatrix(m_frame, mesh.modelMeshId, m_uniformVs.boneMatrixList, MAX_BONE_COUNT);
+            m_handfbxLoader.GetMeshMatrix(m_frame, mesh.modelMeshId, m_uniformVs.meshMatrix);
+            m_handfbxLoader.GetBoneMatrix(m_frame, mesh.modelMeshId, m_uniformVs.boneMatrixList, MAX_BONE_COUNT,handinfo);
 
             // uniform buffer copy
             f->glBindBuffer(GL_UNIFORM_BUFFER, m_uniformBufferVs);
@@ -153,6 +155,8 @@ void FbxRenderer::render(QOpenGLContext *share,  UniformVs uniformvs)
 
             f->glBindVertexArray(mesh.vertexArray);
 
+
+            /*
                 f->glActiveTexture(GL_TEXTURE0);
                 f->glBindTexture(GL_TEXTURE_2D, mesh.material->diffuseTexture);
                 f->glBindSampler(0, mesh.material->repeatSampler);
@@ -176,7 +180,7 @@ void FbxRenderer::render(QOpenGLContext *share,  UniformVs uniformvs)
                   f->glUniform1i(uniforms[UNIFORM_SPECULAR_TEXTURE], 3);
                 }
 
-
+            */
             f->glDrawElements(GL_TRIANGLES, (GLsizei)mesh.modelMesh->indexList.size(), GL_UNSIGNED_SHORT, nullptr);
         }
     };
@@ -185,81 +189,5 @@ void FbxRenderer::render(QOpenGLContext *share,  UniformVs uniformvs)
 
     f->glUseProgram(hand_program->programId());
 
-    drawFunc(m_meshlist);
+    if(handinfo->m_righthand) drawFunc(m_meshlist);
 }
-
-
-GLuint FbxRenderer::loadTexture (QOpenGLContext *share, const std::string & filename)
-{
-    QOpenGLFunctions_3_3_Core* f = 0;
-    f = share->versionFunctions<QOpenGLFunctions_3_3_Core>();
-
-    FIBITMAP *dib1 = nullptr;
-
-    if (filename.size() == 0)
-    {
-        return 0;
-    }
-
-    auto it = m_textureDictionary.find(filename);
-    if ( it != m_textureDictionary.end())
-    {
-        return it->second;
-    }
-
-    FREE_IMAGE_FORMAT fif = FreeImage_GetFIFFromFilename(filename.data());
-
-    dib1 = FreeImage_Load(fif, filename.data(), JPEG_DEFAULT);
-    if (!dib1)
-    {
-        std::cerr << "Erreur ouverture d\'image" << std::endl;
-        return 0;
-    }
-
-    GLuint tex_id = 0;
-    int x, y;
-    int height, width;
-
-
-    RGBQUAD rgbquad;
-
-
-    FREE_IMAGE_TYPE type;
-    BITMAPINFOHEADER *header;
-
-    type = FreeImage_GetImageType(dib1);
-
-
-    height = FreeImage_GetHeight(dib1);
-    width = FreeImage_GetWidth(dib1);
-
-    header = FreeImage_GetInfoHeader(dib1);
-    int scanLineWidh = ((3*width)%4 == 0) ? 3*width : ((3*width)/4)*4+4;
-    unsigned char * texels= (GLubyte*)calloc(height*scanLineWidh, sizeof(GLubyte));
-    for (x=0 ; x<width ; x++)
-        for (y=0 ; y<height; y++)
-        {
-            FreeImage_GetPixelColor(dib1,x,y,&rgbquad);
-
-            texels[(y*scanLineWidh+3*x)]=((GLubyte*)&rgbquad)[2];
-            texels[(y*scanLineWidh+3*x)+1]=((GLubyte*)&rgbquad)[1];
-            texels[(y*scanLineWidh+3*x)+2]=((GLubyte*)&rgbquad)[0];
-        }
-
-    f->glGenTextures (1, &tex_id);
-    f->glBindTexture (GL_TEXTURE_2D, tex_id);
-
-
-    f->glTexImage2D (GL_TEXTURE_2D, 0, GL_RGB,
-                  width, height, 0, GL_RGB,
-                  GL_UNSIGNED_BYTE, texels);
-    free(texels);
-
-    m_textureDictionary.insert({filename, tex_id});
-
-    return tex_id;
-}
-
-
-
-

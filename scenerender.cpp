@@ -67,8 +67,8 @@ void SceneRender::initializeGL ()
     mouse = new MouseRenderer();
     mouse->init(this->context());
 
-    fbxrender = new FbxRenderer();
-    fbxrender->init(this->context(), "");
+    handfbxrender = new handFbxRenderer();
+    handfbxrender->init(this->context(), "");
 
 
 
@@ -227,7 +227,7 @@ void SceneRender::paintGL()
         //back->render(this->context());
         glFrontFace(GL_CCW);
 
-        fbxrender->render(this->context(),&m_handinfo, m_uniformVs);
+       handfbxrender->render(this->context(),&m_handinfo, m_uniformVs);
 
     /*
         glEnable(GL_BLEND);

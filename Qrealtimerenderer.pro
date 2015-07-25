@@ -561,7 +561,6 @@ HEADERS += \
     actortreemodel.h \
     mathhelper.h \
     handinfo.h \
-    handFBXLoader.h \
     colormodulation.h \
     vertexbufferobject.h \
     rendertexture.h \
@@ -597,7 +596,10 @@ HEADERS += \
     rectangleobject.h \
     boardobject.h \
     cvutil.h \
-    adminscenefbo.h
+    adminscenefbo.h \
+    renderactor.h \
+    handFbxLoader.h \
+    handfbxrenderer.h
 
 SOURCES += adminwidget.cpp \
            main.cpp \
@@ -608,7 +610,6 @@ SOURCES += adminwidget.cpp \
     actortreemodel.cpp \
     mathhelper.cpp \
     handinfo.cpp \
-    handFBXLoader.cpp \
     vertexbufferobject.cpp \
     rendertexture.cpp \
     scenerendermodel.cpp \
@@ -640,7 +641,10 @@ SOURCES += adminwidget.cpp \
     rectangleobject.cpp \
     boardobject.cpp \
     cvutil.cpp \
-    adminscenefbo.cpp
+    adminscenefbo.cpp \
+    renderactor.cpp \
+    handFbxLoader.cpp \
+    handfbxrenderer.cpp
 
 DISTFILES += \
     Test.qml \

@@ -64,7 +64,6 @@
 
 #include "glutil.h"
 
-#include "handFBXLoader.h"
 #include "handinfo.h"
 #include "camera.h"
 #include "rendertexture.h"
@@ -77,6 +76,7 @@
 #include "mouserenderer.h"
 #include "ovrcondition.h"
 #include "fbxrenderer.h"
+#include "handfbxrenderer.h"
 #include "qmlrenderer.h"
 #include "copywindow.h"
 
@@ -118,7 +118,7 @@ public:
     qmlRenderer *kyou;
 
     BackGroundRenderer *back;
-    FbxRenderer *fbxrender;
+    handFbxRenderer *handfbxrender;
     MouseRenderer *mouse;
     bool touched = false;
 

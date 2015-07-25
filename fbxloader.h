@@ -11,64 +11,17 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 #include "eigenutil.h"
-
-
-
-using namespace Eigen;
-using namespace QRRUtil;
-
-struct ModelBoneWeight
-{
-    uint8_t boneIndex[4];
-    Vector4f boneWeight;
-};
-
-struct ModelVertex
-{
-    Vector3f position;
-    Vector3f normal;
-    Vector2f uv0;
-    uint8_t boneIndex[4];
-    Vector4f boneWeight;
-
-    bool operator == (const ModelVertex& v) const
-    {
-        return std::memcmp(this, &v, sizeof(ModelVertex)) == 0;
-    }
-};
-
-struct ModelMesh
-{
-    std::string nodeName;
-    std::string materialName;
-
-    std::vector<ModelVertex> vertexList;
-    std::vector<uint16_t> indexList;
-
-    Matrix4f invMeshBaseposeMatrix;
-    std::vector<std::string> boneNodeNameList;
-    std::vector<Matrix4f> invBoneBaseposeMatrixList;
-};
-
-
-struct ModelMaterial
-{
-    std::string materialName;
-
-    std::string diffuseTextureName;
-    std::string normalTextureName;
-    std::string specularTextureName;
-    std::string falloffTextureName;
-    std::string reflectionMapTextureName;
-};
+#include "fbxstruct.h"
 
 
 
 class fbxLoader
 {
+    friend class FbxRenderer;
 public:
 
     fbxLoader();
+    ~fbxLoader();
 
     bool Initialize(const char* filepath);
     void Finalize();
@@ -111,19 +64,19 @@ public:
         return this->animationEndFrame;
     }
 
-    void GetMeshMatrix(float frame, int meshId, Matrix4f& out_matrix) const;
-    void GetBoneMatrix(float frame, int meshId, Matrix4f* out_matrixList, int matrixCount);
+    void GetMeshMatrix(float frame, int meshId, Eigen::Matrix4f& out_matrix) const;
+    void GetBoneMatrix(float frame, int meshId, Eigen::Matrix4f* out_matrixList, int matrixCount);
 
 
     FbxSkeleton* getSkeleton(std::string boneNodeName);
 
-private:
+public:
 
-  std::vector<Vector3f> GetNormalList(FbxMesh* mesh, const std::vector<int>& indexList);
-  std::vector<Vector2f> GetUVList(FbxMesh* mesh, const std::vector<int>& indexList, int uvNo);
-  std::vector<Vector3f> GetPositionList(FbxMesh* mesh, const std::vector<int>& indexList);
+  std::vector<Eigen::Vector3f> GetNormalList(FbxMesh* mesh, const std::vector<int>& indexList);
+  std::vector<Eigen::Vector2f> GetUVList(FbxMesh* mesh, const std::vector<int>& indexList, int uvNo);
+  std::vector<Eigen::Vector3f> GetPositionList(FbxMesh* mesh, const std::vector<int>& indexList);
 
-  void GetWeight(FbxMesh* mesh, const std::vector<int>& indexList, std::vector<ModelBoneWeight>& boneWeightList, std::vector<std::string>& boneNodeNameList, std::vector<Matrix4f>& invBaseposeMatrixList);
+  void GetWeight(FbxMesh* mesh, const std::vector<int>& indexList, std::vector<ModelBoneWeight>& boneWeightList, std::vector<std::string>& boneNodeNameList, std::vector<Eigen::Matrix4f>& invBaseposeMatrixList);
 
   ModelMesh ParseMesh(FbxMesh* mesh);
   ModelMaterial ParseMaterial(FbxSurfaceMaterial* material);

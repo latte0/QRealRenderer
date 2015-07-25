@@ -57,15 +57,17 @@
 #include <imgproc.hpp>
 
 
-#include "handFBXLoader.h"
+#include "fbxloader.h"
 #include "handinfo.h"
 
 #include "external/external_opengl/FreeImage/FreeImage.h"
-#include "external/cppitertools/itertools.hpp"
+#include "external/cppitertools/itertools.hpp"K
 #include "external/external_opengl/glm/glm.hpp"
 
 #include "glutil.h"
 #include "fbxstruct.h"
+
+#include "renderactor.h"
 
 
 #define MAX_BONE_COUNT 128
@@ -73,7 +75,7 @@
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
 
-class FbxRenderer
+class FbxRenderer : Actor
 {
 public:
     FbxRenderer();
@@ -82,9 +84,9 @@ public:
 
 
 
-    void update( UniformVs uniformvs);
-    void init(QOpenGLContext *share, const std::string &filename);
-    void render(QOpenGLContext *share, HandInfo *handinfo, UniformVs uniformvs);
+    virtual void update( UniformVs uniformvs);
+    virtual void init(QOpenGLContext *share, const std::string &filename);
+    virtual void render(QOpenGLContext *share,  UniformVs uniformvs);
 
     QOpenGLVertexArrayObject m_vao;
     QOpenGLShaderProgram *hand_program;
@@ -96,7 +98,7 @@ public:
     GLint uniformsCloth[NUM_UNIFORMS];
 
 
-    FBXLoader m_fbxLoader;
+    fbxLoader m_fbxLoader;
     std::map<std::string, GLuint> m_textureDictionary;
     std::vector<AppMaterial> m_materialList;
     std::vector<AppMesh> m_meshlist;
