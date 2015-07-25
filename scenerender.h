@@ -100,6 +100,8 @@ class qmlRenderer;
 class WindowRenderer;
 class MouseRenderer;
 
+class BackGroundRenderer;
+
 
 using namespace Eigen;
 using namespace QRRUtil;

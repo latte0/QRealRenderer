@@ -42,7 +42,7 @@ void SceneRender::initializeGL ()
     initializeOpenGLFunctions();
 
     cube = new qmlRenderer();
-    cube->init(this->context(), "movie.qml");
+    cube->init(this->context(), "Paint.qml");
     cube->setCondition(75 ,QRRUtil::EigenVector3fMake(0,200,-200) ,90,90,true);
 
     kyou = new qmlRenderer();
@@ -79,7 +79,7 @@ void SceneRender::initializeGL ()
 
     distort_program = new QOpenGLShaderProgram();
     distort_program->addShaderFromSourceFile(QOpenGLShader::Vertex, QString("./resources/Shaders/rift.vert"));
-    distort_program->addShaderFromSourceFile(QOpenGLShader::Fragment, QString("./resources/Shaders/rift.frag"));
+    distort_program->addShaderFromSourceFile(QOpenGLShader::Fragment, QString("./resources/Shaders/rift2.frag"));
     distort_program->link();
 
 /*

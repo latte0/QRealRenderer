@@ -20,14 +20,20 @@ BackGroundRenderer::BackGroundRenderer(int port)
       m_vao(0),
       m_videotex(nullptr)
 {
-    m_mtx = new std::mutex;
-
+    m_mtx = new QMutex();
+/*
     m_imgReceiver = new ImageReceiver(port,m_mtx);
     imgthread = new QThread;
     m_imgReceiver->moveToThread(imgthread);
     QObject::connect(this, SIGNAL(imgstart()), m_imgReceiver, SLOT(run()));
     imgthread->start();
     imgstart();
+*/
+    m_rwindow = new RenderWindow(m_mtx, "movie.qml");
+    m_rwindow->init();
+    m_rwindow->resize(960, 1080);
+    m_rwindow->show();
+
 }
 
 BackGroundRenderer::~BackGroundRenderer()
@@ -73,15 +79,25 @@ void BackGroundRenderer::init(QOpenGLContext* share)
     m_vbo = new QOpenGLBuffer;
     m_vbo->create();
     m_vbo->bind();
-
+/*
     GLfloat v[] = {
             -1,-1,1,    1,1,1,     1,-1,1,
             1,1,1,   -1,-1,1,       -1,1, 1
         };
-
+  */
+    GLfloat v[] = {
+            -1,1,1,    1,-1,1,     -1,-1,1,
+            1,-1,1,   -1,1,1,       1,1, 1
+        };
+/*
     GLfloat texCoords[] = {
         0.0f,1.0f, 1.0f,0.0f, 0.0f,0.0f,
         1.0f,0.0f, 0.0f,1.0f, 1.0f,1.0f,
+    };
+  */
+    GLfloat texCoords[] = {
+        0.0f,0.85f, 1.0f,0.15f, 0.0f,0.15f,
+        1.0f,0.15f, 0.0f,0.85f, 1.0f,0.85f,
     };
 
     const int vertexCount = 6;
@@ -131,15 +147,20 @@ void BackGroundRenderer::render(QOpenGLContext* share)
     int height = 480;
 
     m_mtx->lock();
-      m_videoImage = m_imgReceiver->getImageData();
-    m_mtx->unlock();
+   //   m_videoImage = m_imgReceiver->getImageData();
+    if(m_videotex != nullptr) delete m_videotex;
+       m_videotex = new QOpenGLTexture(m_rwindow->qmlimage.mirrored());
+       m_videotex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
+       m_videotex->setMagnificationFilter(QOpenGLTexture::Linear);
 
+    m_mtx->unlock();
+/*
         QImage image = QRR::CV::cvMatToQImage(m_videoImage);
         if(m_videotex != nullptr) delete m_videotex;
         m_videotex = new QOpenGLTexture(image.mirrored());
         m_videotex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
         m_videotex->setMagnificationFilter(QOpenGLTexture::Linear);
-
+*/
     m_videotex->bind();
 
 

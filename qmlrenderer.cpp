@@ -62,7 +62,7 @@ void qmlRenderer::collide(Eigen::Vector3f top){
     };
 
 
-    if( getH(top) > -touchdistance /1.4 && getH(top) < touchdistance &&
+    if( getH(top) > -touchdistance /2.0 && getH(top) < touchdistance * 2 &&
           m_handtouch == true &&
             insideRect(0.5f)   )
     {

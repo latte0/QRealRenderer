@@ -27,6 +27,11 @@
 
 #include "cvutil.h"
 
+#include "renderwindow.h"
+
+class RenderWindow;
+
+
 QT_FORWARD_DECLARE_CLASS(QOpenGLContext)
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
 QT_FORWARD_DECLARE_CLASS(QOpenGLBuffer)
@@ -41,7 +46,7 @@ public:
     BackGroundRenderer(int port);
     ~BackGroundRenderer();
 
-    std::mutex * m_mtx;
+    QMutex * m_mtx;
 
     void resize(int w, int h);
     void render(QOpenGLContext* share);
@@ -60,6 +65,8 @@ private:
     QOpenGLBuffer *m_vbo;
     QOpenGLVertexArrayObject *m_vao;
     QOpenGLTexture *m_videotex;
+
+    RenderWindow *m_rwindow;
 
     ImageReceiver *m_imgReceiver;
     QThread *imgthread;

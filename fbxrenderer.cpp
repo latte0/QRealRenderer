@@ -20,9 +20,11 @@ void FbxRenderer::init(QOpenGLContext *share, const std::string &filename)
     hand_program->addShaderFromSourceFile(QOpenGLShader::Vertex, QString("./resources/Shaders/SkinCloth.vert"));
     hand_program->addShaderFromSourceFile(QOpenGLShader::Fragment, QString("./resources/Shaders/Skin.frag"));
     hand_program->link();
+    qDebug() << "link";
+
 
     f->glUseProgram(hand_program->programId());
-
+    qDebug() << "gluseprogram";
 
 
     uniformsSkin[UNIFORM_VS] = f->glGetUniformBlockIndex(hand_program->programId(), "UniformVs");
@@ -30,6 +32,8 @@ void FbxRenderer::init(QOpenGLContext *share, const std::string &filename)
     uniformsSkin[UNIFORM_FALLOFF_TEXTURE] = f->glGetUniformBlockIndex(hand_program->programId(), "falloffTexture");
     uniformsSkin[UNIFORM_RIMLIGHT_TEXTURE] = f->glGetUniformBlockIndex(hand_program->programId(), "rimlightTexture");
     uniformsSkin[UNIFORM_SPECULAR_TEXTURE] = f->glGetUniformBlockIndex(hand_program->programId(), "specularTexture");
+    qDebug() << "glgetuniformblock";
+
 
     f->glGenBuffers(1, &m_uniformBufferVs);
 
