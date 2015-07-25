@@ -225,8 +225,10 @@ Rectangle {
             }
 
             onPositionChanged: {
+
                 updatePoint(mouse)
                 canvas.requestPaint()
+
             }
 
             onReleased: {
@@ -248,7 +250,7 @@ Rectangle {
 
     function updatePoint(mouse){
         listPointX.push(mouse.x)
-        listPointY.push(mouse.y)
+        listPointY.push(mouse.y+50)
         xpos = mouse.x
         ypos = mouse.y
     }
