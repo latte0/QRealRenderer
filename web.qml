@@ -15,7 +15,7 @@ Rectangle {
         opacity: 0.5
 
       //  url: "https://www.youtube.com/watch?v=3QuBpxjMLKc"
-        url:"file:///home/k/abc.mp4"
+        url:"file:///home/rvts/Terminator Genisys Movie - Official Trailer.mp4"
 
         Behavior on opacity {
             NumberAnimation { duration: 200 }

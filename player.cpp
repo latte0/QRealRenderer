@@ -99,15 +99,26 @@ Eigen::Vector3f Player::getEyeCenterPosition()
 }
 
 Eigen::Matrix4f Player::getLeftEyeMat(){
-    std::cout << "left" << std::endl;
-    std::cout << m_LeftEyeCam.MakelookAt() << std::endl;
+
     return m_LeftEyeCam.MakelookAt();
 }
 
 Eigen::Matrix4f Player::getRightEyeMat(){
-    std::cout << "right" << std::endl;
-    std::cout << m_RightEyeCam.MakelookAt() << std::endl;
+
     return m_RightEyeCam.MakelookAt();
+}
+
+Eigen::Matrix4f Player::getEyeMat(QRR::EyeSide eye){
+
+    switch(eye){
+        case QRR::EyeSide::Left:
+            return m_LeftEyeCam.MakelookAt();
+            break;
+        case QRR::EyeSide::Right:
+            return m_RightEyeCam.MakelookAt();
+            break;
+    }
+
 }
 
 void Player::toUp(){

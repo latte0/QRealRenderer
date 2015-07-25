@@ -114,8 +114,6 @@ class SceneRender : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
 public:
     SceneRender(QWidget *parent = 0); ~SceneRender();
 
-    GLuint loadTexture (const std::string &filename);
-
     qmlRenderer *cube;
     qmlRenderer *kyou;
 
@@ -162,33 +160,9 @@ protected:
     virtual void keyPressEvent(QKeyEvent *e) override;
 
 
-    void updateuniform(int index) ;
+    void updateuniform(QRR::EyeSide eye) ;
 
 private:
-    bool m_core;
-	int m_xRot;
-	int m_yRot;
-	int m_zRot;
-	QPoint m_lastPos;
-	QOpenGLVertexArrayObject m_vao;
-	QOpenGLShaderProgram *hand_program;
-    QOpenGLShaderProgram *distort_program;
-
-    GLint uniformsSkin[NUM_UNIFORMS];
-    GLint uniformsCloth[NUM_UNIFORMS];
-
-
-	GLuint m_projMatrix;
-
-    HandInfo m_handinfo;
-
-    GLuint m_uniformBufferVs;
-    UniformVs m_uniformVs;
-
-    FBXLoader m_fbxLoader;
-	std::map<std::string, GLuint> m_textureDictionary;
-	std::vector<AppMaterial> m_materialList;
-	std::vector<AppMesh> m_meshlist;
 
     Eigen::Vector3f eye;
     Eigen::Vector3f center;
@@ -202,11 +176,11 @@ private:
 
     int m_frame = 0;
 
-    static constexpr float m_mouseSpeed = 0.000005f;
-    static constexpr float m_speed = 3.0f;
-    float m_horizontalAngle = 3.14f;
-    float m_verticalAngle = 0.0f;
+    HandInfo m_handinfo;
 
+    GLuint m_uniformBufferVs;
+    UniformVs m_uniformVs;
+    QOpenGLShaderProgram *distort_program;
 
 
 

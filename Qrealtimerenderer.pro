@@ -596,7 +596,8 @@ HEADERS += \
     copywindow.h \
     rectangleobject.h \
     boardobject.h \
-    cvutil.h
+    cvutil.h \
+    adminscenefbo.h
 
 SOURCES += adminwidget.cpp \
            main.cpp \
@@ -638,7 +639,8 @@ SOURCES += adminwidget.cpp \
     copywindow.cpp \
     rectangleobject.cpp \
     boardobject.cpp \
-    cvutil.cpp
+    cvutil.cpp \
+    adminscenefbo.cpp
 
 DISTFILES += \
     Test.qml \

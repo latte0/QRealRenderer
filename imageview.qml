@@ -7,8 +7,8 @@ import QtQuick.Controls 1.0
 Rectangle {
 
     id: window
-    width: 700
-    height: 700
+    width: 1000
+    height: 1000
 
     rotation:-90
 
@@ -31,8 +31,7 @@ Rectangle {
                 model: FolderListModel {
                     id: folderModel
                     objectName: "folderModel"
-                    folder: "file:///home/k/research/qrealrenderer/resources/book/"
-                    showDirs: true
+                    folder: "file:///home/rvts/research/qrealtimerenderer/resources/book/"
                     nameFilters: ["*.png", "*.jpg", "*.gif"]
                 }
                 delegate: Rectangle {

@@ -61,6 +61,7 @@ public:
 
     Eigen::Matrix4f getLeftEyeMat();
     Eigen::Matrix4f getRightEyeMat();
+    Eigen::Matrix4f getEyeMat(QRR::EyeSide eye);
 
     void toUp();
     void toDown();

@@ -29,7 +29,7 @@ BackGroundRenderer::BackGroundRenderer(int port)
     imgthread->start();
     imgstart();
 */
-    m_rwindow = new RenderWindow(m_mtx, "movie.qml");
+    m_rwindow = new RenderWindow(m_mtx, "web.qml");
     m_rwindow->init();
     m_rwindow->resize(960, 1080);
     m_rwindow->show();

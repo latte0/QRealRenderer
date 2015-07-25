@@ -24,7 +24,7 @@ void qmlRenderer::inittex(QOpenGLContext * share){
 
 void qmlRenderer::bindTex(){
 
-    QImage image = QImage(700, 700, QImage::Format_ARGB32_Premultiplied);
+    QImage image = QImage(1000, 1000, QImage::Format_ARGB32_Premultiplied);
     QPainter imagePainter(&image);
 
     m_mutex->lock();
@@ -51,10 +51,10 @@ void qmlRenderer::collide(Eigen::Vector3f top){
 
 
    // int qmlwidth = m_rwindow->m_rootItem->width(), qmlheigt = m_rwindow->m_rootItem->height();
-    int qmlwidth = 700, qmlheight = 700;
+    int qmlwidth = 1000, qmlheight = 1000;
     Eigen::Vector2f pos = calcPos(top);
 
-    touch_x = pos.x()*700; touch_y = (700-pos.y()*700);
+    touch_x = pos.x()*qmlwidth; touch_y = (qmlheight-pos.y()*qmlheight);
 
     auto insideRect = [&pos](const int length) -> bool
     {

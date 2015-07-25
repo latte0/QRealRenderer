@@ -31,5 +31,13 @@ namespace Network{
     static int Left = 1091;
     static int Trans = 2000;
 }
+
+
+enum EyeSide : short{
+    Left,
+    Right,
+    Center
+};
+
 }
 #endif // ENVIRONMENTREADER_H

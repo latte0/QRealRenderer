@@ -29,14 +29,6 @@ WindowRenderer::WindowRenderer()
       m_matrixLoc(0)
 
 {
-
-    m_positions[0] = QRRUtil::EigenVector3fMake(-1.0, 1.0, 0.0);
-    m_positions[1] = QRRUtil::EigenVector3fMake(1.0, 1.0, 0.0);
-    m_positions[2] = QRRUtil::EigenVector3fMake(-1.0, -1.0, 0.0);
-    m_positions[3] = QRRUtil::EigenVector3fMake(1.0, -1.0, 0.0);
-    m_centerpos = QRRUtil::EigenVector3fMake(0.0, 0.0, 0.0);
-
-
     m_mutex = new QMutex();
 }
 
@@ -156,19 +148,6 @@ void WindowRenderer::collide(Eigen::Vector3f top){
 
 void WindowRenderer::update( Eigen::Matrix4f mat, Eigen::Vector3f top,  Eigen::Vector3f mousepos){
 
-
-    m_centerpos = m_position;
-
-    Eigen::Vector4f positions[4];
-
-    positions[0] = QRRUtil::EigenVector4fMake(-1.0, 1.0, 0.0,1.0);
-    positions[1] = QRRUtil::EigenVector4fMake(1.0, 1.0, 0.0,1.0);
-    positions[2] = QRRUtil::EigenVector4fMake(-1.0, -1.0, 0.0,1.0);
-    positions[3] = QRRUtil::EigenVector4fMake(1.0, -1.0, 0.0,1.0);
-
-    m_centerpos = QRRUtil::EigenVector3fMake(0.0, 0.0, 0.0);
-
-
     QMatrix4x4 psmat;
 
     psmat.scale(m_scale,m_scale);
@@ -176,13 +155,17 @@ void WindowRenderer::update( Eigen::Matrix4f mat, Eigen::Vector3f top,  Eigen::V
     m_smat = psmat;
 
 
-    for(int i =0;i < 4;i++){
-        positions[i] = positions[i] * m_scale;
-        positions[i] = m_basis * positions[i];
+    Eigen::Matrix4f esmat;
+    esmat << m_scale, 0,0,0,
+            0,m_scale,0,0,
+            0,0,m_scale,0,
+            0,0,0,1.0;
+    initRecpos();
 
-        m_positions[i] = QRRUtil::EigenVector3fMake(positions[i].x(),positions[i].y(),positions[i].z());
-        m_positions[i] += m_position;
-    }
+
+    calcRecpos(QRRUtil::MakeTransform(m_position) * m_basis * esmat);
+
+
 
     Eigen::Matrix4f eworld;
 
@@ -206,11 +189,11 @@ void WindowRenderer::update( Eigen::Matrix4f mat, Eigen::Vector3f top,  Eigen::V
 
 
 
-    m_rightVec = m_positions[1] - m_positions[0];
-    m_downVec = m_positions[2] - m_positions[0];
+    m_rightVec = m_recPositions[1] - m_recPositions[0];
+    m_downVec = m_recPositions[2] - m_recPositions[0];
 
-    if(m_handtouch == false){     m_suiVec = mousepos; }
-    else m_suiVec = m_rightVec.cross(m_downVec);
+    if(m_handtouch == false){     m_vertVec = mousepos; }
+    else m_vertVec = m_rightVec.cross(m_downVec);
 
 
     collide(top);

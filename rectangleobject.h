@@ -3,35 +3,31 @@
 
 #include "actor.h"
 #include "boardobject.h"
+#include "eigenutil.h"
 
-class RectangleObject : public Actor , BoardObject
+#include <Eigen/Core>
+#include <Eigen/Dense>
+#include <Eigen/Geometry>
+
+
+
+class RectangleObject : BoardObject
 {
+    friend class WindowRenderer;
 public:
     RectangleObject();
     ~RectangleObject();
 
-    void update(Eigen::Matrix4f mat, Eigen::Vector3f top, Eigen::Vector3f mousepos);
-/*
-    virtual void bindTex();
-    virtual void inittex();
-    virtual void collide(Eigen::Vector3f top);
-*/
+    void initRecpos();
+    void calcRecpos(Eigen::Matrix4f mat);
+
+
 private:
-    Eigen::Vector3f m_positions[4];
+    Eigen::Vector3f m_recPositions[4];
 
-
-    float m_z = -150.0;
-    float m_s;
-    float m_v;
-    float m_scale = 70;
-    float m_rightrot = 0;
-    float m_uprot = 0;
-
-    bool m_handtouch = false;
-    bool m_touched = false;
-    bool m_pressed = false;
-    float touchdistance = 6.0;
-
+    Eigen::Vector3f m_rightVec;
+    Eigen::Vector3f m_downVec;
+    Eigen::Vector3f m_vertVec;
 
 };
 
