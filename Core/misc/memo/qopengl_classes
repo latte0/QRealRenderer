@@ -75,3 +75,6 @@ QOpenGLWidget provides functionality for displaying OpenGL graphics integrated i
 
 QOpenGLWindow
 Convenience subclass of QWindow to perform OpenGL painting
+
+
+QWidget::createWindowContainer
