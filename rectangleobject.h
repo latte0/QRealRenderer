@@ -11,9 +11,12 @@
 
 
 
-class RectangleObject : BoardObject
+class RectangleObject : public BoardObject
 {
     friend class WindowRenderer;
+    friend class qmlRenderer;
+    friend class MouseRenderer;
+
 public:
     RectangleObject();
     ~RectangleObject();
@@ -21,8 +24,14 @@ public:
     void initRecpos();
     void calcRecpos(Eigen::Matrix4f mat);
 
+    const Eigen::Vector3f getRightVec();
 
-private:
+    const Eigen::Vector3f getDownVec();
+
+    const Eigen::Vector3f getVertVec();
+
+
+protected:
     Eigen::Vector3f m_recPositions[4];
 
     Eigen::Vector3f m_rightVec;

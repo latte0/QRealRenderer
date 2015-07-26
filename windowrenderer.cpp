@@ -134,6 +134,8 @@ void WindowRenderer::setCondition(float scale, Eigen::Vector3f pos, float uprot,
     m_uprot = uprot;
     m_rightrot = rightrot;
 
+
+    //euler rotation
     Eigen::Vector3f mzbasis(cos(m_rightrot * 3.1415/180),0,-sin(m_rightrot * 3.1415/180));
 
     m_basis = QRRUtil::MakeEulerYRotationMat(m_rightrot * 3.1415/180 );
@@ -146,7 +148,11 @@ void WindowRenderer::collide(Eigen::Vector3f top){
 
 }
 
-void WindowRenderer::update( Eigen::Matrix4f mat, Eigen::Vector3f top,  Eigen::Vector3f mousepos){
+void WindowRenderer::update(){
+
+}
+
+void WindowRenderer::objectupdate( Eigen::Matrix4f mat, Eigen::Vector3f top,  Eigen::Vector3f mousepos){
 
     QMatrix4x4 psmat;
 
@@ -160,20 +166,11 @@ void WindowRenderer::update( Eigen::Matrix4f mat, Eigen::Vector3f top,  Eigen::V
             0,m_scale,0,0,
             0,0,m_scale,0,
             0,0,0,1.0;
+
+
     initRecpos();
-
-
     calcRecpos(QRRUtil::MakeTransform(m_position) * m_basis * esmat);
-
-
-
-    Eigen::Matrix4f eworld;
-
-    eworld << m_basis(0,0) , m_basis(0,1) , m_basis(0,2) , m_position.x(),
-              m_basis(1,0) , m_basis(1,1) , m_basis(1,2) , m_position.y(),
-              m_basis(2,0) , m_basis(2,1) , m_basis(2,2) , m_position.z(),
-              0            , 0            , 0            , 1        ;
-
+    createWorld();
 
 
     auto eToqMat = [](const Eigen::Matrix4f& emat) -> QMatrix4x4{
@@ -184,9 +181,8 @@ void WindowRenderer::update( Eigen::Matrix4f mat, Eigen::Vector3f top,  Eigen::V
             return  qmat;
     };
 
-    m_qworld = eToqMat(eworld);
+    m_qworld = eToqMat(m_world);
     m_qmat = eToqMat(mat);
-
 
 
     m_rightVec = m_recPositions[1] - m_recPositions[0];
@@ -220,8 +216,8 @@ void WindowRenderer::render(QOpenGLContext* share, Eigen::Matrix4f mat, Eigen::V
    QOpenGLVertexArrayObject::Binder vaoBinder(m_vao);
 
 
-        update(mat, top ,mousepos);
-
+        objectupdate(mat, top ,mousepos);
+        update();
 
         if (!m_vao->isCreated())
             setupVertexAttribs(share);

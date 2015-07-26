@@ -1,182 +1,66 @@
 #include "mouserenderer.h"
 
-MouseRenderer::MouseRenderer()
-    : m_program(0),
-    m_vbo(0),
-    m_vao(0),
-    m_matrixLoc(0)
+MouseRenderer::MouseRenderer() :
+    WindowRenderer(),
+    m_mousetex(nullptr)
 {
-    m_positions[0] = QRRUtil::EigenVector3fMake(-1.0, 1.0, 0.0);
-    m_positions[1] = QRRUtil::EigenVector3fMake(1.0, 1.0, 0.0);
-    m_positions[2] = QRRUtil::EigenVector3fMake(-1.0, -1.0, 0.0);
-    m_positions[3] = QRRUtil::EigenVector3fMake(1.0, -1.0, 0.0);
-    m_centerpos = QRRUtil::EigenVector3fMake(0.0, 0.0, 0.0);
-
+ m_windowpos = QRRUtil::EigenVector2fMake(0.0f,0.0f);
 }
 
 MouseRenderer::~MouseRenderer()
 {
-    delete m_program;
-    delete m_vbo;
-    delete m_vao;
+    delete m_mousetex;
 }
 
-
-void MouseRenderer::init(QOpenGLContext* share)
+void MouseRenderer::update()
 {
-    auto *f = share->functions();
+    switch(mode){
+        case MouseMode::OnWindow:
+            m_basis = m_attendant->getBasis();
+            m_position = m_attendant->getPosition() + m_windowpos.x() * m_attendant->getRightVec()  +  m_windowpos.y() * m_attendant->getDownVec();
+            m_position -= m_attendant->getVertVec()*0.000001;
+            break;
+        case MouseMode::Sphere:
+            break;
+    }
 
-    static const char *vertexShaderSource =
-        "attribute highp vec4 vertex;\n"
-        "attribute lowp vec2 coord;\n"
-        "varying lowp vec2 v_coord;\n"
-        "uniform highp mat4 matrix;\n"
-        "void main() {\n"
-        "   v_coord = coord;\n"
-        "   gl_Position = matrix * vertex;\n"
-        "}\n";
-    static const char *fragmentShaderSource =
-        "varying lowp vec2 v_coord;\n"
-        "uniform sampler2D sampler;\n"
-        "void main() {\n"
-        "   gl_FragColor = vec4(0.0,1.0,1.0, 0.5);\n"
-        "   "
-        "}\n";
-
-    m_program = new QOpenGLShaderProgram;
-    m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource);
-    m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource);
-    m_program->bindAttributeLocation("vertex", 0);
-    m_program->bindAttributeLocation("coord", 1);
-    m_program->link();
-    m_matrixLoc = m_program->uniformLocation("matrix");
-
-    m_vao = new QOpenGLVertexArrayObject;
-    m_vao->create();
-    QOpenGLVertexArrayObject::Binder vaoBinder(m_vao);
-
-    m_vbo = new QOpenGLBuffer;
-    m_vbo->create();
-    m_vbo->bind();
-
-    GLfloat v[] = {
-            -1,1,0,    1,-1,0,     -1,-1,0,
-            1,-1,0,   -1,1,0,       1,1, 0
-        };
-
-    GLfloat texCoords[] = {
-        0.0f,1.0f, 1.0f,0.0f, 0.0f,0.0f,
-        1.0f,0.0f, 0.0f,1.0f, 1.0f,1.0f,
-    };
-
-    const int vertexCount = 6;
-    m_vbo->allocate(sizeof(GLfloat) * vertexCount * 5);
-    m_vbo->write(0, v, sizeof(GLfloat) * vertexCount * 3);
-    m_vbo->write(sizeof(GLfloat) * vertexCount * 3, texCoords, sizeof(GLfloat) * vertexCount * 2);
-    m_vbo->release();
-
-    if (m_vao->isCreated())
-        setupVertexAttribs(share);
 }
 
-void MouseRenderer::resize(int w, int h)
+void MouseRenderer::inittex(QOpenGLContext* share)
+{
+    m_mousetex = new QOpenGLTexture(QImage("./resources/mouse.png"));
+    m_mousetex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
+    m_mousetex->setMagnificationFilter(QOpenGLTexture::Linear);
+}
+
+
+void MouseRenderer::bindTex()
+{
+    m_mousetex->bind();
+}
+
+void MouseRenderer::collide(Eigen::Vector3f top)
 {
 
 }
 
-
-
-void MouseRenderer::setupVertexAttribs(QOpenGLContext* share)
-{
-
-    auto *f = share->functions();
-
-    m_vbo->bind();
-    m_program->enableAttributeArray(0);
-    m_program->enableAttributeArray(1);
-    f->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    f->glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0,
-                                                  (const void *)(6 * 3 * sizeof(GLfloat)));
-    m_vbo->release();
+void MouseRenderer::setWindowPos(float x, float y){
+   m_windowpos[0] = x;
+   m_windowpos[1] = y;
 }
 
-void MouseRenderer::update(Eigen::Matrix4f mat)
-{}
-
-void MouseRenderer::render(QOpenGLContext* share, Eigen::Matrix4f mat)
-{
-
-    auto *f = share->functions();
-
-    f->glFrontFace(GL_CW);
-
-    f->glUseProgram(m_program->programId());
-    f->glActiveTexture (GL_TEXTURE0);
-    f->glUniform1i     (f->glGetUniformLocation (m_program->programId(), "sampler"), 0);
-
-
-        QOpenGLVertexArrayObject::Binder vaoBinder(m_vao);
-
-        QMatrix4x4 qmat(mat(0,0),mat(0,1),mat(0,2),mat(0,3),
-                        mat(1,0),mat(1,1),mat(1,2),mat(1,3),
-                        mat(2,0),mat(2,1),mat(2,2),mat(2,3),
-                        mat(3,0),mat(3,1),mat(3,2),mat(3,3));
-
-        QMatrix4x4 s;
-        s.scale(m_scale, m_scale);
-        s.translate(0.0f,0.0f,m_z);
-
-
-        Eigen::Matrix4f rightrotmat = QRRUtil::MakeEulerYRotationMat(m_rightrot * 3.1415/180 );
-
-
-        QMatrix4x4 qrightrotmat(rightrotmat(0,0),rightrotmat(0,1),rightrotmat(0,2),rightrotmat(0,3),
-                        rightrotmat(1,0),rightrotmat(1,1),rightrotmat(1,2),rightrotmat(1,3),
-                        rightrotmat(2,0),rightrotmat(2,1),rightrotmat(2,2),rightrotmat(2,3),
-                        rightrotmat(3,0),rightrotmat(3,1),rightrotmat(3,2),rightrotmat(3,3));
-
-
-        Eigen::Vector3f mzbasis(cos(m_rightrot * 3.1415/180),0,-sin(m_rightrot * 3.1415/180));
-
-
-
-        Eigen::Matrix4f uprotmat = QRRUtil::MakeEulerRotationMat(mzbasis,m_uprot * 3.1415/180 );
-
-
-        QMatrix4x4 quprotmat(uprotmat(0,0),uprotmat(0,1),uprotmat(0,2),uprotmat(0,3),
-                        uprotmat(1,0),uprotmat(1,1),uprotmat(1,2),uprotmat(1,3),
-                        uprotmat(2,0),uprotmat(2,1),uprotmat(2,2),uprotmat(2,3),
-                        uprotmat(3,0),uprotmat(3,1),uprotmat(3,2),uprotmat(3,3));
-
-
-
-
-
-        m_positions[0] = QRRUtil::EigenVector3fMake(-1.0, 1.0, 0.0);
-        m_positions[1] = QRRUtil::EigenVector3fMake(1.0, 1.0, 0.0);
-        m_positions[2] = QRRUtil::EigenVector3fMake(-1.0, -1.0, 0.0);
-        m_positions[3] = QRRUtil::EigenVector3fMake(1.0, -1.0, 0.0);
-        m_centerpos = QRRUtil::EigenVector3fMake(0.0, 0.0, 0.0);
-
-        for(int i =0;i < 4;i++){
-            m_positions[i] = m_positions[i] * m_scale;
-            m_positions[i].z() = m_positions[i].z() + m_z;
-            m_positions[i] = QRRUtil::MakeEulerYRotationVec(m_positions[i], m_rightrot * 3.1415/180 );
-            m_positions[i] = QRRUtil::MakeEulerRotationVec(mzbasis,m_positions[i], m_uprot * 3.1415/180 );
-        }
-
-        m_centerpos.z() = m_centerpos.z() + m_z;
-        m_centerpos = QRRUtil::MakeEulerYRotationVec(m_centerpos, m_rightrot * 3.1415/180 );
-        m_centerpos = QRRUtil::MakeEulerRotationVec(mzbasis,m_centerpos, m_uprot * 3.1415/180 );
-
-
-        if (!m_vao->isCreated())
-            setupVertexAttribs(share);
-
-
-        m_program->setUniformValue(m_matrixLoc, qmat * quprotmat * qrightrotmat * s);
-
-        f->glDrawArrays(GL_TRIANGLES, 0, 6);
-
+void MouseRenderer::setWindowPos(Eigen::Vector2f pos){
+    m_windowpos = pos;
 }
+
+void MouseRenderer::setAttendant(WindowRenderer *attendant){
+    m_attendant = attendant;
+}
+
+Eigen::Vector2f MouseRenderer::getWindowPos(){
+   return m_windowpos;
+}
+
+
+
 

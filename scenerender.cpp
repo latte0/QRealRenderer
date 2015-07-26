@@ -7,10 +7,6 @@
 #include "eigenutil.h"
 #include "fbxstruct.h"
 
-
-#include "external/external_opengl/glm/glm.hpp"
-#include "external/external_opengl/glm/gtc/type_ptr.hpp"
-
 SceneRender::SceneRender(QWidget *parent)
     : QOpenGLWidget(parent)
 
@@ -20,7 +16,7 @@ SceneRender::SceneRender(QWidget *parent)
     m_eworld = Eigen::Matrix4f::Identity();
 
     setMouseTracking(true);
-    setCursor(Qt::BlankCursor);
+   // setCursor(Qt::BlankCursor);
 }
 
 SceneRender::~SceneRender()
@@ -49,6 +45,8 @@ void SceneRender::initializeGL ()
     kyou->init(this->context(), "imageview.qml");
     kyou->setCondition(20 ,QRRUtil::EigenVector3fMake(20,20,-8) ,-20,-10,true);
 
+    currentQml = kyou;
+
     qDebug() << "qmlok";
 
 /*
@@ -64,8 +62,11 @@ void SceneRender::initializeGL ()
     back = new BackGroundRenderer(1091);
     back->init(this->context());
 */
+
     mouse = new MouseRenderer();
-    mouse->init(this->context());
+    mouse->init(this->context(), "");
+    mouse->setAttendant(currentQml);
+
 
     handfbxrender = new handFbxRenderer();
     handfbxrender->init(this->context(), "");
@@ -219,9 +220,9 @@ void SceneRender::paintGL()
         updateuniform(eye);
 
         if(debugmode == 0){
-            cube->render(this->context(),m_eproj * m_ecamera, m_handinfo.m_fingerdata[1][3].position + ThePlayer.getPosition() + QRRUtil::EigenVector3fMake(0,0,-400/QRR::Environment::mmDiv),ThePlayer.getPosition() - mouse->m_centerpos);
-            kyou->render(this->context(),m_eproj * m_ecamera, m_handinfo.m_fingerdata[1][3].position+ ThePlayer.getPosition() + QRRUtil::EigenVector3fMake(0,0,-400/QRR::Environment::mmDiv),ThePlayer.getPosition() - mouse->m_centerpos);
-            mouse->render(this->context(),m_eproj * m_ecamera);
+            cube->render(this->context(),m_eproj * m_ecamera, m_handinfo.m_fingerdata[1][3].position + ThePlayer.getPosition() + QRRUtil::EigenVector3fMake(0,0,-400/QRR::Environment::mmDiv),ThePlayer.getPosition() /*- mouse->m_centerpos*/);
+            kyou->render(this->context(),m_eproj * m_ecamera, m_handinfo.m_fingerdata[1][3].position+ ThePlayer.getPosition() + QRRUtil::EigenVector3fMake(0,0,-400/QRR::Environment::mmDiv),ThePlayer.getPosition() /*- mouse->m_centerpos*/);
+            mouse->render(this->context(),m_eproj * m_ecamera,Eigen::Vector3f::Identity(), Eigen::Vector3f::Identity());
         }
 
         //back->render(this->context());
@@ -312,33 +313,66 @@ void SceneRender::resizeGL(int width, int height)
 
 void SceneRender::mousePressEvent(QMouseEvent *e)
 {
+    Eigen::Vector2f winpos(e->pos().x(), e->pos().y());
+    winpos[0] = -0.5 + winpos[0] / size().width();
+    winpos[1] = -0.5 + winpos[1] / size().height();
+    mouse->setWindowPos(winpos);
 
+    QMouseEvent mappedEvent(QEvent::MouseButtonPress,  QPointF(1000* winpos.x(), 1000 * winpos.y()), Qt::LeftButton, Qt::LeftButton,   Qt::NoModifier   );
+    QCoreApplication::sendEvent(kyou->m_rwindow->m_quickWindow, &mappedEvent);
+
+    touched = true;
+    if(touched){
+        QMouseEvent mappedEvent(QEvent::MouseMove,  QPointF(1000* winpos.x(), 1000 * winpos.y()), Qt::LeftButton, Qt::LeftButton,   Qt::NoModifier   );
+        QCoreApplication::sendEvent(currentQml->m_rwindow->m_quickWindow, &mappedEvent);
+    }
+
+        qDebug() << "touches";
+/*
     Eigen::Vector2f pos = cube->calcPos(mouse->m_centerpos);
-
-    std::cout << "mousemoveeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"  << pos * 1000 << std::endl;
 
     QMouseEvent mappedEvent(QEvent::MouseButtonPress,  QPointF(1000* pos.x(), 1000 * pos.y()), Qt::LeftButton, Qt::LeftButton,   Qt::NoModifier   );
     QCoreApplication::sendEvent(cube->m_rwindow->m_quickWindow, &mappedEvent);
+*/
 
-    touched  = true;
 }
 
 void SceneRender::mouseReleaseEvent(QMouseEvent *e)
 {
 
+    Eigen::Vector2f winpos(e->pos().x(), e->pos().y());
+    winpos[0] = -0.5 + winpos[0] / size().width();
+    winpos[1] = -0.5 + winpos[1] / size().height();
+    mouse->setWindowPos(winpos);
 
+
+        QMouseEvent mappedEvent(QEvent::MouseButtonRelease,  QPointF(1000* winpos.x(), 1000 * winpos.y()), Qt::LeftButton, Qt::LeftButton,   Qt::NoModifier   );
+        QCoreApplication::sendEvent(currentQml->m_rwindow->m_quickWindow, &mappedEvent);
+
+/*
     Eigen::Vector2f pos = cube->calcPos(mouse->m_centerpos);
 
     std::cout << "mousemoveeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"  << pos * 1000 << std::endl;
 
     QMouseEvent mappedEvent(QEvent::MouseButtonRelease,  QPointF(1000* pos.x(), 1000 * pos.y()), Qt::LeftButton, Qt::LeftButton,   Qt::NoModifier   );
     QCoreApplication::sendEvent(cube->m_rwindow->m_quickWindow, &mappedEvent);
-
+*/
     touched  = false;
 }
 
 void SceneRender::mouseMoveEvent(QMouseEvent *e)
 {
+
+    Eigen::Vector2f winpos(e->pos().x(), e->pos().y());
+    winpos[0] = -0.5 + winpos[0] / size().width();
+    winpos[1] = -0.5 + winpos[1] / size().height();
+    mouse->setWindowPos(winpos);
+
+    if(touched){
+        QMouseEvent mappedEvent(QEvent::MouseMove,  QPointF(1000* winpos.x(), 1000 * winpos.y()), Qt::LeftButton, Qt::LeftButton,   Qt::NoModifier   );
+        QCoreApplication::sendEvent(currentQml->m_rwindow->m_quickWindow, &mappedEvent);
+    }
+
     /*
     mouse->m_rightrot -= (e->pos().x() - m_lastPos.x()) /4.0;
     mouse->m_uprot += (e->pos().y() - m_lastPos.y() ) /4.0;
@@ -346,17 +380,17 @@ void SceneRender::mouseMoveEvent(QMouseEvent *e)
     m_lastPos = e->pos();
 */
 
-    mouse->m_rightrot = -(-60 + (e->pos().y()*(891/256) / (11*2.0)  ));
+  //  mouse->m_rightrot = -(-60 + (e->pos().y()*(891/256) / (11*2.0)  ));
 
-    mouse->m_uprot = -50 +  (e->pos().x() ) / (11.0 * 1.7);
-
+//    mouse->m_uprot = -50 +  (e->pos().x() ) / (11.0 * 1.7);
+/*
     if(touched){
         Eigen::Vector2f pos = cube->calcPos(mouse->m_centerpos);
 
         QMouseEvent mappedEvent(QEvent::MouseMove,  QPointF(1000* pos.x(), 1000 * pos.y()), Qt::LeftButton, Qt::LeftButton,   Qt::NoModifier   );
         QCoreApplication::sendEvent(cube->m_rwindow->m_quickWindow, &mappedEvent);
     }
-
+*/
 /*
     QPoint glob = mapToGlobal(QPoint(width()/2,height()/2));
     QCursor::setPos(glob);

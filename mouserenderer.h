@@ -5,15 +5,6 @@
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 
-#include <QOpenGLWidget>
-#include <QOpenGLFunctions>
-#include <QOpenGLFunctions_3_3_Core>
-#include <QOpenGLFunctions_3_3_Compatibility>
-#include <QOpenGLVertexArrayObject>
-#include <QOpenGLTexture>
-#include <QOpenGLShaderProgram>
-#include <QOpenGLShader>
-#include <QOpenGLFramebufferObject>
 
 #include <QOffscreenSurface>
 #include <QOpenGLBuffer>
@@ -22,51 +13,43 @@
 #include "renderwindow.h"
 #include "actor.h"
 #include "handinfo.h"
-
+#include "windowrenderer.h"
 #include "eigenutil.h"
 
-QT_FORWARD_DECLARE_CLASS(QOpenGLContext)
-QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
-QT_FORWARD_DECLARE_CLASS(QOpenGLBuffer)
-QT_FORWARD_DECLARE_CLASS(QOpenGLVertexArrayObject)
+enum MouseMode : short{
+  Sphere,
+  OnWindow
+};
 
+class RenderWindow;
 
-class MouseRenderer : public Actor
+class MouseRenderer : public WindowRenderer
 {
 public:
     MouseRenderer();
-    ~MouseRenderer();
+    virtual ~MouseRenderer();
 
+    virtual void bindTex();
+    virtual void inittex(QOpenGLContext* share);
+    virtual void collide(Eigen::Vector3f top);
+    virtual void update();
 
-    void resize(int w, int h);
-    void update(Eigen::Matrix4f mat);
-    void render(QOpenGLContext* share,Eigen::Matrix4f mat);
+    void setWindowPos(float x, float y);
+    void setWindowPos(Eigen::Vector2f pos);
 
-    void init(QOpenGLContext* share);
-    void setupVertexAttribs(QOpenGLContext* share);
+    void setAttendant(WindowRenderer *attendant);
 
+    Eigen::Vector2f getWindowPos();
 
-    float m_z = -149.99;
-    float m_scale = 3;
-    float m_rightrot = 0;
-    float m_uprot = 0;
-    Eigen::Vector3f m_rightVec;
-    Eigen::Vector3f m_downVec;
-    Eigen::Vector3f m_suiVec;
+    QOpenGLTexture *m_mousetex;
 
-    Eigen::Vector3f m_positions[4];
-    Eigen::Vector3f m_centerpos;
+    MouseMode mode = MouseMode::OnWindow;
 
 
 private:
+   Eigen::Vector2f m_windowpos; // this arrange of positions are 0 ~ 1
+   WindowRenderer *m_attendant;
 
-    QOpenGLContext* m_context;
-    QOpenGLShaderProgram *m_program;
-    QOpenGLBuffer *m_vbo;
-    QOpenGLBuffer m_indexbuffer;
-    QOpenGLVertexArrayObject *m_vao;
-    int m_matrixLoc;
-    Eigen::Matrix4f m_proj;
 };
 
 #endif // MOUSERENDERER_H

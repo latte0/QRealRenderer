@@ -34,7 +34,6 @@ void qmlRenderer::bindTex(){
         if(m_touched)imagePainter.drawEllipse(touch_x-10, touch_y-10, 30, 30);
 
         if(m_qmltex != nullptr) delete m_qmltex;
-     //   m_qmltex = new QOpenGLTexture(m_rwindow->qmlimage.mirrored());
         m_qmltex = new QOpenGLTexture(image);
         m_qmltex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
         m_qmltex->setMagnificationFilter(QOpenGLTexture::Linear);
@@ -43,7 +42,9 @@ void qmlRenderer::bindTex(){
 
     m_qmltex->bind();
 
+}
 
+void qmlRenderer::update(){
 
 }
 
@@ -64,7 +65,7 @@ void qmlRenderer::collide(Eigen::Vector3f top){
 
     if( getH(top) > -touchdistance /2.0 && getH(top) < touchdistance * 2 &&
           m_handtouch == true &&
-            insideRect(0.5f)   )
+            insideRect(0.5f)  )
     {
 
         if(insideRect(0.0f) && m_pressed == false){

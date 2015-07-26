@@ -116,6 +116,7 @@ public:
 
     qmlRenderer *cube;
     qmlRenderer *kyou;
+    qmlRenderer *currentQml;
 
     BackGroundRenderer *back;
     handFbxRenderer *handfbxrender;

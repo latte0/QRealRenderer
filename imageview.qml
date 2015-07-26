@@ -31,7 +31,7 @@ Rectangle {
                 model: FolderListModel {
                     id: folderModel
                     objectName: "folderModel"
-                    folder: "file:///home/rvts/research/qrealtimerenderer/resources/book/"
+                    folder: "file:///home/k/research/qrealrenderer/resources/book/"
                     nameFilters: ["*.png", "*.jpg", "*.gif"]
                 }
                 delegate: Rectangle {

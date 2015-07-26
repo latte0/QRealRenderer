@@ -10,11 +10,12 @@ class qmlRenderer : public WindowRenderer
 {
 public:
     qmlRenderer();
-    ~qmlRenderer();
+    virtual ~qmlRenderer();
 
     virtual void inittex(QOpenGLContext * share);
     virtual void bindTex();
     virtual void collide(Eigen::Vector3f top);
+    virtual void update();
 
 
     RenderWindow *m_rwindow;

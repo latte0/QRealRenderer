@@ -39,7 +39,7 @@ public:
         m_world = world;
     }
 
-    void createWold(){
+    void createWorld(){
         m_world << m_basis(0,0) , m_basis(0,1) , m_basis(0,2) , m_position.x(),
                    m_basis(1,0) , m_basis(1,1) , m_basis(1,2) , m_position.y(),
                    m_basis(2,0) , m_basis(2,1) , m_basis(2,2) , m_position.z(),

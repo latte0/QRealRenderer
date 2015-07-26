@@ -111,20 +111,20 @@ Eigen::Matrix4f QRRUtil::MakeRotationXAxis(Eigen::Vector3f const &vec){
 
 
 
-Eigen::Vector2f QRRUtil::EigenVector2fMake(float const x, float const y)
+ Eigen::Vector2f QRRUtil::EigenVector2fMake(float const x, float const y)
 {
   Eigen::Vector2f v = {x, y};
   return std::move(v);
 }
 
 
-Eigen::Vector3f QRRUtil::EigenVector3fMake(float const x, float const y, float const z)
+ Eigen::Vector3f QRRUtil::EigenVector3fMake(float const x, float const y, float const z)
 {
   Eigen::Vector3f v = {x, y ,z};
   return std::move(v);
 }
 
-Eigen::Vector4f QRRUtil::EigenVector4fMake(float const x, float const y, float const z, float const w)
+ Eigen::Vector4f QRRUtil::EigenVector4fMake(float const x, float const y, float const z, float const w)
 {
   Eigen::Vector4f v = {x, y, z, w};
   return std::move(v);
@@ -148,20 +148,20 @@ Eigen::Vector4f QRRUtil::EivenVector4fNormalize(Eigen::Vector4f &&vec){
 
 }
 
-Eigen::Vector2d QRRUtil::EigenVector2dMake(double const x, double const y)
+ Eigen::Vector2d QRRUtil::EigenVector2dMake(double const x, double const y)
 {
   Eigen::Vector2d v = {x, y};
   return std::move(v);
 }
 
 
-Eigen::Vector3d QRRUtil::EigenVector3dMake(double const x, double const y, double const z)
+ Eigen::Vector3d QRRUtil::EigenVector3dMake(double const x, double const y, double const z)
 {
   Eigen::Vector3d v = {x, y ,z};
   return std::move(v);
 }
 
-Eigen::Vector4d QRRUtil::EigenVector4dMake(double const x, double const y, double const z, double const w)
+ Eigen::Vector4d QRRUtil::EigenVector4dMake(double const x, double const y, double const z, double const w)
 {
   Eigen::Vector4d v = {x, y, z, w};
   return std::move(v);

@@ -61,7 +61,7 @@
 #include "handinfo.h"
 
 #include "external/external_opengl/FreeImage/FreeImage.h"
-#include "external/cppitertools/itertools.hpp"K
+#include "external/cppitertools/itertools.hpp"
 #include "external/external_opengl/glm/glm.hpp"
 
 #include "glutil.h"

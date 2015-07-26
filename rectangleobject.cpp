@@ -37,3 +37,15 @@ void RectangleObject::calcRecpos(Eigen::Matrix4f mat){
     }
 
 }
+
+const Eigen::Vector3f RectangleObject::getRightVec(){
+    return m_rightVec;
+}
+
+const Eigen::Vector3f RectangleObject::getDownVec(){
+    return m_downVec;
+}
+
+const Eigen::Vector3f RectangleObject::getVertVec(){
+    return m_rightVec.cross(m_downVec);
+}
