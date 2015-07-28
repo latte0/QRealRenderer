@@ -109,13 +109,19 @@ class BackGroundRenderer;
 using namespace Eigen;
 using namespace QRRUtil;
 
+QT_FORWARD_DECLARE_CLASS(QOpenGLContext)
+QT_FORWARD_DECLARE_CLASS(QOpenGLFramebufferObject)
+QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
+QT_FORWARD_DECLARE_CLASS(QOpenGLBuffer)
 
-class SceneRender : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
+
+class SceneRender : public QWindow
 {
     Q_OBJECT
 
 public:
-    SceneRender(QWidget *parent = 0); ~SceneRender();
+    SceneRender();
+    ~SceneRender();
 
     qmlRenderer *cube;
     qmlRenderer *kyou;
@@ -131,15 +137,17 @@ public:
     QImage sceneimage;
 
     int debugmode = 0;
-
     OVRCondition m_ovrsender;
-
     Eigen::Vector3f m_position;
+
+    bool m_initialized = false;
 
 
 
 
     void initFB();
+    void init();
+    void paint();
 
 
     unsigned int m_distortsampler;
@@ -151,18 +159,19 @@ public:
     QOpenGLFramebufferObject* lastcomposeEyeTex;
     QOpenGLFramebufferObject* finalTexture;
 
-
+    QOpenGLContext *m_context;
+    QOffscreenSurface *m_offscreenSurface;
+    QTimer m_updateTimer;
 
 
 protected:
-    void initializeGL () override;
-    void paintGL() override;
-    void resizeGL(int width, int height) override;
+    void exposeEvent(QExposeEvent *e);
+    void resizeEvent(QResizeEvent *e);
+
     void mousePressEvent(QMouseEvent *e) override;
     void mouseReleaseEvent(QMouseEvent *e) override;
     void mouseMoveEvent(QMouseEvent *e) override;
     virtual void keyPressEvent(QKeyEvent *e) override;
-
 
     void updateuniform(QRR::EyeSide eye) ;
 

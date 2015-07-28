@@ -6,11 +6,11 @@ AdminWidget::AdminWidget(QWidget *parent) : QWidget(parent)
 
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
-
+/*
     gameapp = new SceneRender();
     gameapp->setCursor(Qt::BlankCursor);
     mainLayout->addWidget(gameapp);
-
+*/
 
     setLayout(mainLayout);
     setWindowTitle(tr("widget administrator"));

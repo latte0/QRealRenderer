@@ -29,11 +29,10 @@ MainWindow::MainWindow()
     scenerender->resize(1280, 720);
     scenerender->show();
 
-
      timer = new QTimer();
     QObject::connect(timer, SIGNAL(timeout()), scenerender, SLOT(processing()));
    // QObject::connect(timer, SIGNAL(timeout()), this, SLOT(capturetimeout()));
-    timer->start( 8 );
+    timer->start( 5 );
 }
 
 void MainWindow::setTree(){

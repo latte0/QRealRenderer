@@ -1,8 +1,8 @@
 import QtQuick 2.0
 
 Rectangle {
-    width: 1000
-    height: 1000
+    width: 1280
+    height: 720
 
     property var listPointX:[]
     property var listPointY:[]
@@ -12,7 +12,7 @@ Rectangle {
     Rectangle{
         id:penbox
         width:100
-        height:400
+        height:250
         y:0
 
         border.width: 5
@@ -20,7 +20,7 @@ Rectangle {
 
         Text{
             anchors.centerIn:parent
-            text:"Pen"
+            text:"ペン"
             font.pixelSize: 30
         }
     }
@@ -28,15 +28,15 @@ Rectangle {
     Rectangle{
         id:eracerbox
         width:100
-        height:400
-        y:400
+        height:250
+        y:250
 
         border.width: 5
         border.color: "red"
 
         Text{
             anchors.centerIn:parent
-            text:"Eraser"
+            text:"消しゴム"
             font.pixelSize: 30
         }
     }
@@ -46,15 +46,15 @@ Rectangle {
     Rectangle{
         id:deletebox
         width:100
-        height:200
-        y:800
+        height:220
+        y:500
 
         border.width: 5
         border.color: "red"
 
         Text{
             anchors.centerIn:parent
-            text:"Delete"
+            text:"白紙"
             font.pixelSize: 30
         }
     }
@@ -209,14 +209,17 @@ Rectangle {
         MouseArea{
             anchors.fill:parent
             onPressed: {
-                if(mouse.y > 0 && mouse.y < 400 &&mouse.x > 0 && mouse.x < 400){
+                if(mouse.y > 0 && mouse.y < 250 &&mouse.x > 0 && mouse.x < 100){
                     canvas.strokeColor= "#000000"
                     canvas.lineWidth= 5
-                }else if(mouse.y > 400 && mouse.y < 800 && mouse.x > 0 && mouse.x < 100){
+                    clearPoint()
+                }else if(mouse.y > 250 && mouse.y < 500 && mouse.x > 0 && mouse.x < 100){
                     canvas.strokeColor="#ffffff"
                     canvas.lineWidth= 30
-                }else if(mouse.y > 800 && mouse.x > 0 && mouse.x < 100){
+                    clearPoint()
+                }else if(mouse.y > 500 && mouse.x > 0 && mouse.x < 100){
                     canvas.doClear = true
+                    clearPoint()
                 }else{
                     clearPoint()
                     updatePoint(mouse)
@@ -226,8 +229,22 @@ Rectangle {
 
             onPositionChanged: {
 
-                updatePoint(mouse)
-                canvas.requestPaint()
+                if(mouse.y > 0 && mouse.y < 250 &&mouse.x > 0 && mouse.x < 100){
+                    canvas.strokeColor= "#000000"
+                    canvas.lineWidth= 5
+                    clearPoint()
+                }else if(mouse.y > 250 && mouse.y < 500 && mouse.x > 0 && mouse.x < 100){
+                    canvas.strokeColor="#ffffff"
+                    canvas.lineWidth= 30
+                    clearPoint()
+                }else if(mouse.y > 500 && mouse.x > 0 && mouse.x < 100){
+                    canvas.doClear = true
+                    clearPoint()
+                }else{
+
+                    updatePoint(mouse)
+                    canvas.requestPaint()
+                }
 
             }
 

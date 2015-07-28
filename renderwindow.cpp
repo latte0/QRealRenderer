@@ -91,12 +91,16 @@ void RenderWindow::init()
     connect(&m_updateTimer, &QTimer::timeout, this, &RenderWindow::updateQuick);
     m_updateTimer.start();
 
+    qDebug() << "qml init finish";
 
 
 }
 
 void RenderWindow::createFbo()
 {
+
+
+    qDebug() << "before create fbo";
 
     m_fbo = new QOpenGLFramebufferObject(m_qmlwidth, m_qmlheight, QOpenGLFramebufferObject::CombinedDepthStencil);
     m_quickWindow->setRenderTarget(m_fbo);
@@ -158,6 +162,8 @@ void RenderWindow::run()
 
     m_rootItem->setParentItem(m_quickWindow->contentItem());
 
+    qDebug() << "run";
+
     m_context->makeCurrent(m_offscreenSurface);
     m_renderControl->initialize(m_context);
 
@@ -166,6 +172,8 @@ void RenderWindow::run()
     m_rootItem->setWidth(m_qmlwidth);
     m_rootItem->setHeight(m_qmlheight);
     m_quickWindow->setGeometry(0, 0, m_qmlwidth, m_qmlheight);
+
+    qDebug() << m_qmlwidth << m_qmlheight;
 
     m_fbo = new QOpenGLFramebufferObject(m_qmlwidth, m_qmlheight, QOpenGLFramebufferObject::CombinedDepthStencil);
     m_quickWindow->setRenderTarget(m_fbo);
@@ -215,12 +223,16 @@ int RenderWindow::getQmlHeight(){
     return m_qmlheight;
 }
 
+QSize RenderWindow::getQmlSize(){
+    return QSize(m_qmlwidth, m_qmlheight);
+}
+
 void RenderWindow::updateQuick()
 {
+
     if(!m_quickInitialized){
         createFbo();
         startQuick(m_filename);
-
     }
 
     if (!m_context->makeCurrent(m_offscreenSurface))

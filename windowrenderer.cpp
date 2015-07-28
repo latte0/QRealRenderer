@@ -22,11 +22,13 @@
 
 #include "math.h"
 
-WindowRenderer::WindowRenderer()
+WindowRenderer::WindowRenderer(QWindow* window)
     : m_program(0),
       m_vbo(0),
       m_vao(0),
-      m_matrixLoc(0)
+      m_matrixLoc(0),
+      m_window(window),
+      RectangleObject()
 
 {
     m_mutex = new QMutex();
@@ -47,20 +49,20 @@ void WindowRenderer::inittex(QOpenGLContext* share){
 void WindowRenderer::init(QOpenGLContext* share, const QString &filename)
 {
 
-
     m_filename = filename;
     inittex(share);
 
-    auto *f = share->functions();
+    share->makeCurrent(m_window);
 
     static const char *vertexShaderSource =
         "attribute highp vec4 vertex;\n"
         "attribute lowp vec2 coord;\n"
         "varying lowp vec2 v_coord;\n"
         "uniform highp mat4 matrix;\n"
+        "uniform float aspect;\n"
         "void main() {\n"
         "   v_coord = coord;\n"
-        "   gl_Position = matrix * vertex;\n"
+        "   gl_Position = matrix * vec4(vertex.x, vertex.y / aspect, vertex.z, vertex.w);\n"
         "}\n";
     static const char *fragmentShaderSource =
         "varying lowp vec2 v_coord;\n"
@@ -71,13 +73,21 @@ void WindowRenderer::init(QOpenGLContext* share, const QString &filename)
         "   gl_FragColor = vec4(riftcolor.b, riftcolor.g, riftcolor.r, 0);\n"
         "}\n";
 
-    m_program = new QOpenGLShaderProgram;
+
+    qDebug() <<" before program link";
+
+    share->makeCurrent(m_window);
+
+    m_program = new QOpenGLShaderProgram(share);
     m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource);
     m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource);
     m_program->bindAttributeLocation("vertex", 0);
     m_program->bindAttributeLocation("coord", 1);
     m_program->link();
     m_matrixLoc = m_program->uniformLocation("matrix");
+    m_aspectLoc = m_program->uniformLocation("aspect");
+
+    qDebug() << "after program link";
 
     m_vao = new QOpenGLVertexArrayObject;
     m_vao->create();
@@ -88,7 +98,7 @@ void WindowRenderer::init(QOpenGLContext* share, const QString &filename)
     m_vbo->bind();
 
     GLfloat v[] = {
-            -1,1,0,    1,-1,0,     -1,-1,0,
+            -1,1,0,    1,-1 ,0,     -1,-1,0,
             1,-1,0,   -1,1,0,       1,1, 0
         };
 
@@ -116,7 +126,7 @@ void WindowRenderer::resize(int w, int h)
 void WindowRenderer::setupVertexAttribs(QOpenGLContext* share)
 {
 
-    auto *f = share->functions();
+    auto *f = share->versionFunctions<QOpenGLFunctions_3_3_Core>();
 
     m_vbo->bind();
     m_program->enableAttributeArray(0);
@@ -203,7 +213,7 @@ void WindowRenderer::bindTex(){
 void WindowRenderer::render(QOpenGLContext* share, Eigen::Matrix4f mat, Eigen::Vector3f top,  Eigen::Vector3f mousepos)
 {
 
-    auto *f = share->functions();
+    auto *f = share->versionFunctions<QOpenGLFunctions_3_3_Core>();
 
     f->glFrontFace(GL_CW);
 
@@ -223,6 +233,7 @@ void WindowRenderer::render(QOpenGLContext* share, Eigen::Matrix4f mat, Eigen::V
             setupVertexAttribs(share);
 
         m_program->setUniformValue(m_matrixLoc, m_qmat * m_qworld * m_smat);
+        m_program->setUniformValue(m_aspectLoc, getAspect());
 
         f->glDrawArrays(GL_TRIANGLES, 0, 6);
 

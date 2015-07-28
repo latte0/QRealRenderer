@@ -56,6 +56,7 @@ public:
 
     int getQmlWidth();
     int getQmlHeight();
+    QSize getQmlSize();
 
         void startQuick(const QString &filename);
 

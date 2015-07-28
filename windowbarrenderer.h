@@ -6,7 +6,7 @@
 class WindowBarRenderer : public WindowRenderer
 {
 public:
-    WindowBarRenderer();
+    WindowBarRenderer(QWindow* surface);
 };
 
 #endif // WINDOWBAR_H

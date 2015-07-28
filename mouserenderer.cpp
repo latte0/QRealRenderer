@@ -1,7 +1,7 @@
 #include "mouserenderer.h"
 
-MouseRenderer::MouseRenderer() :
-    WindowRenderer(),
+MouseRenderer::MouseRenderer(QWindow* window) :
+    WindowRenderer(window),
     m_mousetex(nullptr)
 {
  m_windowpos = QRRUtil::EigenVector2fMake(0.0f,0.0f);

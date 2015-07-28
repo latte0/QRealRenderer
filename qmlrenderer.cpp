@@ -1,8 +1,8 @@
 #include "qmlrenderer.h"
 #include <QPainter>
 
-qmlRenderer::qmlRenderer() :
-    WindowRenderer(),
+qmlRenderer::qmlRenderer(QWindow* window) :
+    WindowRenderer(window),
     m_qmltex(nullptr)
 {
 
@@ -16,6 +16,7 @@ void qmlRenderer::inittex(QOpenGLContext * share){
     m_rwindow = new RenderWindow(m_mutex, m_filename);
     m_rwindow->init();
 
+
     //initialize scene graph
    // m_rwindow->show();
    // m_rwindow->hide();
@@ -25,14 +26,15 @@ void qmlRenderer::inittex(QOpenGLContext * share){
 
 void qmlRenderer::bindTex(){
 
-    QImage image = QImage(1000, 1000, QImage::Format_ARGB32_Premultiplied);
+    QImage image = QImage(m_rwindow->getQmlSize(), QImage::Format_ARGB32_Premultiplied);
     QPainter imagePainter(&image);
 
     m_mutex->lock();
        imagePainter.setRenderHint(QPainter::Antialiasing, true);
         imagePainter.drawImage(0,0,m_rwindow->qmlimage.mirrored());
         imagePainter.setPen(QPen(Qt::red, 12, Qt::DashDotLine, Qt::RoundCap));
-        if(m_touched)imagePainter.drawEllipse(touch_x-10, touch_y-10, 30, 30);
+
+        if(m_touched)imagePainter.drawEllipse(touch_x, touch_y, 30, 30);
 
         m_qmltex.reset(new QOpenGLTexture(image));
         m_qmltex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
@@ -45,14 +47,21 @@ void qmlRenderer::bindTex(){
 }
 
 void qmlRenderer::update(){
+    setAspect( (float )getQmlSize().width() / (float)getQmlSize().height());
+}
 
+QSize qmlRenderer::getQmlSize(){
+
+    return m_rwindow->getQmlSize();
 }
 
 void qmlRenderer::collide(Eigen::Vector3f top){
 
 
+
    // int qmlwidth = m_rwindow->m_rootItem->width(), qmlheigt = m_rwindow->m_rootItem->height();
-    int qmlwidth = 1000, qmlheight = 1000;
+    int qmlwidth = getQmlSize().width(), qmlheight = getQmlSize().height();
+
     Eigen::Vector2f pos = calcPos(top);
 
     touch_x = pos.x()*qmlwidth; touch_y = (qmlheight-pos.y()*qmlheight);

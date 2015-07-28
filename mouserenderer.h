@@ -26,7 +26,7 @@ class RenderWindow;
 class MouseRenderer : public WindowRenderer
 {
 public:
-    MouseRenderer();
+    MouseRenderer(QWindow* surface);
     virtual ~MouseRenderer();
 
     virtual void bindTex();

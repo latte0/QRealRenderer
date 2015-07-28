@@ -1,7 +1,7 @@
 #include "rectangleobject.h"
 
 RectangleObject::RectangleObject():
-    m_aspect(1)
+    m_aspect(1.0f)
 {
 
     m_recPositions[0] = QRRUtil::EigenVector3fMake(-1.0, 1.0, 0.0);

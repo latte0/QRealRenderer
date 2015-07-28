@@ -40,7 +40,7 @@ class WindowRenderer : public RenderActor ,public RectangleObject
 public:
 
 
-    WindowRenderer();
+    WindowRenderer(QWindow* window);
     virtual ~WindowRenderer();
 
 
@@ -102,11 +102,13 @@ protected:
     QString m_filename;
 
     QOpenGLContext* m_context;
+    QWindow* m_window;
     QOpenGLShaderProgram *m_program;
     QOpenGLBuffer *m_vbo;
     QOpenGLBuffer m_indexbuffer;
     QOpenGLVertexArrayObject *m_vao;
     int m_matrixLoc;
+    int m_aspectLoc;
     Eigen::Matrix4f m_proj;
 
     QMatrix4x4 m_qworld;
