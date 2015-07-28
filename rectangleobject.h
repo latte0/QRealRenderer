@@ -19,16 +19,19 @@ class RectangleObject : public BoardObject
 
 public:
     RectangleObject();
-    ~RectangleObject();
+    virtual ~RectangleObject();
 
     void initRecpos();
     void calcRecpos(Eigen::Matrix4f mat);
 
-    const Eigen::Vector3f getRightVec();
+    void setAspect(float aspect);
+    const float getAspect() const;
 
-    const Eigen::Vector3f getDownVec();
+    const Eigen::Vector3f getRightVec() const;
 
-    const Eigen::Vector3f getVertVec();
+    const Eigen::Vector3f getDownVec() const;
+
+    const Eigen::Vector3f getVertVec() const;
 
 
 protected:
@@ -38,6 +41,7 @@ protected:
     Eigen::Vector3f m_downVec;
     Eigen::Vector3f m_vertVec;
 
+    float m_aspect;
 };
 
 #endif // RECTANGLEOBJECT_H

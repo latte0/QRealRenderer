@@ -128,7 +128,7 @@ void handFbxRenderer::init(QOpenGLContext *share, const std::string &filename)
 
 }
 
-void handFbxRenderer::render(QOpenGLContext *share, HandInfo *handinfo,  UniformVs uniformvs){
+void handFbxRenderer::render(QOpenGLContext *share, UniformVs uniformvs){
     this->update(uniformvs);
 
     QOpenGLFunctions_3_3_Core* f = 0;
@@ -146,7 +146,7 @@ void handFbxRenderer::render(QOpenGLContext *share, HandInfo *handinfo,  Uniform
             hand_program->bind();
 
             m_handfbxLoader.GetMeshMatrix(m_frame, mesh.modelMeshId, m_uniformVs.meshMatrix);
-            m_handfbxLoader.GetBoneMatrix(m_frame, mesh.modelMeshId, m_uniformVs.boneMatrixList, MAX_BONE_COUNT,handinfo);
+            m_handfbxLoader.GetBoneMatrix(m_frame, mesh.modelMeshId, m_uniformVs.boneMatrixList, MAX_BONE_COUNT);
 
             // uniform buffer copy
             f->glBindBuffer(GL_UNIFORM_BUFFER, m_uniformBufferVs);
@@ -189,5 +189,5 @@ void handFbxRenderer::render(QOpenGLContext *share, HandInfo *handinfo,  Uniform
 
     f->glUseProgram(hand_program->programId());
 
-    if(handinfo->m_righthand) drawFunc(m_meshlist);
+    if(HandInfo::singleton().m_righthand) drawFunc(m_meshlist);
 }

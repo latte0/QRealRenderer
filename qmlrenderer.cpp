@@ -9,15 +9,16 @@ qmlRenderer::qmlRenderer() :
 }
 
 qmlRenderer::~qmlRenderer(){
-        delete m_qmltex;
 }
 
 void qmlRenderer::inittex(QOpenGLContext * share){
 
     m_rwindow = new RenderWindow(m_mutex, m_filename);
     m_rwindow->init();
-    m_rwindow->resize(960, 1080);
-    m_rwindow->show();
+
+    //initialize scene graph
+   // m_rwindow->show();
+   // m_rwindow->hide();
 
 
 }
@@ -33,8 +34,7 @@ void qmlRenderer::bindTex(){
         imagePainter.setPen(QPen(Qt::red, 12, Qt::DashDotLine, Qt::RoundCap));
         if(m_touched)imagePainter.drawEllipse(touch_x-10, touch_y-10, 30, 30);
 
-        if(m_qmltex != nullptr) delete m_qmltex;
-        m_qmltex = new QOpenGLTexture(image);
+        m_qmltex.reset(new QOpenGLTexture(image));
         m_qmltex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
         m_qmltex->setMagnificationFilter(QOpenGLTexture::Linear);
 

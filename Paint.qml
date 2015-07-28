@@ -250,7 +250,7 @@ Rectangle {
 
     function updatePoint(mouse){
         listPointX.push(mouse.x)
-        listPointY.push(mouse.y+50)
+        listPointY.push(mouse.y)
         xpos = mouse.x
         ypos = mouse.y
     }

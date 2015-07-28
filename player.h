@@ -38,10 +38,11 @@
  * ***************/
 
 
-class Player : public Actor, QRR::Singleton<Player>
+class Player : public Actor, public QRR::Singleton<Player>
 {
-    friend class QRR::Singleton<Player>;
+
 public:
+    friend class QRR::Singleton<Player>;
 
     Player();
     ~Player();

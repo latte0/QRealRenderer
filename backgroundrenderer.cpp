@@ -15,9 +15,9 @@
 #include "glutil.h"
 
 BackGroundRenderer::BackGroundRenderer(int port)
-    : m_program(0),
-      m_vbo(0),
-      m_vao(0),
+    : m_program(nullptr),
+      m_vbo(nullptr),
+      m_vao(nullptr),
       m_videotex(nullptr)
 {
     m_mtx = new QMutex();
@@ -148,8 +148,7 @@ void BackGroundRenderer::render(QOpenGLContext* share)
 
     m_mtx->lock();
    //   m_videoImage = m_imgReceiver->getImageData();
-    if(m_videotex != nullptr) delete m_videotex;
-       m_videotex = new QOpenGLTexture(m_rwindow->qmlimage.mirrored());
+       m_videotex.reset(new QOpenGLTexture(m_rwindow->qmlimage.mirrored()));
        m_videotex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
        m_videotex->setMagnificationFilter(QOpenGLTexture::Linear);
 

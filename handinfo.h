@@ -4,6 +4,7 @@
 #include "external/Leap.h"
 #include "eigenutil.h"
 #include "actor.h"
+#include "singleton.h"
 
 struct FingerData
 {
@@ -13,7 +14,7 @@ struct FingerData
     Eigen::Matrix4f position_mat;
 };
 
-class HandInfo : public Actor
+class HandInfo : public Actor , public QRR::Singleton<HandInfo>
 {
 public:
     HandInfo();

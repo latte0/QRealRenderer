@@ -41,8 +41,6 @@ class RenderWindow : public QWindow
 {
     Q_OBJECT
 
-
-
 public:
     RenderWindow(QMutex* mutex, const QString &filename);
     ~RenderWindow();
@@ -56,6 +54,11 @@ public:
     QOpenGLContext * getContext();
     QOpenGLFramebufferObject *getQmlFbo();
 
+    int getQmlWidth();
+    int getQmlHeight();
+
+        void startQuick(const QString &filename);
+
 
     QQuickWindow *m_quickWindow;
     QOpenGLVertexArrayObject *m_vao;
@@ -68,9 +71,8 @@ protected:
     void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
     void mouseReleaseEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
 
-private slots:
-    void render();
 
+public slots:
     void run();
     void createFbo();
     void destroyFbo();
@@ -79,9 +81,7 @@ private slots:
 
 
 private:
-    void startQuick(const QString &filename);
-    void setupVertexAttribs();
-    void updateSizes();
+
 
     QOpenGLContext *m_context;
     QOffscreenSurface *m_offscreenSurface;
@@ -93,14 +93,14 @@ private:
     QQmlComponent *m_qmlComponent;
 
     QOpenGLFramebufferObject *m_fbo;
-    QOpenGLShaderProgram *m_program;
-    QOpenGLBuffer *m_vbo;
+
 
     bool m_quickInitialized;
     bool m_quickReady;
     int m_matrixLoc;
-    QMatrix4x4 m_proj;
     QTimer m_updateTimer;
+
+    int m_qmlwidth, m_qmlheight;
 };
 
 #endif

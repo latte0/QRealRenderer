@@ -60,11 +60,11 @@ int OVRCondition::OnStartup()
       ovrTrackingState state = ovrHmd_GetTrackingState(Hmd, 0);
 
       ovrQuatf orientation = state.HeadPose.ThePose.Orientation;
-      qDebug () << orientation.x << orientation.y << orientation.z << orientation.w;
+
       glm::quat q = glm::make_quat(&orientation.x);
       glm::vec3 euler = glm::eulerAngles(q);
 
-      qDebug() << euler.x << euler.y << euler.z;
+
 
     }
 
@@ -78,9 +78,9 @@ void OVRCondition::send(){
     ovrTrackingState state = ovrHmd_GetTrackingState(Hmd, 0);
 
     ovrQuatf orientation = state.HeadPose.ThePose.Orientation;
-    qDebug () << orientation.x << orientation.y << orientation.z << orientation.w;
+
     Eigen::Matrix4f testmat = QRRUtil::MakeMatrixfromQuat( orientation.x , orientation.y , orientation.z , orientation.w);
-    std::cout << testmat << std::endl;
+
     glm::quat q = glm::make_quat(&orientation.x);
     glm::vec3 euler = glm::eulerAngles(q);
 
@@ -92,7 +92,6 @@ void OVRCondition::send(){
     out << euler.x * 180/3.1415<< euler.y * 180/3.1415<< euler.z* 180/3.1415;
     QString send = QString("%1/%2/%3").arg(euler.x * 180/3.1415).arg(euler.y * 180/3.1415).arg(euler.z* 180/3.1415);
 
-    qDebug () << send;
     udpsocket.writeDatagram(send.toLocal8Bit(),send.toLocal8Bit().length(), QHostAddress(QString("192.168.23.201")), 1500);
      udpsocket.writeDatagram(send.toLocal8Bit(),send.toLocal8Bit().length(), QHostAddress::LocalHost, 1500);
 }

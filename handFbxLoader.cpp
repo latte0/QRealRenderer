@@ -25,7 +25,7 @@ handFbxLoader::~handFbxLoader(){
 }
 
 
-void handFbxLoader::GetBoneMatrix(float frame, int meshId, Matrix4f* out_matrixList, int matrixCount, HandInfo* handInfo)
+void handFbxLoader::GetBoneMatrix(float frame, int meshId, Matrix4f* out_matrixList, int matrixCount)
 {
   auto& modelMesh = this->meshList[meshId];
 
@@ -67,12 +67,12 @@ void handFbxLoader::GetBoneMatrix(float frame, int meshId, Matrix4f* out_matrixL
   //  std::cout << boneNodeName << std::endl;
 
     Matrix4f trans = Matrix4f::Identity();
-    if(handInfo->m_righthand){
+    if(HandInfo::singleton().m_righthand){
 
 
         if ( boneNodeName == "Bone" ) {
-          //  trans = handInfo->m_handGlobalNorm;
-           // trans = QRRUtil::MakeTransform(handInfo->m_handGlobalPos) * trans;
+          //  trans = HandInfo::singleton().m_handGlobalNorm;
+           // trans = QRRUtil::MakeTransform(HandInfo::singleton().m_handGlobalPos) * trans;
                if(boneNode->GetParent()->GetParent() != NULL){
                    //std::cout << "tashika ni tsuzuki ga aru !!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
                 FbxNodeAttribute* boneAttributea = boneNode->GetParent()->GetParent()->GetNodeAttribute();
@@ -83,94 +83,94 @@ void handFbxLoader::GetBoneMatrix(float frame, int meshId, Matrix4f* out_matrixL
         //    else std::cout << "tsuzuki nashi " << std::endl;
         }
         else if ( boneNodeName == "Bone_001" ) {
-            trans = handInfo->m_fingerdata[1][0].position_mat * handInfo->m_fingerdata[1][0].direction_mat;
+            trans = HandInfo::singleton().m_fingerdata[1][0].position_mat * HandInfo::singleton().m_fingerdata[1][0].direction_mat;
 
         }
         else if ( boneNodeName == "Bone_002" ) {
-         //   Eigen::Vector3f v = getSkeleton("Bone_001")->LimbLength * handInfo->m_fingerdata[1][0].direction;
+         //   Eigen::Vector3f v = getSkeleton("Bone_001")->LimbLength * HandInfo::singleton().m_fingerdata[1][0].direction;
 
-            trans = handInfo->m_fingerdata[1][1].position_mat * handInfo->m_fingerdata[1][1].direction_mat;
+            trans = HandInfo::singleton().m_fingerdata[1][1].position_mat * HandInfo::singleton().m_fingerdata[1][1].direction_mat;
         }
         else if ( boneNodeName == "Bone_003" ) {
-           // Eigen::Vector3f v = getSkeleton("Bone_001")->LimbLength * handInfo->m_fingerdata[1][0].direction +   getSkeleton("Bone_002")->LimbLength * handInfo->m_fingerdata[1][1].direction;
+           // Eigen::Vector3f v = getSkeleton("Bone_001")->LimbLength * HandInfo::singleton().m_fingerdata[1][0].direction +   getSkeleton("Bone_002")->LimbLength * HandInfo::singleton().m_fingerdata[1][1].direction;
 
-            trans = handInfo->m_fingerdata[1][2].position_mat * handInfo->m_fingerdata[1][2].direction_mat;
+            trans = HandInfo::singleton().m_fingerdata[1][2].position_mat * HandInfo::singleton().m_fingerdata[1][2].direction_mat;
         }
         else if ( boneNodeName == "Bone_004" ) {
-           // Eigen::Vector3f v = getSkeleton("Bone_001")->LimbLength * handInfo->m_fingerdata[1][0].direction +   getSkeleton("Bone_002")->LimbLength * handInfo->m_fingerdata[1][1].direction +  getSkeleton("Bone_003")->LimbLength * handInfo->m_fingerdata[1][2].direction;
+           // Eigen::Vector3f v = getSkeleton("Bone_001")->LimbLength * HandInfo::singleton().m_fingerdata[1][0].direction +   getSkeleton("Bone_002")->LimbLength * HandInfo::singleton().m_fingerdata[1][1].direction +  getSkeleton("Bone_003")->LimbLength * HandInfo::singleton().m_fingerdata[1][2].direction;
 
-            trans = handInfo->m_fingerdata[1][3].position_mat * handInfo->m_fingerdata[1][3].direction_mat;
+            trans = HandInfo::singleton().m_fingerdata[1][3].position_mat * HandInfo::singleton().m_fingerdata[1][3].direction_mat;
         }
 
         else if ( boneNodeName == "Bone_005" ) {
 
-            trans = handInfo->m_fingerdata[2][0].direction_mat * trans;
-            trans = handInfo->m_fingerdata[2][0].position_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[2][0].direction_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[2][0].position_mat * trans;
         }
         else if ( boneNodeName == "Bone_006" ) {
-            trans = handInfo->m_fingerdata[2][1].direction_mat * trans;
-            trans = handInfo->m_fingerdata[2][1].position_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[2][1].direction_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[2][1].position_mat * trans;
         }
         else if ( boneNodeName == "Bone_007" ) {
-            trans = handInfo->m_fingerdata[2][2].direction_mat * trans;
-            trans = handInfo->m_fingerdata[2][2].position_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[2][2].direction_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[2][2].position_mat * trans;
         }
         else if ( boneNodeName == "Bone_008" ) {
-            trans = handInfo->m_fingerdata[2][3].direction_mat * trans;
-            trans = handInfo->m_fingerdata[2][3].position_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[2][3].direction_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[2][3].position_mat * trans;
         }
         else if ( boneNodeName == "Bone_009" ) {
-            trans = handInfo->m_fingerdata[3][0].direction_mat * trans;
-            trans = handInfo->m_fingerdata[3][0].position_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[3][0].direction_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[3][0].position_mat * trans;
         }
         else if ( boneNodeName == "Bone_010" ) {
-            trans = handInfo->m_fingerdata[3][1].direction_mat * trans;
-            trans = handInfo->m_fingerdata[3][1].position_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[3][1].direction_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[3][1].position_mat * trans;
         }
         else if ( boneNodeName == "Bone_011" ) {
-            trans = handInfo->m_fingerdata[3][2].direction_mat * trans;
-            trans = handInfo->m_fingerdata[3][2].position_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[3][2].direction_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[3][2].position_mat * trans;
         }
         else if ( boneNodeName == "Bone_012" ) {
-            trans = handInfo->m_fingerdata[3][3].direction_mat * trans;
-            trans = handInfo->m_fingerdata[3][3].position_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[3][3].direction_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[3][3].position_mat * trans;
         }
         else if ( boneNodeName == "Bone_013" ) {
-            trans = handInfo->m_fingerdata[4][0].direction_mat * trans;
-            trans = handInfo->m_fingerdata[4][0].position_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[4][0].direction_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[4][0].position_mat * trans;
         }
         else if ( boneNodeName == "Bone_014" ) {
-            trans = handInfo->m_fingerdata[4][1].direction_mat * trans;
-            trans = handInfo->m_fingerdata[4][1].position_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[4][1].direction_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[4][1].position_mat * trans;
         }
         else if ( boneNodeName == "Bone_015" ) {
-            trans = handInfo->m_fingerdata[4][2].direction_mat * trans;
-            trans = handInfo->m_fingerdata[4][2].position_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[4][2].direction_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[4][2].position_mat * trans;
         }
         else if ( boneNodeName == "Bone_016" ) {
-            trans = handInfo->m_fingerdata[4][3].direction_mat * trans;
-            trans = handInfo->m_fingerdata[4][3].position_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[4][3].direction_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[4][3].position_mat * trans;
         }
         /*else if ( boneNodeName == "Bone_017" ) {
         }*/
         else if ( boneNodeName == "Bone_018" ) {
-            trans = handInfo->m_fingerdata[0][1].direction_mat * trans;
-            trans = handInfo->m_fingerdata[0][1].position_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[0][1].direction_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[0][1].position_mat * trans;
         }
         else if ( boneNodeName == "Bone_019" ) {
-            trans = handInfo->m_fingerdata[0][2].direction_mat * trans;
-            trans = handInfo->m_fingerdata[0][2].position_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[0][2].direction_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[0][2].position_mat * trans;
         }
         else if ( boneNodeName == "Bone_020" ) {
-            trans = handInfo->m_fingerdata[0][3].direction_mat * trans;
-            trans = handInfo->m_fingerdata[0][3].position_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[0][3].direction_mat * trans;
+            trans = HandInfo::singleton().m_fingerdata[0][3].position_mat * trans;
         }
 
 
 
     }
 
-    if(handInfo->m_righthand){out_matrix = trans * modelMesh.invBoneBaseposeMatrixList[i]; }//eigen doushi
+    if(HandInfo::singleton().m_righthand){out_matrix = trans * modelMesh.invBoneBaseposeMatrixList[i]; }//eigen doushi
     else out_matrix = out_matrix * modelMesh.invBoneBaseposeMatrixList[i];
 
 
@@ -178,7 +178,7 @@ void handFbxLoader::GetBoneMatrix(float frame, int meshId, Matrix4f* out_matrixL
   }
 }
 
-Eigen::Matrix4f handFbxLoader::CalculateLocalBoneMatrix(std::string boneNodeName, HandInfo* handInfo){
+Eigen::Matrix4f handFbxLoader::CalculateLocalBoneMatrix(std::string boneNodeName){
 
   /*  auto boneNodeId = this->nodeIdDictionaryAnimation.at(boneNodeName);
     auto boneNode = this->fbxSceneAnimation->GetNode(boneNodeId);

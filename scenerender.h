@@ -1,3 +1,4 @@
+
 #ifndef GAMEAPPLICATION_H
 #define GAMEAPPLICATION_H
 
@@ -79,6 +80,8 @@
 #include "handfbxrenderer.h"
 #include "qmlrenderer.h"
 #include "copywindow.h"
+#include "singleton.h"
+#include "scene.h"
 
 //http://stackoverflow.com/questions/17420739/opencv-2-4-5-and-qt5-error-s
 
@@ -177,12 +180,11 @@ private:
 
     int m_frame = 0;
 
-    HandInfo m_handinfo;
-
     GLuint m_uniformBufferVs;
     UniformVs m_uniformVs;
-    QOpenGLShaderProgram *distort_program;
 
+
+    QOpenGLShaderProgram *distort_program;
 
 
 
@@ -216,23 +218,6 @@ private:
 
     const unsigned int m_quadindices[4] = {0,1,2,3};
 
-
-    Player              ThePlayer;
-
-
-
-
-//----------------------------------- bullet -----------------------------
-
-
-    btAlignedObjectArray<btCollisionShape*>	m_collisionShapes;
-    btBroadphaseInterface*	m_broadphase;
-    btCollisionDispatcher*	m_dispatcher;
-    btConstraintSolver*	m_solver;
-    btDefaultCollisionConfiguration* m_collisionConfiguration;
-
-
-//---------------------------------------------------------------------------------------------------
 
 
 private slots:

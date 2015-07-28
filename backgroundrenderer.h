@@ -44,7 +44,7 @@ class BackGroundRenderer : Actor
 
 public:
     BackGroundRenderer(int port);
-    ~BackGroundRenderer();
+    virtual ~BackGroundRenderer();
 
     QMutex * m_mtx;
 
@@ -64,7 +64,7 @@ private:
     QOpenGLShaderProgram *m_program;
     QOpenGLBuffer *m_vbo;
     QOpenGLVertexArrayObject *m_vao;
-    QOpenGLTexture *m_videotex;
+    std::unique_ptr<QOpenGLTexture> m_videotex;
 
     RenderWindow *m_rwindow;
 

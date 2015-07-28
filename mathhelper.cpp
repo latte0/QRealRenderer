@@ -1,5 +1,7 @@
 #include "mathhelper.h"
 
-namespace Regen{
+namespace QRR{
+    namespace Math{
 
+    }
 }

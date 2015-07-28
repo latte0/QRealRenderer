@@ -12,11 +12,10 @@ SceneRender::SceneRender(QWidget *parent)
 
 {
 
-    m_position = ThePlayer.getPosition();
+    m_position = Player::singleton().getPosition();
     m_eworld = Eigen::Matrix4f::Identity();
 
     setMouseTracking(true);
-   // setCursor(Qt::BlankCursor);
 }
 
 SceneRender::~SceneRender()
@@ -38,7 +37,7 @@ void SceneRender::initializeGL ()
     initializeOpenGLFunctions();
 
     cube = new qmlRenderer();
-    cube->init(this->context(), "Paint.qml");
+    cube->init(this->context(), "movie.qml");
     cube->setCondition(75 ,QRRUtil::EigenVector3fMake(0,0,-200) ,0,0,true);
 
     kyou = new qmlRenderer();
@@ -68,8 +67,8 @@ void SceneRender::initializeGL ()
     mouse->setAttendant(currentQml);
 
 
-    handfbxrender = new handFbxRenderer();
-    handfbxrender->init(this->context(), "");
+ //   handfbxrender = new handFbxRenderer();
+   // handfbxrender->init(this->context(), "");
 
 
 
@@ -156,16 +155,16 @@ void SceneRender::initFB(){
 
 void SceneRender::updateuniform(QRR::EyeSide eye){
 
-    ThePlayer.update();
+    Player::singleton().update();
 
 
-    m_uniformVs.lightDirection = EigenVector4fMake(0.0f, 0.0f, 500.0f, 0.0f);
-    m_uniformVs.lightDirection = m_uniformVs.lightDirection.normalized();
+//    m_uniformVs.lightDirection = EigenVector4fMake(0.0f, 0.0f, 500.0f, 0.0f);
+  //  m_uniformVs.lightDirection = m_uniformVs.lightDirection.normalized();
 
-    m_ecamera = ThePlayer.getEyeMat(eye);
+    m_ecamera = Player::singleton().getEyeMat(eye);
 
 
-    m_eworld =QRRUtil::MakeTransform( ThePlayer.getPosition() + QRRUtil::EigenVector3fMake(0,0,-400/QRR::Environment::mmDiv));
+    m_eworld =QRRUtil::MakeTransform( Player::singleton().getPosition() + QRRUtil::EigenVector3fMake(0,0,-400/QRR::Environment::mmDiv));
 
 
     m_uniformVs.normalMatrix = m_eworld.inverse();
@@ -187,11 +186,11 @@ void SceneRender::paintGL()
 {
 
 
-    glClearColor(0.2f, 0.2f, 0.6f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDepthFunc(GL_LEQUAL);
 
-    m_handinfo.UpdateInfo();
+    HandInfo::singleton().UpdateInfo();
 
 
 
@@ -203,7 +202,7 @@ void SceneRender::paintGL()
         glViewport(0,0,960,1080);
 
         glClearDepth(1.0);
-        glClearColor(0.2f, 0.2f, 0.6f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
@@ -220,15 +219,15 @@ void SceneRender::paintGL()
         updateuniform(eye);
 
         if(debugmode == 0){
-            cube->render(this->context(),m_eproj * m_ecamera, m_handinfo.m_fingerdata[1][3].position + ThePlayer.getPosition() + QRRUtil::EigenVector3fMake(0,0,-400/QRR::Environment::mmDiv),ThePlayer.getPosition() /*- mouse->m_centerpos*/);
-            kyou->render(this->context(),m_eproj * m_ecamera, m_handinfo.m_fingerdata[1][3].position+ ThePlayer.getPosition() + QRRUtil::EigenVector3fMake(0,0,-400/QRR::Environment::mmDiv),ThePlayer.getPosition() /*- mouse->m_centerpos*/);
+            cube->render(this->context(),m_eproj * m_ecamera, HandInfo::singleton().m_fingerdata[1][3].position + Player::singleton().getPosition() + QRRUtil::EigenVector3fMake(0,0,-400/QRR::Environment::mmDiv),Player::singleton().getPosition() /*- mouse->m_centerpos*/);
+            kyou->render(this->context(),m_eproj * m_ecamera, HandInfo::singleton().m_fingerdata[1][3].position+ Player::singleton().getPosition() + QRRUtil::EigenVector3fMake(0,0,-400/QRR::Environment::mmDiv),Player::singleton().getPosition() /*- mouse->m_centerpos*/);
             mouse->render(this->context(),m_eproj * m_ecamera,Eigen::Vector3f::Identity(), Eigen::Vector3f::Identity());
         }
 
         //back->render(this->context());
         glFrontFace(GL_CCW);
 
-       handfbxrender->render(this->context(),&m_handinfo, m_uniformVs);
+    //   handfbxrender->render(this->context(),&HandInfo::singleton(), m_uniformVs);
 
     /*
         glEnable(GL_BLEND);
@@ -308,7 +307,7 @@ void SceneRender::paintGL()
 void SceneRender::resizeGL(int width, int height)
 {
 
-    m_eproj = ThePlayer.m_RightEyeCam.m_proj;
+    m_eproj = Player::singleton().m_RightEyeCam.m_proj;
 }
 
 void SceneRender::mousePressEvent(QMouseEvent *e)
@@ -327,7 +326,6 @@ void SceneRender::mousePressEvent(QMouseEvent *e)
         QCoreApplication::sendEvent(currentQml->m_rwindow->m_quickWindow, &mappedEvent);
     }
 
-        qDebug() << "touches";
 /*
     Eigen::Vector2f pos = cube->calcPos(mouse->m_centerpos);
 
@@ -406,12 +404,12 @@ void SceneRender::keyPressEvent(QKeyEvent *e){
         return (e->key() == k);
     };
 
-    if(keyconf(Qt::Key_W)) ThePlayer.toUp();
-    if(keyconf(Qt::Key_S)) ThePlayer.toDown();
-    if(keyconf(Qt::Key_A)) ThePlayer.toRight();
-    if(keyconf(Qt::Key_D)) ThePlayer.toLeft();
-    if(keyconf(Qt::Key_R)) ThePlayer.toOver();
-    if(keyconf(Qt::Key_F)) ThePlayer.toBelow();
+    if(keyconf(Qt::Key_W)) Player::singleton().toUp();
+    if(keyconf(Qt::Key_S)) Player::singleton().toDown();
+    if(keyconf(Qt::Key_A)) Player::singleton().toRight();
+    if(keyconf(Qt::Key_D)) Player::singleton().toLeft();
+    if(keyconf(Qt::Key_R)) Player::singleton().toOver();
+    if(keyconf(Qt::Key_F)) Player::singleton().toBelow();
 
     if(keyconf(Qt::Key_B)) debugmode = ++debugmode % 2;
 

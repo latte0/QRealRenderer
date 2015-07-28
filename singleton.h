@@ -3,18 +3,18 @@
 
 #include <memory>
 
-namespace QRR
-{
+namespace QRR{
 template <class T>
 class Singleton
 {
-public :
-    static T& singleton()
-    {
+public:
+    static T& singleton(){
         static typename T::singleton_pointer_type s_singleton(T::createInstance());
 
         return getReference(s_singleton);
     }
+
+
 
 private:
     typedef std::unique_ptr<T> singleton_pointer_type;
@@ -26,7 +26,7 @@ private:
     }
 
 protected:
-    Singleton() {}
+    Singleton(){};
 
 private :
     Singleton(const Singleton &) = delete;

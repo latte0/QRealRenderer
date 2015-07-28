@@ -21,6 +21,7 @@
 #include <QMutex>
 
 #include "actor.h"
+#include "renderactor.h"
 #include "handinfo.h"
 #include "rectangleobject.h"
 
@@ -31,7 +32,7 @@ QT_FORWARD_DECLARE_CLASS(QOpenGLBuffer)
 QT_FORWARD_DECLARE_CLASS(QOpenGLVertexArrayObject)
 
 
-class WindowRenderer : public Actor ,public RectangleObject
+class WindowRenderer : public RenderActor ,public RectangleObject
 {
     friend class qmlRenderer;
     friend class MouseRenderer;

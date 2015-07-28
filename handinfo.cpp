@@ -28,8 +28,6 @@ Eigen::Matrix4f HandInfo::LeaptoEigenmat(Leap::Matrix lmat){
             xb.z , yb.z ,zb.z, 0 ,
             0 , 0 ,0, 1 ;
 
-    std::cout << mat << std::endl;
-
     return mat;
 }
 

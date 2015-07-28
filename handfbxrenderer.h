@@ -12,7 +12,7 @@ public:
 
     virtual void update( UniformVs uniformvs);
     virtual void init(QOpenGLContext *share, const std::string &filename);
-    virtual void render(QOpenGLContext *share, HandInfo *handinfo, UniformVs uniformvs);
+    virtual void render(QOpenGLContext *share, UniformVs uniformvs);
 
     handFbxLoader m_handfbxLoader;
 

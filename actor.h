@@ -24,7 +24,7 @@ class Actor :public QObject
 {
 public:
     Actor();
-    ~Actor();
+    virtual ~Actor();
 
 
     void setPosition(Eigen::Vector3f pos){

@@ -71,8 +71,7 @@ Eigen::Matrix4f QRRUtil::MakeTransform(Eigen::Vector3f const &trans){
 Eigen::Matrix4f QRRUtil::MakeRotationZAxis(Eigen::Vector3f const &vec){
 
 
-    Eigen::Vector3f f = vec.normalized();
-    std::cout << f << std::endl;
+    Eigen::Vector3f f = vec.normalized();;
     Eigen::Vector3f u = EigenVector3fMake(0.0f ,1.0f ,0.0f).normalized();
     Eigen::Vector3f s = f.cross(u).normalized();
     u = s.cross(f);
@@ -94,7 +93,6 @@ Eigen::Matrix4f QRRUtil::MakeRotationYAxis(Eigen::Vector3f const &vec){
 
 Eigen::Matrix4f QRRUtil::MakeRotationXAxis(Eigen::Vector3f const &vec){
     Eigen::Vector3f f = vec.normalized();
-    std::cout << f << std::endl;
     Eigen::Vector3f u = EigenVector3fMake(0.0f ,1.0f ,0.0f).normalized();
     Eigen::Vector3f s = f.cross(u).normalized();
     u = s.cross(f);

@@ -599,7 +599,8 @@ HEADERS += \
     adminscenefbo.h \
     renderactor.h \
     handFbxLoader.h \
-    handfbxrenderer.h
+    handfbxrenderer.h \
+    fileobserver.h
 
 SOURCES += adminwidget.cpp \
            main.cpp \
@@ -644,7 +645,8 @@ SOURCES += adminwidget.cpp \
     adminscenefbo.cpp \
     renderactor.cpp \
     handFbxLoader.cpp \
-    handfbxrenderer.cpp
+    handfbxrenderer.cpp \
+    fileobserver.cpp
 
 DISTFILES += \
     Test.qml \
@@ -654,4 +656,5 @@ DISTFILES += \
     flickr.qml \
     quickwindow.qml \
     web.qml \
-    movie.qml
+    movie.qml \
+    camera.qml

@@ -19,7 +19,7 @@ public:
 
 
     RenderWindow *m_rwindow;
-    QOpenGLTexture *m_qmltex;
+    std::unique_ptr<QOpenGLTexture>  m_qmltex;
 
     float touch_x = 0, touch_y = 0;
 };

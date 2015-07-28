@@ -26,9 +26,9 @@ public:
     handFbxLoader();
     ~handFbxLoader();
 
-    void GetBoneMatrix(float frame, int meshId, Eigen::Matrix4f* out_matrixList, int matrixCount, HandInfo* handInfo);
+    void GetBoneMatrix(float frame, int meshId, Eigen::Matrix4f* out_matrixList, int matrixCount);
 
-    Eigen::Matrix4f CalculateLocalBoneMatrix(std::string boneNode, HandInfo* handInfo);
+    Eigen::Matrix4f CalculateLocalBoneMatrix(std::string boneNode);
 
 
 };

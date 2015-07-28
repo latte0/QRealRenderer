@@ -75,7 +75,7 @@
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
 
-class FbxRenderer : Actor
+class FbxRenderer : public RenderActor
 {
 public:
     FbxRenderer();
