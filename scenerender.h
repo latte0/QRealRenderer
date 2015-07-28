@@ -105,6 +105,8 @@ class MouseRenderer;
 
 class BackGroundRenderer;
 
+class Scene;
+
 
 using namespace Eigen;
 using namespace QRRUtil;
@@ -120,7 +122,7 @@ class SceneRender : public QWindow
     Q_OBJECT
 
 public:
-    SceneRender();
+    SceneRender(std::shared_ptr<QOpenGLContext> context);
     ~SceneRender();
 
     qmlRenderer *cube;
@@ -143,6 +145,9 @@ public:
     bool m_initialized = false;
 
 
+    std::shared_ptr<Scene> m_scene;
+    void setScene(std::shared_ptr<Scene> scene);
+    void render(std::shared_ptr<Scene> scene);
 
 
     void initFB();
@@ -159,7 +164,7 @@ public:
     QOpenGLFramebufferObject* lastcomposeEyeTex;
     QOpenGLFramebufferObject* finalTexture;
 
-    QOpenGLContext *m_context;
+    std::shared_ptr<QOpenGLContext> m_context;
     QOffscreenSurface *m_offscreenSurface;
     QTimer m_updateTimer;
 

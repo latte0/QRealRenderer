@@ -1,10 +1,9 @@
 #include "mouserenderer.h"
 
-MouseRenderer::MouseRenderer(QWindow* window) :
-    WindowRenderer(window),
+MouseRenderer::MouseRenderer() :
     m_mousetex(nullptr)
 {
- m_windowpos = QRRUtil::EigenVector2fMake(0.0f,0.0f);
+     m_windowpos = QRRUtil::EigenVector2fMake(0.0f,0.0f);
 }
 
 MouseRenderer::~MouseRenderer()
@@ -26,7 +25,7 @@ void MouseRenderer::update()
 
 }
 
-void MouseRenderer::inittex(QOpenGLContext* share)
+void MouseRenderer::inittex(std::shared_ptr<QOpenGLContext>& share)
 {
     m_mousetex = new QOpenGLTexture(QImage("./resources/mouse.png"));
     m_mousetex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);

@@ -105,25 +105,46 @@ class btDefaultCollisionConfiguration;
 
 class RenderWindow;
 class qmlRenderer;
+class FbxRenderer;
 class WindowRenderer;
 class MouseRenderer;
-
 class BackGroundRenderer;
+class SceneRender;
 
 enum SceneData : short{
     TOML,
     XML
 };
 
+enum ModelData : short{
+  FBX_MODEL,
+    OBJ_MODEL
+};
+
+struct QmlObject{
+    float scale;
+    Eigen::Vector3f pos;
+    float euler_x;
+    float euler_y;
+    bool touched;
+    QString filename;
+};
+
 class Scene
 {
 public:
-    Scene();
+
+    Scene(std::shared_ptr<QOpenGLContext> context);
     ~Scene();
 
+    std::shared_ptr<QOpenGLContext> m_context;
+
     void addLight();
-    void addModel();
-    void addCamera();
+    void addModel(const ModelData div, const QString filename);
+    void addQml(const QmlObject qmlobj);
+    void addMouse();
+
+    void update();
 
 
     Eigen::Vector3f eye;
@@ -156,9 +177,16 @@ public:
 
 private:
 
-    std::vector<Light> lights;
-    std::vector<RenderActor> renderActors;
-    std::vector<Camera> camera;
+    using  lightPtr = std::shared_ptr<Light>;
+    using  fbxrendererPtr = std::shared_ptr<FbxRenderer>;
+    using  qmlrendererPtr = std::shared_ptr<qmlRenderer>;
+
+
+    std::list<lightPtr> lights;
+    std::list<fbxrendererPtr> fbxs;
+    std::list<qmlrendererPtr> qmls;
+
+    qmlrendererPtr currentQml;
 
 
 };

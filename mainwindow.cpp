@@ -6,7 +6,8 @@
 #include <QLabel>
 #include <QDebug>
 
-MainWindow::MainWindow()
+MainWindow::MainWindow() :
+    m_scenario(nullptr)
 {
  /*   QMenuBar *menuBar = new QMenuBar;
     QMenu *menuWindow = menuBar->addMenu(tr("&Window"));
@@ -25,14 +26,8 @@ MainWindow::MainWindow()
     setUnifiedTitleAndToolBarOnMac(true);
     */
 
-    scenerender = new SceneRender();
-    scenerender->resize(1280, 720);
-    scenerender->show();
+    m_scenario.reset(new Scenario);
 
-     timer = new QTimer();
-    QObject::connect(timer, SIGNAL(timeout()), scenerender, SLOT(processing()));
-   // QObject::connect(timer, SIGNAL(timeout()), this, SLOT(capturetimeout()));
-    timer->start( 5 );
 }
 
 void MainWindow::setTree(){
@@ -90,3 +85,4 @@ void MainWindow::capturewidget(){
     subadmin->setPixmap(screenshot);
 */
 }
+

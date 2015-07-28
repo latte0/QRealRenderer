@@ -1,8 +1,8 @@
 #include "qmlrenderer.h"
 #include <QPainter>
 
-qmlRenderer::qmlRenderer(QWindow* window) :
-    WindowRenderer(window),
+qmlRenderer::qmlRenderer() :
+    WindowRenderer(),
     m_qmltex(nullptr)
 {
 
@@ -11,7 +11,7 @@ qmlRenderer::qmlRenderer(QWindow* window) :
 qmlRenderer::~qmlRenderer(){
 }
 
-void qmlRenderer::inittex(QOpenGLContext * share){
+void qmlRenderer::inittex(std::shared_ptr<QOpenGLContext>& share){
 
     m_rwindow = new RenderWindow(m_mutex, m_filename);
     m_rwindow->init();
@@ -30,7 +30,7 @@ void qmlRenderer::bindTex(){
     QPainter imagePainter(&image);
 
     m_mutex->lock();
-       imagePainter.setRenderHint(QPainter::Antialiasing, true);
+        imagePainter.setRenderHint(QPainter::Antialiasing, true);
         imagePainter.drawImage(0,0,m_rwindow->qmlimage.mirrored());
         imagePainter.setPen(QPen(Qt::red, 12, Qt::DashDotLine, Qt::RoundCap));
 

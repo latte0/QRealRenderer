@@ -1,10 +1,21 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QOpenGLWidget>
+#include <QOpenGLFunctions>
+#include <QOpenGLFunctions_3_3_Core>
+#include <QOpenGLFunctions_3_3_Compatibility>
+#include <QOpenGLVertexArrayObject>
+#include <QOpenGLTexture>
+#include <QOpenGLShaderProgram>
+#include <QOpenGLShader>
+#include <QOpenGLFramebufferObject>
+
 #include <QMainWindow>
 #include <QDockWidget>
 #include <QTreeView>
 #include "adminwidget.h"
+#include "scenario.h"
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -22,8 +33,14 @@ public:
     QLabel *subadmin;
     QTreeView *treeview;
 
-    QTimer* timer;
-    SceneRender* scenerender;
+    std::unique_ptr<Scenario> m_scenario;
+/*
+protected:
+    void mousePressEvent(QMouseEvent *e) override;
+    void mouseReleaseEvent(QMouseEvent *e) override;
+    void mouseMoveEvent(QMouseEvent *e) override;
+    virtual void keyPressEvent(QKeyEvent *e) override;
+*/
 
 private slots:
     void onAddNew();

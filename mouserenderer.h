@@ -26,11 +26,11 @@ class RenderWindow;
 class MouseRenderer : public WindowRenderer
 {
 public:
-    MouseRenderer(QWindow* surface);
+    MouseRenderer();
     virtual ~MouseRenderer();
 
     virtual void bindTex();
-    virtual void inittex(QOpenGLContext* share);
+    virtual void inittex(std::shared_ptr<QOpenGLContext>& share);
     virtual void collide(Eigen::Vector3f top);
     virtual void update();
 

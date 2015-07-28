@@ -1,7 +1,7 @@
 #include "windowbarrenderer.h"
 
-WindowBarRenderer::WindowBarRenderer(QWindow* window):
-    WindowRenderer(window)
+WindowBarRenderer::WindowBarRenderer():
+    WindowRenderer()
 {
 
 }

@@ -7,24 +7,17 @@
 #include "eigenutil.h"
 #include "fbxstruct.h"
 
-SceneRender::SceneRender()
+SceneRender::SceneRender(std::shared_ptr<QOpenGLContext> context)
 {
     setSurfaceType(QWindow::OpenGLSurface);
-
-    QSurfaceFormat format;
-
-    format.setDepthBufferSize(16);
-    format.setStencilBufferSize(8);
-    setFormat(format);
     setCursor(Qt::BlankCursor);
 
+    m_context = context;
 
-    m_context = new QOpenGLContext(this);
-    m_context->setFormat(format);
-    qDebug() << m_context->create();
+    setFormat(m_context->format());
 
-    m_position = Player::singleton().getPosition();
     m_eworld = Eigen::Matrix4f::Identity();
+
 
     setMouseGrabEnabled(true);
 }
@@ -38,24 +31,28 @@ SceneRender::~SceneRender()
 void SceneRender::processing()
 {
 
-    if(!isExposed()){
-        m_updateTimer.start();
-        return;
-    }
+    if(!isExposed()) return;
+
 
 
     if(!m_initialized){
-
         init();
-         m_updateTimer.start();
         return ;
     }
 
     paint();
-    m_updateTimer.start();
 }
 
-void SceneRender::init ()
+void SceneRender::setScene(std::shared_ptr<Scene> scene){
+    m_scene = scene;
+}
+
+void SceneRender::render(std::shared_ptr<Scene> scene){
+    setScene(scene);
+    paint();
+}
+
+void SceneRender::init()
 {
 
     qDebug() << m_context->isValid();
@@ -65,13 +62,13 @@ void SceneRender::init ()
     m_context->versionFunctions<QOpenGLFunctions_3_3_Core>()->initializeOpenGLFunctions();
 
 
-    cube = new qmlRenderer(this);
+    cube = new qmlRenderer();
     cube->init(m_context, "movie.qml");
     cube->setCondition(75 ,QRRUtil::EigenVector3fMake(0,0,-200) ,0,0,true);
 
     qDebug() << "qml setting";
 
-    kyou = new qmlRenderer(this);
+    kyou = new qmlRenderer();
     kyou->init(m_context, "Paint.qml");
     kyou->setCondition(20 ,QRRUtil::EigenVector3fMake(20,20,-8) ,-20,-10,true);
 
@@ -94,7 +91,7 @@ void SceneRender::init ()
     back->init(m_context);
 */
 
-    mouse = new MouseRenderer(this);
+    mouse = new MouseRenderer();
     mouse->init(m_context, "");
     mouse->setAttendant(currentQml);
 
@@ -265,7 +262,7 @@ void SceneRender::paint()
         //back->render(m_context);
         f->glFrontFace(GL_CCW);
 
-    //   handfbxrender->render(m_context,&HandInfo::singleton(), m_uniformVs);
+    //   handfbxrender->render(m_context, m_uniformVs);
 
     /*
         glEnable(GL_BLEND);
@@ -445,6 +442,7 @@ void SceneRender::mouseMoveEvent(QMouseEvent *e)
 }
 
 
+
 void SceneRender::keyPressEvent(QKeyEvent *e){
 
     auto keyconf = [e](int k) -> bool
@@ -453,13 +451,13 @@ void SceneRender::keyPressEvent(QKeyEvent *e){
     };
 
     if(keyconf(Qt::Key_W)) Player::singleton().toUp();
-    if(keyconf(Qt::Key_S)) Player::singleton().toDown();
-    if(keyconf(Qt::Key_A)) Player::singleton().toRight();
-    if(keyconf(Qt::Key_D)) Player::singleton().toLeft();
-    if(keyconf(Qt::Key_R)) Player::singleton().toOver();
-    if(keyconf(Qt::Key_F)) Player::singleton().toBelow();
+    else if(keyconf(Qt::Key_S)) Player::singleton().toDown();
+    else if(keyconf(Qt::Key_A)) Player::singleton().toRight();
+    else if(keyconf(Qt::Key_D)) Player::singleton().toLeft();
+    else if(keyconf(Qt::Key_R)) Player::singleton().toOver();
+    else if(keyconf(Qt::Key_F)) Player::singleton().toBelow();
 
-    if(keyconf(Qt::Key_B)) debugmode = ++debugmode % 2;
+    else if(keyconf(Qt::Key_B)) debugmode = ++debugmode % 2;
 
 
 }

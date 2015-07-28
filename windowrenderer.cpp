@@ -22,12 +22,11 @@
 
 #include "math.h"
 
-WindowRenderer::WindowRenderer(QWindow* window)
+WindowRenderer::WindowRenderer()
     : m_program(0),
       m_vbo(0),
       m_vao(0),
       m_matrixLoc(0),
-      m_window(window),
       RectangleObject()
 
 {
@@ -42,17 +41,16 @@ WindowRenderer::~WindowRenderer()
 
 }
 
-void WindowRenderer::inittex(QOpenGLContext* share){
+void WindowRenderer::inittex(std::shared_ptr<QOpenGLContext>& share){
 
 }
 
-void WindowRenderer::init(QOpenGLContext* share, const QString &filename)
+void WindowRenderer::init(std::shared_ptr<QOpenGLContext>& share, const QString &filename)
 {
 
     m_filename = filename;
     inittex(share);
 
-    share->makeCurrent(m_window);
 
     static const char *vertexShaderSource =
         "attribute highp vec4 vertex;\n"
@@ -76,9 +74,7 @@ void WindowRenderer::init(QOpenGLContext* share, const QString &filename)
 
     qDebug() <<" before program link";
 
-    share->makeCurrent(m_window);
-
-    m_program = new QOpenGLShaderProgram(share);
+    m_program = new QOpenGLShaderProgram;
     m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource);
     m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource);
     m_program->bindAttributeLocation("vertex", 0);
@@ -123,7 +119,7 @@ void WindowRenderer::resize(int w, int h)
 
 }
 
-void WindowRenderer::setupVertexAttribs(QOpenGLContext* share)
+void WindowRenderer::setupVertexAttribs(std::shared_ptr<QOpenGLContext>& share)
 {
 
     auto *f = share->versionFunctions<QOpenGLFunctions_3_3_Core>();
@@ -210,7 +206,7 @@ void WindowRenderer::bindTex(){
 
 }
 
-void WindowRenderer::render(QOpenGLContext* share, Eigen::Matrix4f mat, Eigen::Vector3f top,  Eigen::Vector3f mousepos)
+void WindowRenderer::render(std::shared_ptr<QOpenGLContext>& share, Eigen::Matrix4f mat, Eigen::Vector3f top,  Eigen::Vector3f mousepos)
 {
 
     auto *f = share->versionFunctions<QOpenGLFunctions_3_3_Core>();
