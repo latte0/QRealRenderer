@@ -7,7 +7,7 @@
 #include "eigenutil.h"
 #include "fbxstruct.h"
 
-SceneRender::SceneRender(std::shared_ptr<QOpenGLContext> context)
+SceneRender::SceneRender(std::shared_ptr<QOpenGLContext>& context)
 {
     setSurfaceType(QWindow::OpenGLSurface);
     setCursor(Qt::BlankCursor);
@@ -63,15 +63,15 @@ void SceneRender::init()
 
 
     cube = new qmlRenderer();
-    cube->init(m_context, "web.qml");
-    cube->setCondition(75 ,Eigen::Vector3f{0,0,-200} ,0,0,true);
+    cube->init(m_context, "imageview.qml");
+  //  cube->setCondition(75 ,Eigen::Vector3f{0,0,-200} ,0,0,true);
+    cube->setCondition(20 ,Eigen::Vector3f{20,20,5} ,-20,-10,true);
 
     qDebug() << "qml setting";
 
     kyou = new qmlRenderer();
     kyou->init(m_context, "Paint.qml");
-    kyou->setCondition(20 ,Eigen::Vector3f{20,20,-8} ,-20,-10,true);
-
+    kyou->setCondition(20 ,Eigen::Vector3f{0,-40,30} ,-90,0,true);
 
     currentQml = kyou;
 
@@ -86,17 +86,17 @@ void SceneRender::init()
 */
 
 
-/*
-    back = new BackGroundRenderer(1091);
+
+    back = new BackGroundRenderer(1080);
     back->init(m_context);
-*/
+
 
     mouse = new MouseRenderer();
     mouse->init(m_context, "");
     mouse->setAttendant(currentQml);
 
 
- //   handfbxrender = new handFbxRenderer();
+  //  handfbxrender = new handFbxRenderer();
    // handfbxrender->init(m_context, "");
 
 
@@ -259,7 +259,7 @@ void SceneRender::paint()
             mouse->render(m_context,m_eproj * m_ecamera,Eigen::Vector3f::Identity());
         }
 
-        //back->render(m_context);
+        back->render(m_context);
         f->glFrontFace(GL_CCW);
 
     //   handfbxrender->render(m_context, m_uniformVs);

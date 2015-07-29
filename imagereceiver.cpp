@@ -1,6 +1,6 @@
 #include "imagereceiver.h"
 
-ImageReceiver::ImageReceiver(int port,std::mutex *mtx) :
+ImageReceiver::ImageReceiver(int port,QMutex *mtx) :
     m_mtx(mtx),
     m_port(port)
 {
@@ -22,7 +22,7 @@ cv::Mat ImageReceiver::getImageData()
        return m_videoImage;
 }
 
-std::mutex* ImageReceiver::getMutex(){
+QMutex* ImageReceiver::getMutex(){
     return m_mtx;
 }
 
@@ -50,6 +50,7 @@ void  ImageReceiver::run(){
         m_mtx->lock();
             m_videoImage = cv::imdecode(cv::Mat(video_ibuff), CV_LOAD_IMAGE_COLOR);
         m_mtx->unlock();
+
     }
 }
 

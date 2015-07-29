@@ -1,8 +1,8 @@
 import QtQuick 2.0
 
 Rectangle {
-    width: 1280
-    height: 720
+    width: 720
+    height: 1280
 
     property var listPointX:[]
     property var listPointY:[]

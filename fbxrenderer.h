@@ -80,13 +80,13 @@ class FbxRenderer : public Entity
 public:
     FbxRenderer();
 
-    GLuint loadTexture (QOpenGLContext *share, const std::string &filename);
+    GLuint loadTexture (std::shared_ptr<QOpenGLContext> &share, const std::string &filename);
 
 
 
     virtual void update( UniformVs uniformvs);
-    virtual void init(QOpenGLContext *share, const std::string &filename);
-    virtual void render(QOpenGLContext *share,  UniformVs uniformvs);
+    virtual void init(std::shared_ptr<QOpenGLContext>& share, const std::string &filename);
+    virtual void render(std::shared_ptr<QOpenGLContext>& share,  UniformVs uniformvs);
 
     QOpenGLVertexArrayObject m_vao;
     QOpenGLShaderProgram *hand_program;
@@ -96,6 +96,8 @@ public:
     UniformVs m_uniformVs;
     GLint uniformsSkin[NUM_UNIFORMS];
     GLint uniformsCloth[NUM_UNIFORMS];
+
+    std::shared_ptr<QOpenGLContext> m_context;
 
 
     fbxLoader m_fbxLoader;

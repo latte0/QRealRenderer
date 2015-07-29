@@ -119,7 +119,6 @@ void RenderWindow::destroyFbo()
 void RenderWindow::requestUpdate()
 {
 
-    qDebug() << "render request";
     if (!m_updateTimer.isActive())
         m_updateTimer.start();
 }

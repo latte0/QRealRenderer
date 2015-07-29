@@ -122,7 +122,7 @@ class SceneRender : public QWindow
     Q_OBJECT
 
 public:
-    SceneRender(std::shared_ptr<QOpenGLContext> context);
+    SceneRender(std::shared_ptr<QOpenGLContext>& context);
     ~SceneRender();
 
     qmlRenderer *cube;

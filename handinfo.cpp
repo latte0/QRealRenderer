@@ -33,6 +33,7 @@ Eigen::Matrix4f HandInfo::LeaptoEigenmat(Leap::Matrix lmat){
 
 bool HandInfo::UpdateInfo(){
     m_righthand =false;
+
     Leap::Frame frame_leap = m_Leap.frame();
 
     Leap::HandList hands = frame_leap.hands();

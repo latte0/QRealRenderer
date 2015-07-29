@@ -21,19 +21,20 @@ BackGroundRenderer::BackGroundRenderer(int port)
       m_videotex(nullptr)
 {
     m_mtx = new QMutex();
-/*
+
     m_imgReceiver = new ImageReceiver(port,m_mtx);
     imgthread = new QThread;
     m_imgReceiver->moveToThread(imgthread);
     QObject::connect(this, SIGNAL(imgstart()), m_imgReceiver, SLOT(run()));
     imgthread->start();
     imgstart();
-*/
+
+    /*
     m_rwindow = new RenderWindow(m_mtx, "web.qml");
     m_rwindow->init();
     m_rwindow->resize(960, 1080);
     m_rwindow->show();
-
+*/
 }
 
 BackGroundRenderer::~BackGroundRenderer()
@@ -43,9 +44,11 @@ BackGroundRenderer::~BackGroundRenderer()
     delete m_vao;
 }
 
-void BackGroundRenderer::init(QOpenGLContext* share)
+void BackGroundRenderer::init(std::shared_ptr<QOpenGLContext>& share)
 {
     auto *f = share->functions();
+
+    m_context = share;
 
     static const char *vertexShaderSource =
         "attribute highp vec4 vertex;\n"
@@ -60,7 +63,7 @@ void BackGroundRenderer::init(QOpenGLContext* share)
         "varying lowp vec2 v_coord;\n"
         "uniform sampler2D sampler;\n"
         "void main() {\n"
-        "   gl_FragColor = vec4(1.0,1.0,0.0, 0.5);\n"
+        "   //gl_FragColor = vec4(1.0,1.0,0.0, 0.5);\n"
         "   vec4 riftcolor = texture2D(sampler,  v_coord);"
         "   gl_FragColor = vec4(riftcolor.b, riftcolor.g, riftcolor.r, 0);\n"
         "}\n";
@@ -79,27 +82,27 @@ void BackGroundRenderer::init(QOpenGLContext* share)
     m_vbo = new QOpenGLBuffer;
     m_vbo->create();
     m_vbo->bind();
-/*
+
     GLfloat v[] = {
             -1,-1,1,    1,1,1,     1,-1,1,
             1,1,1,   -1,-1,1,       -1,1, 1
         };
-  */
+  /*
     GLfloat v[] = {
             -1,1,1,    1,-1,1,     -1,-1,1,
             1,-1,1,   -1,1,1,       1,1, 1
         };
-/*
+*/
     GLfloat texCoords[] = {
         0.0f,1.0f, 1.0f,0.0f, 0.0f,0.0f,
         1.0f,0.0f, 0.0f,1.0f, 1.0f,1.0f,
     };
-  */
+  /*
     GLfloat texCoords[] = {
         0.0f,0.85f, 1.0f,0.15f, 0.0f,0.15f,
         1.0f,0.15f, 0.0f,0.85f, 1.0f,0.85f,
     };
-
+*/
     const int vertexCount = 6;
     m_vbo->allocate(sizeof(GLfloat) * vertexCount * 5);
     m_vbo->write(0, v, sizeof(GLfloat) * vertexCount * 3);
@@ -116,7 +119,7 @@ void BackGroundRenderer::resize(int w, int h)
 
 }
 
-void BackGroundRenderer::setupVertexAttribs(QOpenGLContext* share)
+void BackGroundRenderer::setupVertexAttribs(std::shared_ptr<QOpenGLContext>& share)
 {
 
     auto *f = share->functions();
@@ -130,7 +133,7 @@ void BackGroundRenderer::setupVertexAttribs(QOpenGLContext* share)
     m_vbo->release();
 }
 
-void BackGroundRenderer::render(QOpenGLContext* share)
+void BackGroundRenderer::render(std::shared_ptr<QOpenGLContext>& share)
 {
 
 
@@ -145,21 +148,25 @@ void BackGroundRenderer::render(QOpenGLContext* share)
 
     int width = 640;
     int height = 480;
-
+/*
     m_mtx->lock();
-   //   m_videoImage = m_imgReceiver->getImageData();
+      m_videoImage = m_imgReceiver->getImageData();
        m_videotex.reset(new QOpenGLTexture(m_rwindow->qmlimage.mirrored()));
        m_videotex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
        m_videotex->setMagnificationFilter(QOpenGLTexture::Linear);
+*/
+   // m_mtx->unlock();
 
-    m_mtx->unlock();
-/*
+
+    m_mtx->lock();
+    m_videoImage = m_imgReceiver->getImageData();
         QImage image = QRR::CV::cvMatToQImage(m_videoImage);
-        if(m_videotex != nullptr) delete m_videotex;
-        m_videotex = new QOpenGLTexture(image.mirrored());
+
+        m_videotex.reset(new QOpenGLTexture(image.mirrored()));
         m_videotex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
         m_videotex->setMagnificationFilter(QOpenGLTexture::Linear);
-*/
+    m_mtx->unlock();
+
     m_videotex->bind();
 
 
@@ -167,6 +174,7 @@ void BackGroundRenderer::render(QOpenGLContext* share)
 
     if (!m_vao->isCreated())
         setupVertexAttribs(share);
+
 
     f->glDrawArrays(GL_TRIANGLES, 0, 6);
 

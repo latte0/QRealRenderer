@@ -3,6 +3,7 @@
 
 #include <QImage>
 #include <QThread>
+#include <QMutex>
 
 #include <math.h>
 #include <iostream>
@@ -30,12 +31,12 @@ class ImageReceiver : public QObject
     Q_OBJECT
 
 public:
-    ImageReceiver(int port,std::mutex *mtx);
+    ImageReceiver(int port,QMutex *mtx);
     ~ImageReceiver();
 
 
     cv::Mat getImageData();
-    std::mutex* getMutex();
+    QMutex* getMutex();
 
 
 
@@ -50,7 +51,7 @@ private:
     int m_sock, m_numrcv;
     struct sockaddr_in m_addr;
 
-    std::mutex *m_mtx;
+    QMutex *m_mtx;
 
     cv::Mat m_videoImage;
     static constexpr int m_videoSize = 65500;

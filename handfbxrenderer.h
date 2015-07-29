@@ -11,10 +11,11 @@ public:
     ~handFbxRenderer();
 
     virtual void update( UniformVs uniformvs);
-    virtual void init(QOpenGLContext *share, const std::string &filename);
-    virtual void render(QOpenGLContext *share, UniformVs uniformvs);
+    virtual void init(std::shared_ptr<QOpenGLContext>& share, const std::string &filename);
+    virtual void render(std::shared_ptr<QOpenGLContext>& share, UniformVs uniformvs);
 
     handFbxLoader m_handfbxLoader;
+
 
 };
 

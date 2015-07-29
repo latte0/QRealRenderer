@@ -4,7 +4,7 @@ FbxRenderer::FbxRenderer(){
 
 }
 
-void FbxRenderer::init(QOpenGLContext *share, const std::string &filename)
+void FbxRenderer::init(std::shared_ptr<QOpenGLContext> &share, const std::string &filename)
 {
 
     QOpenGLFunctions_3_3_Core* f = 0;
@@ -124,7 +124,7 @@ void FbxRenderer::update( UniformVs uniformvs)
 }
 
 
-void FbxRenderer::render(QOpenGLContext *share,  UniformVs uniformvs)
+void FbxRenderer::render(std::shared_ptr<QOpenGLContext> &share,  UniformVs uniformvs)
 {
 
     this->update(uniformvs);
@@ -189,7 +189,7 @@ void FbxRenderer::render(QOpenGLContext *share,  UniformVs uniformvs)
 }
 
 
-GLuint FbxRenderer::loadTexture (QOpenGLContext *share, const std::string & filename)
+GLuint FbxRenderer::loadTexture (std::shared_ptr<QOpenGLContext>& share, const std::string & filename)
 {
     QOpenGLFunctions_3_3_Core* f = 0;
     f = share->versionFunctions<QOpenGLFunctions_3_3_Core>();

@@ -20,8 +20,9 @@ void handFbxRenderer::update( UniformVs uniformvs){
 
 }
 
-void handFbxRenderer::init(QOpenGLContext *share, const std::string &filename)
+void handFbxRenderer::init(std::shared_ptr<QOpenGLContext>& share, const std::string &filename)
 {
+    m_context = share;
 
     QOpenGLFunctions_3_3_Core* f = 0;
     f = share->versionFunctions<QOpenGLFunctions_3_3_Core>();
@@ -128,7 +129,7 @@ void handFbxRenderer::init(QOpenGLContext *share, const std::string &filename)
 
 }
 
-void handFbxRenderer::render(QOpenGLContext *share, UniformVs uniformvs){
+void handFbxRenderer::render(std::shared_ptr<QOpenGLContext>& share, UniformVs uniformvs){
     this->update(uniformvs);
 
     QOpenGLFunctions_3_3_Core* f = 0;
