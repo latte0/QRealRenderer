@@ -27,7 +27,15 @@ WindowRenderer::WindowRenderer()
       m_vbo(0),
       m_vao(0),
       m_matrixLoc(0),
-      RectangleObject()
+      RectangleObject(),
+      m_z(0.0f),
+      m_scale(0.5f),
+      m_rightrot(0.0f),
+      m_uprot(0.0f),
+      m_handtouch(true),
+      m_touched(false),
+      m_pressed(false),
+      touchdistance(6.0)
 
 {
     m_mutex = new QMutex();
@@ -49,7 +57,10 @@ void WindowRenderer::init(std::shared_ptr<QOpenGLContext>& share, const QString 
 {
 
     m_filename = filename;
+    m_context = share;
     inittex(share);
+
+
 
 
     static const char *vertexShaderSource =
@@ -158,7 +169,7 @@ void WindowRenderer::update(){
 
 }
 
-void WindowRenderer::objectupdate( Eigen::Matrix4f mat, Eigen::Vector3f top,  Eigen::Vector3f mousepos){
+void WindowRenderer::objectupdate( Eigen::Matrix4f mat, Eigen::Vector3f top){
 
     QMatrix4x4 psmat;
 
@@ -194,8 +205,8 @@ void WindowRenderer::objectupdate( Eigen::Matrix4f mat, Eigen::Vector3f top,  Ei
     m_rightVec = m_recPositions[1] - m_recPositions[0];
     m_downVec = m_recPositions[2] - m_recPositions[0];
 
-    if(m_handtouch == false){     m_vertVec = mousepos; }
-    else m_vertVec = m_rightVec.cross(m_downVec);
+//    if(m_handtouch == false){     m_vertVec = mousepos; }
+     m_vertVec = m_rightVec.cross(m_downVec);
 
 
     collide(top);
@@ -206,7 +217,7 @@ void WindowRenderer::bindTex(){
 
 }
 
-void WindowRenderer::render(std::shared_ptr<QOpenGLContext>& share, Eigen::Matrix4f mat, Eigen::Vector3f top,  Eigen::Vector3f mousepos)
+void WindowRenderer::render(std::shared_ptr<QOpenGLContext>& share, Eigen::Matrix4f mat, Eigen::Vector3f top)
 {
 
     auto *f = share->versionFunctions<QOpenGLFunctions_3_3_Core>();
@@ -222,7 +233,7 @@ void WindowRenderer::render(std::shared_ptr<QOpenGLContext>& share, Eigen::Matri
    QOpenGLVertexArrayObject::Binder vaoBinder(m_vao);
 
 
-        objectupdate(mat, top ,mousepos);
+        objectupdate(mat, top);
         update();
 
         if (!m_vao->isCreated())

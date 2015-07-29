@@ -21,7 +21,7 @@
 #include <QMutex>
 
 #include "actor.h"
-#include "renderactor.h"
+#include "entity.h"
 #include "handinfo.h"
 #include "rectangleobject.h"
 
@@ -32,7 +32,7 @@ QT_FORWARD_DECLARE_CLASS(QOpenGLBuffer)
 QT_FORWARD_DECLARE_CLASS(QOpenGLVertexArrayObject)
 
 
-class WindowRenderer : public RenderActor ,public RectangleObject
+class WindowRenderer : public Entity ,public RectangleObject
 {
     friend class qmlRenderer;
     friend class MouseRenderer;
@@ -48,8 +48,8 @@ public:
 
 
     void resize(int w, int h);
-    void objectupdate(Eigen::Matrix4f mat, Eigen::Vector3f top, Eigen::Vector3f mousepos);
-    void render(std::shared_ptr<QOpenGLContext>& share,Eigen::Matrix4f mat, Eigen::Vector3f top, Eigen::Vector3f mousepos);
+    void objectupdate(Eigen::Matrix4f mat, Eigen::Vector3f top);
+    void render(std::shared_ptr<QOpenGLContext>& share,Eigen::Matrix4f mat, Eigen::Vector3f top);
 
     virtual void bindTex();
     virtual void inittex(std::shared_ptr<QOpenGLContext>& share);
@@ -115,16 +115,17 @@ protected:
     QMatrix4x4 m_qmat;
     QMatrix4x4 m_smat;
 
-    float m_z = 0.0;
+    float m_z;
     float m_s;
     float m_v;
-    float m_scale = 0.5;
-    float m_rightrot = 0;
-    float m_uprot = 0;
-    bool m_handtouch = true;
-    bool m_touched = false;
-    bool m_pressed = false;
-    float touchdistance = 6.0;
+    float m_scale;
+    float m_rightrot;
+    float m_uprot;
+    bool m_handtouch ;
+    bool m_touched;
+    bool m_pressed;
+    float touchdistance;
+
 
 };
 

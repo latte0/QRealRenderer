@@ -22,8 +22,6 @@ auto main (int argc, char *argv[]) -> int
 {
     QApplication a(argc, argv);
 
-
-
     QtWebEngine::initialize();
 
     QSurfaceFormat fmt;

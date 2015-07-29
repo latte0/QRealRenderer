@@ -130,6 +130,8 @@ struct QmlObject{
     QString filename;
 };
 
+
+
 class Scene
 {
 public:
@@ -141,7 +143,7 @@ public:
 
     void addLight();
     void addModel(const ModelData div, const QString filename);
-    void addQml(const QmlObject qmlobj);
+    void addQml(const QmlObject&& qmlobj);
     void addMouse();
 
     void update();

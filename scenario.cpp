@@ -14,18 +14,25 @@ Scenario::Scenario()
 
     m_context = context;
 
-    auto tmpscene = std::make_shared<Scene>(m_context);
- //   tmpscene->addqml(QmlObject());
-
-    currentscene = tmpscene;
-
-    sceneobjects.push_back(tmpscene);
 
     m_scenerender = std::make_shared<SceneRender>(m_context);
     m_scenerender->resize(1280, 720);
 
     m_scenerender->show();
     m_scenerender->init();
+
+
+    auto tmpscene = std::make_shared<Scene>(m_context);
+
+
+
+   // tmpscene->addQml( QmlObject{75 ,Eigen::Vector3f{0,0,-200} ,0,0,true, "Paint.qml"} );
+    //tmpscene->addQml( QmlObject{20 ,Eigen::Vector3f{20,20,-8} ,-20,-10,true , "Paint.qml"} );
+
+    currentscene = tmpscene;
+    m_sceneobjects.push_back(tmpscene);
+
+
 
 
     timer = new QTimer();
@@ -46,7 +53,7 @@ void Scenario::changeScene(const QString &scenename)
 
 void Scenario::run(){
 
-     //   currentscene->update();
+       // currentscene->update();
         m_scenerender->render(currentscene);
 
 }

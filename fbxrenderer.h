@@ -67,7 +67,7 @@
 #include "glutil.h"
 #include "fbxstruct.h"
 
-#include "renderactor.h"
+#include "entity.h"
 
 
 #define MAX_BONE_COUNT 128
@@ -75,7 +75,7 @@
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
 
-class FbxRenderer : public RenderActor
+class FbxRenderer : public Entity
 {
 public:
     FbxRenderer();

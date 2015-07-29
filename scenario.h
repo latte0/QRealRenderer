@@ -12,6 +12,8 @@
 #include "scene.h"
 #include "scenerender.h"
 
+#include "eigenutil.h"
+
 
 class Scenario : public QObject
 {
@@ -22,7 +24,7 @@ public:
     ~Scenario();
     QTimer* timer;
     std::shared_ptr<SceneRender> m_scenerender;
-    std::list<std::shared_ptr<Scene>> sceneobjects;
+    std::list<std::shared_ptr<Scene>> m_sceneobjects;
     std::shared_ptr<QOpenGLContext> m_context;
 
     std::shared_ptr<Scene> currentscene;

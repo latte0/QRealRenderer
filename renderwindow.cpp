@@ -49,6 +49,8 @@ RenderWindow::RenderWindow(QMutex *mutex ,const QString &filename)
     m_offscreenSurface->create();
 
 
+
+
 }
 
 RenderWindow::~RenderWindow()
@@ -77,6 +79,7 @@ void RenderWindow::init()
     m_renderControl = new QQuickRenderControl();
     m_quickWindow = new QQuickWindow(m_renderControl);
 
+
     connect(m_quickWindow, &QQuickWindow::sceneGraphInitialized, this, &RenderWindow::createFbo);
     connect(m_quickWindow, &QQuickWindow::sceneGraphInvalidated, this, &RenderWindow::destroyFbo);
     connect(m_renderControl, &QQuickRenderControl::renderRequested, this, &RenderWindow::requestUpdate);
@@ -91,9 +94,6 @@ void RenderWindow::init()
     connect(&m_updateTimer, &QTimer::timeout, this, &RenderWindow::updateQuick);
     m_updateTimer.start();
 
-    qDebug() << "qml init finish";
-
-
 }
 
 void RenderWindow::createFbo()
@@ -103,6 +103,7 @@ void RenderWindow::createFbo()
     qDebug() << "before create fbo";
 
     m_fbo = new QOpenGLFramebufferObject(m_qmlwidth, m_qmlheight, QOpenGLFramebufferObject::CombinedDepthStencil);
+    qDebug() << m_fbo->isValid();
     m_quickWindow->setRenderTarget(m_fbo);
 
     qDebug() << "createfbo";
@@ -117,6 +118,8 @@ void RenderWindow::destroyFbo()
 
 void RenderWindow::requestUpdate()
 {
+
+    qDebug() << "render request";
     if (!m_updateTimer.isActive())
         m_updateTimer.start();
 }
@@ -132,6 +135,8 @@ QOpenGLFramebufferObject * RenderWindow::getQmlFbo(){
 void RenderWindow::run()
 {
     disconnect(m_qmlComponent, SIGNAL(statusChanged(QQmlComponent::Status)), this, SLOT(run()));
+
+
 
     if (m_qmlComponent->isError()) {
         QList<QQmlError> errorList = m_qmlComponent->errors();
@@ -175,9 +180,6 @@ void RenderWindow::run()
 
     qDebug() << m_qmlwidth << m_qmlheight;
 
-    m_fbo = new QOpenGLFramebufferObject(m_qmlwidth, m_qmlheight, QOpenGLFramebufferObject::CombinedDepthStencil);
-    m_quickWindow->setRenderTarget(m_fbo);
-
 
     m_context->doneCurrent();
     m_quickInitialized = true;
@@ -188,7 +190,10 @@ void RenderWindow::run()
 
 void RenderWindow::startQuick(const QString &filename)
 {
+
+
     m_qmlComponent = new QQmlComponent(m_qmlEngine, QUrl(filename));
+
     if (m_qmlComponent->isLoading())
         connect(m_qmlComponent, &QQmlComponent::statusChanged, this, &RenderWindow::run);
     else
@@ -197,6 +202,7 @@ void RenderWindow::startQuick(const QString &filename)
 
 void RenderWindow::exposeEvent(QExposeEvent *)
 {
+
     if (isExposed() && !m_quickInitialized)    startQuick(m_filename);
 
 }

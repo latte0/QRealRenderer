@@ -63,14 +63,14 @@ void SceneRender::init()
 
 
     cube = new qmlRenderer();
-    cube->init(m_context, "movie.qml");
-    cube->setCondition(75 ,QRRUtil::EigenVector3fMake(0,0,-200) ,0,0,true);
+    cube->init(m_context, "web.qml");
+    cube->setCondition(75 ,Eigen::Vector3f{0,0,-200} ,0,0,true);
 
     qDebug() << "qml setting";
 
     kyou = new qmlRenderer();
     kyou->init(m_context, "Paint.qml");
-    kyou->setCondition(20 ,QRRUtil::EigenVector3fMake(20,20,-8) ,-20,-10,true);
+    kyou->setCondition(20 ,Eigen::Vector3f{20,20,-8} ,-20,-10,true);
 
 
     currentQml = kyou;
@@ -186,13 +186,13 @@ void SceneRender::updateuniform(QRR::EyeSide eye){
     Player::singleton().update();
 
 
-    m_uniformVs.lightDirection = EigenVector4fMake(0.0f, 0.0f, 500.0f, 0.0f);
+    m_uniformVs.lightDirection = Eigen::Vector4f{0.0f, 0.0f, 500.0f, 0.0f};
     m_uniformVs.lightDirection = m_uniformVs.lightDirection.normalized();
 
     m_ecamera = Player::singleton().getEyeMat(eye);
 
 
-    m_eworld =QRRUtil::MakeTransform( Player::singleton().getPosition() + QRRUtil::EigenVector3fMake(0,0,-400/QRR::Environment::mmDiv));
+    m_eworld =QRRUtil::MakeTransform( Player::singleton().getPosition() + Eigen::Vector3f{0,0,-400/QRR::Environment::mmDiv});
 
 
     m_uniformVs.normalMatrix = m_eworld.inverse();
@@ -214,7 +214,7 @@ void SceneRender::paint()
 {
 
 
-    if (!m_context->makeCurrent(this) || !m_initialized)
+    if (!m_context->makeCurrent(this) || !m_initialized || !isExposed())
         return;
 
     QOpenGLFunctions_3_3_Core* f = 0;
@@ -254,9 +254,9 @@ void SceneRender::paint()
         updateuniform(eye);
 
         if(debugmode == 0){
-            cube->render(m_context,m_eproj * m_ecamera, HandInfo::singleton().m_fingerdata[1][3].position + Player::singleton().getPosition() + QRRUtil::EigenVector3fMake(0,0,-400/QRR::Environment::mmDiv),Player::singleton().getPosition() /*- mouse->m_centerpos*/);
-            kyou->render(m_context,m_eproj * m_ecamera, HandInfo::singleton().m_fingerdata[1][3].position+ Player::singleton().getPosition() + QRRUtil::EigenVector3fMake(0,0,-400/QRR::Environment::mmDiv),Player::singleton().getPosition() /*- mouse->m_centerpos*/);
-            mouse->render(m_context,m_eproj * m_ecamera,Eigen::Vector3f::Identity(), Eigen::Vector3f::Identity());
+            cube->render(m_context,m_eproj * m_ecamera, HandInfo::singleton().m_fingerdata[1][3].position + Player::singleton().getPosition() + Eigen::Vector3f{0,0,-400/QRR::Environment::mmDiv} );
+            kyou->render(m_context,m_eproj * m_ecamera, HandInfo::singleton().m_fingerdata[1][3].position+ Player::singleton().getPosition() + Eigen::Vector3f{0,0,-400/QRR::Environment::mmDiv} );
+            mouse->render(m_context,m_eproj * m_ecamera,Eigen::Vector3f::Identity());
         }
 
         //back->render(m_context);
@@ -334,7 +334,7 @@ void SceneRender::paint()
 
       m_context->swapBuffers(this);
 
-          m_ovrsender.send();
+      m_ovrsender.send();
 
 
 }

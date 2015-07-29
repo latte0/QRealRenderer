@@ -597,10 +597,10 @@ HEADERS += \
     boardobject.h \
     cvutil.h \
     adminscenefbo.h \
-    renderactor.h \
     handFbxLoader.h \
     handfbxrenderer.h \
-    fileobserver.h
+    fileobserver.h \
+    entity.h
 
 SOURCES += adminwidget.cpp \
            main.cpp \
@@ -643,10 +643,10 @@ SOURCES += adminwidget.cpp \
     boardobject.cpp \
     cvutil.cpp \
     adminscenefbo.cpp \
-    renderactor.cpp \
     handFbxLoader.cpp \
     handfbxrenderer.cpp \
-    fileobserver.cpp
+    fileobserver.cpp \
+    entity.cpp
 
 DISTFILES += \
     Test.qml \
@@ -657,4 +657,5 @@ DISTFILES += \
     quickwindow.qml \
     web.qml \
     movie.qml \
-    camera.qml
+    camera.qml \
+    browser.qml

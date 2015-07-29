@@ -62,11 +62,11 @@ void qmlRenderer::collide(Eigen::Vector3f top){
    // int qmlwidth = m_rwindow->m_rootItem->width(), qmlheigt = m_rwindow->m_rootItem->height();
     int qmlwidth = getQmlSize().width(), qmlheight = getQmlSize().height();
 
-    Eigen::Vector2f pos = calcPos(top);
+    auto pos = calcPos(top);
 
     touch_x = pos.x()*qmlwidth; touch_y = (qmlheight-pos.y()*qmlheight);
 
-    auto insideRect = [&pos](const int length) -> bool
+    auto insideRect = [&pos](const auto length) -> bool
     {
         return ( pos.x() < 1.0  + length&& pos.x() > 0.0 -length &&pos.y() < 1.0 + length && pos.y() > 0.0 -length );
     };

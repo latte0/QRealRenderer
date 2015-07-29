@@ -112,29 +112,29 @@ Eigen::Matrix4f QRRUtil::MakeRotationXAxis(Eigen::Vector3f const &vec){
  Eigen::Vector2f QRRUtil::EigenVector2fMake(float const x, float const y)
 {
   Eigen::Vector2f v = {x, y};
-  return std::move(v);
+  return v;
 }
 
 
  Eigen::Vector3f QRRUtil::EigenVector3fMake(float const x, float const y, float const z)
 {
   Eigen::Vector3f v = {x, y ,z};
-  return std::move(v);
+  return v;
 }
 
  Eigen::Vector4f QRRUtil::EigenVector4fMake(float const x, float const y, float const z, float const w)
 {
   Eigen::Vector4f v = {x, y, z, w};
-  return std::move(v);
+  return v;
 }
 
-Eigen::Vector2f QRRUtil::EivenVector4fNormalize(Eigen::Vector2f &&vec){
+Eigen::Vector2f QRRUtil::EivenVector4fNormalize(Eigen::Vector2f &vec){
 }
 
-Eigen::Vector3f QRRUtil::EivenVector4fNormalize(Eigen::Vector3f &&vec){
+Eigen::Vector3f QRRUtil::EivenVector4fNormalize(Eigen::Vector3f &vec){
 }
 
-Eigen::Vector4f QRRUtil::EivenVector4fNormalize(Eigen::Vector4f &&vec){
+Eigen::Vector4f QRRUtil::EivenVector4fNormalize(Eigen::Vector4f &vec){
    // double total=0;
 
    // std::for_each(vec. vec.end(), [=](double x) -> void {total += x;});
@@ -165,13 +165,13 @@ Eigen::Vector4f QRRUtil::EivenVector4fNormalize(Eigen::Vector4f &&vec){
   return std::move(v);
 }
 
-Eigen::Vector2d QRRUtil::EivenVector4dNormalize(Eigen::Vector2d &&vec){
+Eigen::Vector2d QRRUtil::EivenVector4dNormalize(Eigen::Vector2d &vec){
 }
 
-Eigen::Vector3d QRRUtil::EivenVector4dNormalize(Eigen::Vector3d &&vec){
+Eigen::Vector3d QRRUtil::EivenVector4dNormalize(Eigen::Vector3d &vec){
 }
 
-Eigen::Vector4d QRRUtil::EivenVector4dNormalize(Eigen::Vector4d &&vec){
+Eigen::Vector4d QRRUtil::EivenVector4dNormalize(Eigen::Vector4d &vec){
 
 }
 

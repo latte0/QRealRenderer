@@ -20,6 +20,10 @@
 #include <QQuickRenderControl>
 #include <QCoreApplication>
 
+
+#include <QtWebEngine/QtWebEngine>
+
+
 #include <QMutex>
 #include "scenerender.h"
 
