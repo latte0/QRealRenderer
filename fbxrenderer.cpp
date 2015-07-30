@@ -1,14 +1,20 @@
 #include "fbxrenderer.h"
 
-FbxRenderer::FbxRenderer(){
+FbxRenderer::FbxRenderer(std::shared_ptr<QOpenGLContext> &share):
+    m_context(share)
+{
 
 }
 
-void FbxRenderer::init(std::shared_ptr<QOpenGLContext> &share, const std::string &filename)
+FbxRenderer::~FbxRenderer(){
+
+}
+
+void FbxRenderer::init(const std::string &filename)
 {
 
     QOpenGLFunctions_3_3_Core* f = 0;
-    f = share->versionFunctions<QOpenGLFunctions_3_3_Core>();
+    f = m_context->versionFunctions<QOpenGLFunctions_3_3_Core>();
 
     m_fbxLoader.Initialize("./resources/model/hand_rig2.fbx");
     qDebug() << "initialize ?" << m_fbxLoader.GetMaterialCount() ;
@@ -47,9 +53,9 @@ void FbxRenderer::init(std::shared_ptr<QOpenGLContext> &share, const std::string
 
         std::string home = "/Textures/";
         // read texture
-        material.diffuseTexture = loadTexture(share, home + modelMaterial.diffuseTextureName);
-        material.falloffTexture = loadTexture(share, home + modelMaterial.falloffTextureName);
-        material.specularTexture = loadTexture(share, home + modelMaterial.specularTextureName);
+        material.diffuseTexture = loadTexture(home + modelMaterial.diffuseTextureName);
+        material.falloffTexture = loadTexture(home + modelMaterial.falloffTextureName);
+        material.specularTexture = loadTexture(home + modelMaterial.specularTextureName);
         material.rimlightTexture = 0;
 
             // repatsampler
@@ -124,13 +130,13 @@ void FbxRenderer::update( UniformVs uniformvs)
 }
 
 
-void FbxRenderer::render(std::shared_ptr<QOpenGLContext> &share,  UniformVs uniformvs)
+void FbxRenderer::render(UniformVs uniformvs)
 {
 
     this->update(uniformvs);
 
     QOpenGLFunctions_3_3_Core* f = 0;
-    f = share->versionFunctions<QOpenGLFunctions_3_3_Core>();
+    f = m_context->versionFunctions<QOpenGLFunctions_3_3_Core>();
 
     auto drawFunc = [=](const std::vector<AppMesh>& meshlist)
     {
@@ -189,10 +195,10 @@ void FbxRenderer::render(std::shared_ptr<QOpenGLContext> &share,  UniformVs unif
 }
 
 
-GLuint FbxRenderer::loadTexture (std::shared_ptr<QOpenGLContext>& share, const std::string & filename)
+GLuint FbxRenderer::loadTexture (const std::string & filename)
 {
     QOpenGLFunctions_3_3_Core* f = 0;
-    f = share->versionFunctions<QOpenGLFunctions_3_3_Core>();
+    f = m_context->versionFunctions<QOpenGLFunctions_3_3_Core>();
 
     FIBITMAP *dib1 = nullptr;
 

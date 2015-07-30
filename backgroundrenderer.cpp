@@ -14,13 +14,15 @@
 #include "eigenutil.h"
 #include "glutil.h"
 
-BackGroundRenderer::BackGroundRenderer(int port)
+BackGroundRenderer::BackGroundRenderer(int port, std::shared_ptr<QOpenGLContext>& share)
     : m_program(nullptr),
       m_vbo(nullptr),
       m_vao(nullptr),
       m_videotex(nullptr)
 {
     m_mtx = new QMutex();
+
+    m_context = share;
 
     m_imgReceiver = new ImageReceiver(port,m_mtx);
     imgthread = new QThread;
@@ -44,11 +46,10 @@ BackGroundRenderer::~BackGroundRenderer()
     delete m_vao;
 }
 
-void BackGroundRenderer::init(std::shared_ptr<QOpenGLContext>& share)
+void BackGroundRenderer::init()
 {
-    auto *f = share->functions();
+    auto *f = m_context->functions();
 
-    m_context = share;
 
     static const char *vertexShaderSource =
         "attribute highp vec4 vertex;\n"
@@ -111,18 +112,15 @@ void BackGroundRenderer::init(std::shared_ptr<QOpenGLContext>& share)
 
 
     if (m_vao->isCreated())
-        setupVertexAttribs(share);
+        setupVertexAttribs();
 }
 
-void BackGroundRenderer::resize(int w, int h)
+
+
+void BackGroundRenderer::setupVertexAttribs()
 {
 
-}
-
-void BackGroundRenderer::setupVertexAttribs(std::shared_ptr<QOpenGLContext>& share)
-{
-
-    auto *f = share->functions();
+    auto *f = m_context->functions();
 
     m_vbo->bind();
     m_program->enableAttributeArray(0);
@@ -133,11 +131,11 @@ void BackGroundRenderer::setupVertexAttribs(std::shared_ptr<QOpenGLContext>& sha
     m_vbo->release();
 }
 
-void BackGroundRenderer::render(std::shared_ptr<QOpenGLContext>& share)
+void BackGroundRenderer::render()
 {
 
 
-    auto *f = share->functions();
+    auto *f = m_context->functions();
 
     f->glFrontFace(GL_CW);
 
@@ -173,7 +171,7 @@ void BackGroundRenderer::render(std::shared_ptr<QOpenGLContext>& share)
     QOpenGLVertexArrayObject::Binder vaoBinder(m_vao);
 
     if (!m_vao->isCreated())
-        setupVertexAttribs(share);
+        setupVertexAttribs();
 
 
     f->glDrawArrays(GL_TRIANGLES, 0, 6);

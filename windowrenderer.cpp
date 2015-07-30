@@ -22,7 +22,7 @@
 
 #include "math.h"
 
-WindowRenderer::WindowRenderer()
+WindowRenderer::WindowRenderer(std::shared_ptr<QOpenGLContext>& share)
     : m_program(0),
       m_vbo(0),
       m_vao(0),
@@ -35,10 +35,12 @@ WindowRenderer::WindowRenderer()
       m_handtouch(true),
       m_touched(false),
       m_pressed(false),
-      touchdistance(6.0)
+      touchdistance(6.0),
+      m_mutex(new QMutex()),
+      m_context(share)
 
 {
-    m_mutex = new QMutex();
+
 }
 
 WindowRenderer::~WindowRenderer()
@@ -49,16 +51,15 @@ WindowRenderer::~WindowRenderer()
 
 }
 
-void WindowRenderer::inittex(std::shared_ptr<QOpenGLContext>& share){
+void WindowRenderer::inittex(){
 
 }
 
-void WindowRenderer::init(std::shared_ptr<QOpenGLContext>& share, const QString &filename)
+void WindowRenderer::init( const QString &filename)
 {
 
     m_filename = filename;
-    m_context = share;
-    inittex(share);
+    inittex();
 
 
 
@@ -121,7 +122,7 @@ void WindowRenderer::init(std::shared_ptr<QOpenGLContext>& share, const QString 
     m_vbo->release();
 
     if (m_vao->isCreated())
-        setupVertexAttribs(share);
+        setupVertexAttribs();
 
 }
 
@@ -130,10 +131,10 @@ void WindowRenderer::resize(int w, int h)
 
 }
 
-void WindowRenderer::setupVertexAttribs(std::shared_ptr<QOpenGLContext>& share)
+void WindowRenderer::setupVertexAttribs()
 {
 
-    auto *f = share->versionFunctions<QOpenGLFunctions_3_3_Core>();
+    auto *f = m_context->versionFunctions<QOpenGLFunctions_3_3_Core>();
 
     m_vbo->bind();
     m_program->enableAttributeArray(0);
@@ -217,10 +218,10 @@ void WindowRenderer::bindTex(){
 
 }
 
-void WindowRenderer::render(std::shared_ptr<QOpenGLContext>& share, Eigen::Matrix4f mat, Eigen::Vector3f top)
+void WindowRenderer::render( Eigen::Matrix4f mat, Eigen::Vector3f top)
 {
 
-    auto *f = share->versionFunctions<QOpenGLFunctions_3_3_Core>();
+    auto *f = m_context->versionFunctions<QOpenGLFunctions_3_3_Core>();
 
     f->glFrontFace(GL_CW);
 
@@ -237,7 +238,7 @@ void WindowRenderer::render(std::shared_ptr<QOpenGLContext>& share, Eigen::Matri
         update();
 
         if (!m_vao->isCreated())
-            setupVertexAttribs(share);
+            setupVertexAttribs();
 
         m_program->setUniformValue(m_matrixLoc, m_qmat * m_qworld * m_smat);
         m_program->setUniformValue(m_aspectLoc, getAspect());

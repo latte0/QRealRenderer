@@ -600,7 +600,8 @@ HEADERS += \
     handFbxLoader.h \
     handfbxrenderer.h \
     fileobserver.h \
-    entity.h
+    entity.h \
+    qrrproperty.h
 
 SOURCES += adminwidget.cpp \
            main.cpp \

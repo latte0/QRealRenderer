@@ -62,20 +62,19 @@ void SceneRender::init()
     m_context->versionFunctions<QOpenGLFunctions_3_3_Core>()->initializeOpenGLFunctions();
 
 
-    cube = new qmlRenderer();
-    cube->init(m_context, "imageview.qml");
+    cube = new qmlRenderer(m_context);
+    cube->init("imageview.qml");
   //  cube->setCondition(75 ,Eigen::Vector3f{0,0,-200} ,0,0,true);
     cube->setCondition(20 ,Eigen::Vector3f{20,20,5} ,-20,-10,true);
 
     qDebug() << "qml setting";
 
-    kyou = new qmlRenderer();
-    kyou->init(m_context, "Paint.qml");
+    kyou = new qmlRenderer(m_context);
+    kyou->init("Paint.qml");
     kyou->setCondition(20 ,Eigen::Vector3f{0,-40,30} ,-90,0,true);
 
     currentQml = kyou;
 
-    qDebug() << "qmlok";
 
 /*
     scenemutex = new QMutex();
@@ -87,12 +86,12 @@ void SceneRender::init()
 
 
 
-    back = new BackGroundRenderer(1080);
-    back->init(m_context);
+    back = new BackGroundRenderer(1080, m_context);
+    back->init();
 
 
-    mouse = new MouseRenderer();
-    mouse->init(m_context, "");
+    mouse = new MouseRenderer(m_context);
+    mouse->init("");
     mouse->setAttendant(currentQml);
 
 
@@ -254,12 +253,13 @@ void SceneRender::paint()
         updateuniform(eye);
 
         if(debugmode == 0){
-            cube->render(m_context,m_eproj * m_ecamera, HandInfo::singleton().m_fingerdata[1][3].position + Player::singleton().getPosition() + Eigen::Vector3f{0,0,-400/QRR::Environment::mmDiv} );
-            kyou->render(m_context,m_eproj * m_ecamera, HandInfo::singleton().m_fingerdata[1][3].position+ Player::singleton().getPosition() + Eigen::Vector3f{0,0,-400/QRR::Environment::mmDiv} );
-            mouse->render(m_context,m_eproj * m_ecamera,Eigen::Vector3f::Identity());
+            cube->render(m_eproj * m_ecamera, HandInfo::singleton().m_fingerdata[1][3].position + Player::singleton().getPosition() + Eigen::Vector3f{0,0,-400/QRR::Environment::mmDiv} );
+            kyou->render(m_eproj * m_ecamera, HandInfo::singleton().m_fingerdata[1][3].position+ Player::singleton().getPosition() + Eigen::Vector3f{0,0,-400/QRR::Environment::mmDiv} );
+            mouse->render(m_eproj * m_ecamera,Eigen::Vector3f::Identity());
         }
 
-        back->render(m_context);
+        back->render();
+
         f->glFrontFace(GL_CCW);
 
     //   handfbxrender->render(m_context, m_uniformVs);

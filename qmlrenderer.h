@@ -11,10 +11,10 @@ class RenderWindow;
 class qmlRenderer : public WindowRenderer
 {
 public:
-    qmlRenderer();
+    qmlRenderer(std::shared_ptr<QOpenGLContext>& share);
     virtual ~qmlRenderer();
 
-    virtual void inittex(std::shared_ptr<QOpenGLContext>& share);
+    virtual void inittex();
     virtual void bindTex();
     virtual void collide(Eigen::Vector3f top);
     virtual void update();

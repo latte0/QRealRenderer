@@ -7,12 +7,12 @@
 class handFbxRenderer : public FbxRenderer
 {
 public:
-    handFbxRenderer();
+    handFbxRenderer(std::shared_ptr<QOpenGLContext> &share);
     ~handFbxRenderer();
 
     virtual void update( UniformVs uniformvs);
-    virtual void init(std::shared_ptr<QOpenGLContext>& share, const std::string &filename);
-    virtual void render(std::shared_ptr<QOpenGLContext>& share, UniformVs uniformvs);
+    virtual void init(const std::string &filename);
+    virtual void render(UniformVs uniformvs);
 
     handFbxLoader m_handfbxLoader;
 

@@ -7,8 +7,14 @@
 #include <Eigen/Geometry>
 #include <random>
 
+#include <list>
+#include <map>
+#include <iostream>
+#include <memory>
+#include <vector>
 
 #include "eigenutil.h"
+
 
 
 enum ActorSpecies: int{
@@ -23,9 +29,11 @@ enum ActorSpecies: int{
 class Actor :public QObject
 {
 public:
+
     Actor();
     virtual ~Actor();
 
+    using actorPtr = std::shared_ptr<Actor>;
 
     void setPosition(Eigen::Vector3f pos){
         m_position = pos;
@@ -65,6 +73,13 @@ public:
 
     int getId(){ return id; }
 
+    actorPtr getParent(){
+        return ActorParent;
+    }
+
+    std::list<actorPtr> getChildren(){
+        return ActorChildren;
+    }
 
 
     Eigen::Vector3f m_position;
@@ -73,6 +88,11 @@ public:
 
 
 private:
+
+
+    actorPtr ActorParent;
+    std::list<actorPtr> ActorChildren;
+
 
     int id;
     std::random_device rd;

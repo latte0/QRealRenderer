@@ -6,7 +6,7 @@
 class WindowBarRenderer : public WindowRenderer
 {
 public:
-    WindowBarRenderer();
+    WindowBarRenderer( std::shared_ptr<QOpenGLContext>& share);
 };
 
 #endif // WINDOWBAR_H

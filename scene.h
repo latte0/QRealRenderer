@@ -132,6 +132,11 @@ struct QmlObject{
 
 
 
+using  actorPtr = std::shared_ptr<Actor>;
+using  lightPtr = std::shared_ptr<Light>;
+using  fbxrendererPtr = std::shared_ptr<FbxRenderer>;
+using  qmlrendererPtr = std::shared_ptr<qmlRenderer>;
+
 class Scene
 {
 public:
@@ -141,10 +146,17 @@ public:
 
     std::shared_ptr<QOpenGLContext> m_context;
 
+
     void addLight();
     void addModel(const ModelData div, const QString filename);
     void addQml(const QmlObject&& qmlobj);
     void addMouse();
+
+    void addActor(const actorPtr actorobj);
+
+    template <class T>
+    std::list<std::shared_ptr<T>> getActors();
+
 
     void update();
 
@@ -179,11 +191,9 @@ public:
 
 private:
 
-    using  lightPtr = std::shared_ptr<Light>;
-    using  fbxrendererPtr = std::shared_ptr<FbxRenderer>;
-    using  qmlrendererPtr = std::shared_ptr<qmlRenderer>;
 
-
+    std::shared_ptr<MouseRenderer> mouse;
+    std::list<actorPtr> actors;
     std::list<lightPtr> lights;
     std::list<fbxrendererPtr> fbxs;
     std::list<qmlrendererPtr> qmls;

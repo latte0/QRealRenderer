@@ -40,7 +40,7 @@ class WindowRenderer : public Entity ,public RectangleObject
 public:
 
 
-    WindowRenderer();
+    WindowRenderer(std::shared_ptr<QOpenGLContext>& share);
     virtual ~WindowRenderer();
 
 
@@ -49,18 +49,18 @@ public:
 
     void resize(int w, int h);
     void objectupdate(Eigen::Matrix4f mat, Eigen::Vector3f top);
-    void render(std::shared_ptr<QOpenGLContext>& share,Eigen::Matrix4f mat, Eigen::Vector3f top);
+    void render(Eigen::Matrix4f mat, Eigen::Vector3f top);
 
     virtual void bindTex();
-    virtual void inittex(std::shared_ptr<QOpenGLContext>& share);
+    virtual void inittex();
     virtual void collide(Eigen::Vector3f top);
     virtual void update();
 
     //????
-    void init(std::shared_ptr<QOpenGLContext>& share, const QString &filename);
+    void init(const QString &filename);
 
 
-    void setupVertexAttribs(std::shared_ptr<QOpenGLContext>& share);
+    void setupVertexAttribs();
 
     void setCondition(float scale, Eigen::Vector3f pos, float uprot, float rightrot, bool handtouch);
 
@@ -102,6 +102,7 @@ protected:
     QString m_filename;
 
     std::shared_ptr<QOpenGLContext> m_context;
+
     QWindow* m_window;
     QOpenGLShaderProgram *m_program;
     QOpenGLBuffer *m_vbo;

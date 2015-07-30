@@ -2,13 +2,13 @@
 
 Scenario::Scenario()
 {
-    QSurfaceFormat format;
 
+    QSurfaceFormat format;
     format.setDepthBufferSize(16);
     format.setStencilBufferSize(8);
 
-    std::shared_ptr<QOpenGLContext> context(new QOpenGLContext);
 
+    std::shared_ptr<QOpenGLContext> context(new QOpenGLContext);
     context->setFormat(format);
     context->create();
 
@@ -17,7 +17,6 @@ Scenario::Scenario()
 
     m_scenerender = std::make_shared<SceneRender>(m_context);
     m_scenerender->resize(1280, 720);
-
     m_scenerender->show();
     m_scenerender->init();
 

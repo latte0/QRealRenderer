@@ -50,19 +50,36 @@ void Scene::addModel(const ModelData div, const QString filename){
 
 void Scene::addQml(const QmlObject&& qmlobj){
 
-    std::shared_ptr<qmlRenderer> qml(new qmlRenderer());
-    qml->init(m_context, qmlobj.filename);
+    std::shared_ptr<qmlRenderer> qml(new qmlRenderer(m_context));
+    qml->init(qmlobj.filename);
     qml->setCondition(qmlobj.scale, qmlobj.pos, qmlobj.euler_x,  qmlobj.euler_y, qmlobj.touched);
 
     qmls.push_back(qml);
     currentQml = qml;
 
+    addActor(std::dynamic_pointer_cast<Actor>(qml));
 }
 
 void Scene::addMouse(){
 
 }
 
+
+void Scene::addActor(const actorPtr actor){
+    actors.push_back(actor);
+}
+
+template <class T>
+std::list<std::shared_ptr<T>> Scene::getActors(){
+    std::list<std::shared_ptr<T>> list;
+    for( auto &obj : actors){
+        if(std::dynamic_pointer_cast<T>(obj) != nullptr){
+            list.push_back(obj);
+        }
+    }
+
+    return list;
+}
 
 
 

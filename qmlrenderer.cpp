@@ -1,8 +1,8 @@
 #include "qmlrenderer.h"
 #include <QPainter>
 
-qmlRenderer::qmlRenderer() :
-    WindowRenderer(),
+qmlRenderer::qmlRenderer(std::shared_ptr<QOpenGLContext>& share) :
+    WindowRenderer(share),
     m_qmltex(nullptr)
 {
 
@@ -11,7 +11,7 @@ qmlRenderer::qmlRenderer() :
 qmlRenderer::~qmlRenderer(){
 }
 
-void qmlRenderer::inittex(std::shared_ptr<QOpenGLContext>& share){
+void qmlRenderer::inittex(){
 
     m_rwindow = new RenderWindow(m_mutex, m_filename);
     m_rwindow->init();

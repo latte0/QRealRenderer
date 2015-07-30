@@ -1,6 +1,7 @@
 #include "handfbxrenderer.h"
 
-handFbxRenderer::handFbxRenderer()
+handFbxRenderer::handFbxRenderer(std::shared_ptr<QOpenGLContext> &share):
+    FbxRenderer(share)
 {
 
 }
@@ -20,12 +21,12 @@ void handFbxRenderer::update( UniformVs uniformvs){
 
 }
 
-void handFbxRenderer::init(std::shared_ptr<QOpenGLContext>& share, const std::string &filename)
+void handFbxRenderer::init(const std::string &filename)
 {
-    m_context = share;
+
 
     QOpenGLFunctions_3_3_Core* f = 0;
-    f = share->versionFunctions<QOpenGLFunctions_3_3_Core>();
+    f = m_context->versionFunctions<QOpenGLFunctions_3_3_Core>();
 
     m_handfbxLoader.Initialize("./resources/model/hand_rig2.fbx");
     qDebug() << "initialize ?" << m_handfbxLoader.GetMaterialCount() ;
@@ -129,11 +130,11 @@ void handFbxRenderer::init(std::shared_ptr<QOpenGLContext>& share, const std::st
 
 }
 
-void handFbxRenderer::render(std::shared_ptr<QOpenGLContext>& share, UniformVs uniformvs){
+void handFbxRenderer::render( UniformVs uniformvs){
     this->update(uniformvs);
 
     QOpenGLFunctions_3_3_Core* f = 0;
-    f = share->versionFunctions<QOpenGLFunctions_3_3_Core>();
+    f = m_context->versionFunctions<QOpenGLFunctions_3_3_Core>();
 
     auto drawFunc = [=](const std::vector<AppMesh>& meshlist)
     {

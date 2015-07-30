@@ -43,22 +43,18 @@ class BackGroundRenderer : Actor
     Q_OBJECT
 
 public:
-    BackGroundRenderer(int port);
+    BackGroundRenderer(int port, std::shared_ptr<QOpenGLContext>& share);
     virtual ~BackGroundRenderer();
 
     QMutex * m_mtx;
 
-    void resize(int w, int h);
-    void render(std::shared_ptr<QOpenGLContext>& share);
+    void render();
 
-    void init(std::shared_ptr<QOpenGLContext>& share);
-    void setupVertexAttribs(std::shared_ptr<QOpenGLContext>& share);
+    void init();
+    void setupVertexAttribs();
 
-    Eigen::Vector3f m_positions[4];
 
 private:
-
-    float m_scale = 10;
 
     std::shared_ptr<QOpenGLContext> m_context;
     QOpenGLShaderProgram *m_program;
